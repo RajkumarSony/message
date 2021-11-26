@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.js": "/static/js/main.d982d563.chunk.js",
+    "main.js.map": "/static/js/main.d982d563.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.00f11325.js",
+    "runtime-main.js.map": "/static/js/runtime-main.00f11325.js.map",
+    "static/css/2.d0df8735.chunk.css": "/static/css/2.d0df8735.chunk.css",
+    "static/js/2.b115d5ae.chunk.js": "/static/js/2.b115d5ae.chunk.js",
+    "static/js/2.b115d5ae.chunk.js.map": "/static/js/2.b115d5ae.chunk.js.map",
+    "static/js/3.033be513.chunk.js": "/static/js/3.033be513.chunk.js",
+    "static/js/3.033be513.chunk.js.map": "/static/js/3.033be513.chunk.js.map",
+    "index.html": "/index.html",
+    "static/css/2.d0df8735.chunk.css.map": "/static/css/2.d0df8735.chunk.css.map",
+    "static/js/2.b115d5ae.chunk.js.LICENSE.txt": "/static/js/2.b115d5ae.chunk.js.LICENSE.txt",
+    "static/media/Whatsapp.85f11eae.svg": "/static/media/Whatsapp.85f11eae.svg",
+    "static/media/index.css": "/static/media/roboto-vietnamese-400-normal.c0bec65d.woff2"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.00f11325.js",
+    "static/css/2.d0df8735.chunk.css",
+    "static/js/2.b115d5ae.chunk.js",
+    "static/js/main.d982d563.chunk.js"
+  ]
+}
