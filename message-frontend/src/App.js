@@ -4,7 +4,9 @@ import Navbar from "./components/root/Navbar";
 import { ChakraProvider } from "@chakra-ui/react";
 import Home from "./Pages/Home";
 import Features from "./Pages/Features";
-import Users from "./Pages/Users";
+import Download from "./Pages/Download";
+import HelpCenter from "./Pages/HelpCenter";
+import Security from "./Pages/security";
 import NotFound from "./Pages/NotFound";
 import theme from "./theme";
 import "@fontsource/roboto"
@@ -26,7 +28,9 @@ function App() {
           {/* <Route exact path={"/about"} element={<About />} /> */}
 
 
-          <Route exact path="/users" element={<Users />} />
+          <Route exact path="/download" element={<Download />} />
+          <Route exact path="/security" element={<Security />} />
+          <Route exact path="/help-center" element={<HelpCenter />} />
 
 
           <Route path="*" element={<NotFound />} />

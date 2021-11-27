@@ -1,34 +1,83 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Flex, Spacer ,Input} from "@chakra-ui/react";
-import {Box ,Image} from "@chakra-ui/react";
-import whatsapp from "../../assets/icons/Whatsapp.svg"
-import {BsGlobe} from "react-icons/bs"
-import {MdArrowDropDown} from "react-icons/md";
+import { Box, Image, Button } from "@chakra-ui/react";
+import whatsapp from "../../assets/icons/Whatsapp.svg";
+import { BsGlobe } from "react-icons/bs";
+import { MdArrowDropDown } from "react-icons/md";
 
 function Navbar() {
-  let marginright ="6%"
+  
   return (
-    <header style={{height:"91px",widht:"100%",border:"1px solid ",backgroundColor:"#128c7e"}}>
-     <Flex flexDirection="row"  alignItems="center" style={{height:"100%",width:"100%"}}>
-<Image ml="9%" mr="9%" width="15%" src={whatsapp} alt="Brand Logo" />
-<Box  d="flex"  flexDirection="row" style={{color:"white",lineHeight:"26px" ,width:"90%",}}>
-<Link style={{marginRight:marginright}} to="/">WHATSAPP WEB</Link>
+    // Header
+    <Box
+      h={{ lg: "91px", md: "74px" }}
+      d="flex"
+      flexDirection="row"
+      backgroundColor="#128c7e"
+      maxW="100%"
+      minW="100%"
+      justifyContent="center"
+      alignItems="center"
+   
+    >
 
-<Link style={{marginRight:marginright}} to="/features">FEATURES</Link>
-
-
-<Link style={{marginRight:marginright}} to="/download">DOWNLOAD</Link>
-
-<Link style={{marginRight:marginright}} to="/security">SECURITY</Link>
-
-<Link style={{marginRight:marginright}} to="/help-center">HELP CENTER</Link>
-<Box  d="flex" flexDirection="row" style={{alignItems:"center",justifyContent:"space-evenly"}}><BsGlobe /><h5 style={{padding:"0 4px"}}>EN</h5><MdArrowDropDown/></Box>
-</Box>
-</Flex>
-    </header>
-      
+      <Box
+        d="flex"
+        pr={{ md: "32px" }}
+        pl={{ md: "32px" }}
+        maxW={{ md: "1050px" }}
+        flexDirection="row"
+        color="white"
+        lineHeight="26px"
+        width="100%"
+        alignItems="center"
+        justifyContent="space=between"
     
+      >
+        <Box d="flex" w="80%" alignItems="center">
+          <Box minW="160px">
+            <Link to="/">
+              <Image src={whatsapp} alt="Brand Logo" />
+            </Link>
+          </Box>
+        </Box>
+        <Box
+          d="flex"
+          minW={{ md: "90%", lg: "80%" }}
+          flexDirection="row"
+          justifyContent="flex-end"
+          alignItems="center"
+        >
+          <Box
+            d="flex"
+            alignItems="center"
+            justifyContent="space-evenly"
+            flexGrow="1"
+          >
+            <Link to="/web">WHATSAPP WEB</Link>
+
+            <Link to="/features">FEATURES</Link>
+
+            <Link to="/download">DOWNLOAD</Link>
+
+            <Link to="/security">SECURITY</Link>
+
+            <Link to="/help-center">HELP CENTER</Link>
+          </Box>
+
+          <Button
+            colorScheme="transparent"
+            leftIcon={<BsGlobe />}
+            rightIcon={<MdArrowDropDown />}
+            variant ="ghost"
+          >
+            <h5 style={{ padding: "0 4px" }}>EN</h5>
+          </Button>
+        </Box>
+      </Box>
+
+      {/* </Flex> */}
+    </Box>
   );
 }
 export default Navbar;
