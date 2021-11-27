@@ -1,22 +1,23 @@
 {
   "name": "message",
   "version": "1.0.0",
-  "description": "message app",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
-  "author": "nktech",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nktech-Official/message.git"
+  },
+  "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nktech-Official/message/issues"
+  },
+  "homepage": "https://github.com/Nktech-Official/message#readme",
   "dependencies": {
     "express": "^4.17.1"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.15"
-  },
-  "engines": {
-    "node": "^14.17.1",
-    "npm": "^6.14.13"
   }
 }
