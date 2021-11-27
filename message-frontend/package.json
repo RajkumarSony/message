@@ -29,7 +29,7 @@
   "scripts": {
     "watch": "npm-watch",
     "start": "react-scripts start",
-    "build": "react-scripts build --watch && cd ../message-backend/ && rmdir /s /q public && cd ../message-frontend && move build ../message-backend/public ",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

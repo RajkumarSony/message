@@ -5,9 +5,9 @@ const app = express();
 
 
 const port = 5000;
-app.use(express.static(path.join(__dirname, "..", "/message-backend/public")));
+app.use(express.static(path.join(__dirname, "/message-frontend/build")));
 app.use((req, res, next) => {
-    res.sendFile(path.join(__dirname, "..", "/message-backend/public", "index.html"));
+    res.sendFile(path.join(__dirname, "/message-fontend/build", "index.html"));
 });
 
 app.listen(port, () => {

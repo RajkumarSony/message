@@ -1,1 +1,1 @@
-web: cd message-frontend && npm run build && cd ../message-backend && npm start
+web: cd message-frontend && npm run build
