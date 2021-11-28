@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix messsage-frontend && npm run build --prefix messsage-frontend"
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix message-frontend && npm run build --prefix message-frontend"
   },
   "repository": {
     "type": "git",
