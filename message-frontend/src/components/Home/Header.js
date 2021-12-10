@@ -11,7 +11,7 @@ export default function Header() {
       <Box style={{margin:"0 15%",maxWidth: "788px",
     width: "100%",marginLeft: "auto",
     marginRight: "auto"}}>
-        <Flex FlexDirection="row" width="100%" justifyContent="space-between">
+        <Flex direction="row" width="100%" justifyContent="space-between">
           <Box  >
             <Box style={{fontSize: "33px",lineHeight:"43px",marginTop:"20%" ,marginBottom:"8%"}}>
             <h2 >Simple. Secure. </h2>

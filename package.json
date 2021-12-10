@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-   
+    "development": "npm run build --prefix message-frontend && npm start",
     "start": "node index.js",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix message-frontend && npm run build --prefix message-frontend"
   },
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Nktech-Official/message#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "react": "^16.0.0"
   }
 }

@@ -2,8 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { Box, Image, Button } from "@chakra-ui/react";
 import whatsapp from "../../assets/icons/Whatsapp.svg";
-import { BsGlobe } from "react-icons/bs";
-import { MdArrowDropDown } from "react-icons/md";
 
 function Navbar() {
   
@@ -67,11 +65,10 @@ function Navbar() {
 
           <Button
             colorScheme="transparent"
-            leftIcon={<BsGlobe />}
-            rightIcon={<MdArrowDropDown />}
+            
             variant ="ghost"
           >
-            <h5 style={{ padding: "0 4px" }}>EN</h5>
+            <h5 style={{ padding: "0 4px" }}>Login</h5>
           </Button>
         </Box>
       </Box>

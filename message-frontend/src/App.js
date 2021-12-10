@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/root/Navbar";
 import { ChakraProvider } from "@chakra-ui/react";
 import Home from "./Pages/Home";
+import Web from"./Pages/Web";
 import Features from "./Pages/Features";
 import Download from "./Pages/Download";
 import HelpCenter from "./Pages/HelpCenter";
@@ -16,21 +17,20 @@ function App() {
 
 
       <Router>
-
-
-        <Navbar />
-        
+<Navbar/> 
         <Routes>
+         
           {["/home", "/", "/Home", "/index.html", "/index.js"].map((path, index) =>
             <Route path={path} element={<Home />} key={index} />
           )}
-          <Route exact path={"/features"} element={<Features />} />
-          {/* <Route exact path={"/about"} element={<About />} /> */}
+          <Route  path="/web" element={<Web/>}/>
+          <Route  path={"/features"} element={<Features />} />
+          
 
 
-          <Route exact path="/download" element={<Download />} />
-          <Route exact path="/security" element={<Security />} />
-          <Route exact path="/help-center" element={<HelpCenter />} />
+          <Route  path="/download" element={<Download />} />
+          <Route  path="/security" element={<Security />} />
+          <Route  path="/help-center" element={<HelpCenter />} />
 
 
           <Route path="*" element={<NotFound />} />
