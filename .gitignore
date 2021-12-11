@@ -10,7 +10,7 @@ node_modules
 /coverage
 
 # production
-/build
+build
 
 # misc
 package-lock.json
@@ -21,6 +21,7 @@ yarn.lock
 .env.test.local
 .env.production.local
 .env
+
 
 npm-debug.log*
 yarn-debug.log*

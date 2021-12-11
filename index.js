@@ -7,7 +7,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 app.use(express.static(path.join(__dirname, "/message-frontend/build")));
 app.use((req, res, next) => {
-    res.sendFile(path.join(__dirname, "/message-fontend/build", "index.html"));
+    res.sendFile(path.join(__dirname, "/message-frontend/build", "index.html"));
 });
 
 app.listen(port, () => {
