@@ -21,7 +21,7 @@ export default function Web() {
         
   </Pane>
  
-  <Pane className="Resizer" style={{overflow: 'hidden'}} >
+  <Pane h="100%" className="Resizer" style={{overflow: 'hidden'}} >
     <Messanger/>
   </Pane>
 </SplitPane>
