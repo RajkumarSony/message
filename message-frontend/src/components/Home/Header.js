@@ -7,7 +7,7 @@ import {MdMonitor} from "react-icons/md"
 import {IoIosArrowForward} from "react-icons/io"
 export default function Header() {
     return (
-        <Box style={{ margin: "5% 0" }}>
+        <Box style={{ margin: "10% 0" }}>
       <Box style={{margin:"0 15%",maxWidth: "788px",
     width: "100%",marginLeft: "auto",
     marginRight: "auto"}}>

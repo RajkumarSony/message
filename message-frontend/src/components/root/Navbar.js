@@ -8,6 +8,9 @@ function Navbar() {
   return (
     // Header
     <Box
+    position="fixed"
+    top={0}
+    
       h={{ lg: "91px", md: "74px" }}
       d="flex"
       flexDirection="row"

@@ -21,7 +21,8 @@ yarn.lock
 .env.test.local
 .env.production.local
 .env
-
+# Devs 
+data.json
 
 npm-debug.log*
 yarn-debug.log*
