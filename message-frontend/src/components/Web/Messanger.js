@@ -3,6 +3,7 @@ import { Box, Textarea, Icon ,Button} from "@chakra-ui/react";
 import { MdSend, MdMic,MdOutlineEmojiEmotions } from "react-icons/md";
 import {TiAttachmentOutline} from "react-icons/ti"
 import io from "socket.io-client"
+import backgroundImg from "../../assets/Img/Background.png"
 
 const socket=io()
 socket.connect()
@@ -35,7 +36,7 @@ console.log(Val)
 
   return (
     <Box h="100%" flexDirection="column" d="flex">
-        <Box borderLeft="1px solid gray"  backgroundColor="white" backgroundImage="url(https://lh3.googleusercontent.com/SZ97RCEv5EVH6iMCDIdHeGJM_BNyHYcnRQ4EdK4V_VyVxLlQS8GY1U3xB8atEBH55OM)" h="100vh">
+        <Box borderLeft="1px solid gray"  backgroundColor="white" backgroundImage={backgroundImg} h="100vh">
            {/* <Image src="https://lh3.googleusercontent.com/SZ97RCEv5EVH6iMCDIdHeGJM_BNyHYcnRQ4EdK4V_VyVxLlQS8GY1U3xB8atEBH55OM"/> */}
         </Box>
       <Box  borderLeft="1px solid gray"   alignItems="center" h={20} d="flex" flexDirection="row">
