@@ -7,6 +7,7 @@ import MessageNav from "../components/Web/MessageNav";
 import { Box } from "@chakra-ui/react";
 import "./Pane.css";
 import data from "./data.json";
+import { Navigate } from "react-router-dom";
 
 
 export default function Web() {
@@ -17,7 +18,9 @@ export default function Web() {
       Uid:""
     }
   )
+const user=localStorage.getItem("user");
 
+if(user){
   return (
     <SplitPane
       m={0}
@@ -78,5 +81,6 @@ export default function Web() {
         </SplitPane>
       </Pane>
     </SplitPane>
-  );
+  );}
+  return <Navigate to="/"/>
 }

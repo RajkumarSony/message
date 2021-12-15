@@ -1,10 +1,30 @@
-import React from "react";
+import React,{useState} from "react";
 import { Link } from "react-router-dom";
 import { Box, Image, Button } from "@chakra-ui/react";
 import whatsapp from "../../assets/icons/Whatsapp.svg";
+import {auth} from "../../FirebaseConfig"
+import {signOut,signInWithEmailAndPassword} from "firebase/auth"
+
 
 function Navbar() {
   
+  const [user, setUser] = useState(localStorage.getItem("user"))
+  
+  const logOut=()=>{
+    signOut(auth).then(()=>{
+     
+      setUser(localStorage.getItem("user"))
+     
+    })
+  }
+  const login=()=>{
+    signInWithEmailAndPassword(auth,"nktech@gmail.com","password").then((userCredential)=>{
+      setUser(localStorage.getItem("user"))
+    
+     
+    })
+    
+  }
   return (
     // Header
     <Box
@@ -68,10 +88,10 @@ function Navbar() {
 
           <Button
             colorScheme="transparent"
-            
+            onClick={user? logOut:login}
             variant ="ghost"
           >
-            <h5 style={{ padding: "0 4px" }}>Login</h5>
+            <h5 style={{ padding: "0 4px" }}>{user?"logout":"login"}</h5>
           </Button>
         </Box>
       </Box>
