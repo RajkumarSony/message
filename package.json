@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "development": "npm run build --prefix message-frontend && npm start",
-    "start": "node index.js",
-    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix message-frontend && npm run build --prefix message-frontend"
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",

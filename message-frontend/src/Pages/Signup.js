@@ -12,6 +12,7 @@ import {
   Heading,
   Text,
   Link,
+  Icon,
 } from "@chakra-ui/react";
 import { Navigate, useNavigate, Link as reachLink } from "react-router-dom";
 import { useState } from "react";
@@ -32,18 +33,24 @@ export default function SignupCard() {
   const navigate = useNavigate();
   const signup = () => {
     console.log(email);
-    if ( email !== "" && email !== null && password !== "" && password !== null && fname !== null && fname !== ""
+    if (
+      email !== "" &&
+      email !== null &&
+      password !== "" &&
+      password !== null &&
+      fname !== null &&
+      fname !== ""
     ) {
       console.log(fname);
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          if (lname === null || lname==="") {
+          if (lname === null || lname === "") {
             updateProfile(auth.currentUser, {
               displayName: `${fname}`,
             }).then(() => {
               console.log(userCredential);
             });
-          }else{
+          } else {
             updateProfile(auth.currentUser, {
               displayName: `${fname} ${lname}`,
             }).then(() => {
@@ -86,9 +93,19 @@ export default function SignupCard() {
   };
   const handleFname = (event) => {
     setFname(event.target.value);
+    Seterror({
+      code: null,
+      error: false,
+      message: null,
+    });
   };
   const handleLname = (event) => {
     setLname(event.target.value);
+    Seterror({
+      code: null,
+      error: false,
+      message: null,
+    });
   };
   const handleEmail = (event) => {
     setEmail(event.target.value);
@@ -131,6 +148,22 @@ export default function SignupCard() {
             p={8}
           >
             <Stack spacing={4}>
+              <Text
+                h={10}
+                d={"flex"}
+                opacity={error.code ? 1 : 0}
+                p="2"
+                alignItems="center"
+                justifyContent={"center"}
+                borderRadius={10}
+                backgroundColor="rgba(232, 39, 39, 0.5)"
+                align={"center"}
+                color="white"
+                transition="opacity 0.5s ease"
+              >
+                {error.message}
+                {"    "}
+              </Text>
               <HStack>
                 <Box>
                   <FormControl id="firstName" isRequired>
@@ -163,7 +196,7 @@ export default function SignupCard() {
                         setShowPassword((showPassword) => !showPassword)
                       }
                     >
-                      {showPassword ? <AiFillEye /> : <AiFillEyeInvisible />}
+                     <Icon as={showPassword ? AiFillEye : AiFillEyeInvisible}/> 
                     </Button>
                   </InputRightElement>
                 </InputGroup>
@@ -183,15 +216,8 @@ export default function SignupCard() {
                 </Button>
               </Stack>
               <Stack pt={3}>
-                <Text
-                  borderRadius={10}
-                  backgroundColor={
-                    error.error ? "rgba(232, 39, 39, 0.5)" : "white"
-                  }
-                  pt={3}
-                  align={"center"}
-                >
-                  {error.error ? error.message : "Already a user?"}{" "}
+                <Text pt={3} align={"center"}>
+                  Already a user?{" "}
                   <Link as={reachLink} to="/auth/login" color={"blue.400"}>
                     Login
                   </Link>

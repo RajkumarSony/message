@@ -1,0 +1,2 @@
+.Resizer{height:100%;z-index:1;box-sizing:border-box;-moz-background-clip:padding;-webkit-background-clip:padding;background-clip:padding-box}.Resizer:hover{transition:all 2s ease}.Resizer.vertical{margin:0 -3.844px;cursor:ew-resize;border-left:3.844px solid rgba(18,140,126,0);border-right:3.844px solid rgba(18,140,126,0)}.Resizer.vertical:hover{border-left:3.844px solid rgba(18,140,126,.4)}.Resizer.disabled{cursor:not-allowed}.Resizer.disabled:hover{border-color:transparent}.Resizer.horizontal{height:0;width:100%}
+/*# sourceMappingURL=main.f4b4999d.chunk.css.map */

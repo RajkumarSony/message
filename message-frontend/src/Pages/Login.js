@@ -124,6 +124,7 @@ export default function SimpleCard() {
                   backgroundColor="rgba(232, 39, 39, 0.5)"
                   align={"center"}
                   color="white" 
+                  transition="opacity 0.5s ease-in-out"
                 >
                   { error.message}
                   {"    "}
