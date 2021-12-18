@@ -1,15 +1,69 @@
-import React, { useState } from "react";
+import React, { useState ,useRef} from "react";
 import { Box, Textarea, Icon ,Button} from "@chakra-ui/react";
 import { MdSend, MdMic,MdOutlineEmojiEmotions } from "react-icons/md";
 import {TiAttachmentOutline} from "react-icons/ti"
-import io from "socket.io-client"
 import backgroundImg from "../../assets/Img/Background.png"
+import {auth} from "../../FirebaseConfig"
 
-const socket=io()
-socket.connect()
-// socket.on("connect")
-export default function Messanger() {
+const data=[
+  {
+    message:"hello",
+    send:true
+  },
+  {
+    message:"hi",
+    send:false
+  },
+  {
+    message:"who?",
+    send:true
+
+  }
+  ,{
+    message:"hello",
+    send:true
+  },
+  {
+    message:"hi",
+    send:false
+  },
+  {
+    message:"who?",
+    send:true
+
+  }
+  ,{
+    message:"hello",
+    send:true
+  },
+  {
+    message:"hi",
+    send:false
+  },
+  {
+    message:"who?",
+    send:true
+
+  }
+  ,{
+    message:"hello",
+    send:true
+  },
+  {
+    message:"hi",
+    send:false
+  },
+  {
+    message:"who?",
+    send:true
+
+  }
+];
+export default function Messanger(props) {
+  const mesref=useRef(null)
   const [micIcon, setMicIcon] = useState(true);
+ 
+ 
   const [Val, setVal] = useState("")
   const handelChange = (event) => {
     setVal(event.target.value)
@@ -19,15 +73,33 @@ export default function Messanger() {
       setMicIcon(false);
     }
   };
-
+ mesref.current?.scrollIntoView({ behavior: "smooth" })
   const handleMic=()=>{
 console.log(Val)
   }
  const handleSubmit=()=>{
-   socket.emit("SendMesaage",{message:Val});
-   setVal("");
-   setMicIcon(true);
+   if(Val!==""){
+   mesref.current.scrollIntoView({ behavior: "smooth" })
+    props.socket.emit("SendMesaage",{message:Val,uid:auth.currentUser.uid});
+   
+    data.push({
+      message:Val,
+      send:true,
+      // uid:auth.currentUser.uid
+    })
+    console.log(data)
+    setVal("");
+    setMicIcon(true);
+   }
  }
+ props.socket.on("Sm",(msg)=>{
+  data.push({
+    message:msg.message,
+    send:false,
+    // uid:auth.currentUser.uid
+  })
+  console.log(msg)
+    })
  const handleKeyDown=(event)=>{
   if ((event.keyCode === 10 || event.keyCode === 13) && event.ctrlKey){
     handleSubmit()
@@ -36,8 +108,17 @@ console.log(Val)
 
   return (
     <Box h="100%" flexDirection="column" d="flex">
-        <Box borderLeft="1px solid gray"  backgroundColor="white" backgroundImage={backgroundImg} h="100vh">
-           {/* <Image src="https://lh3.googleusercontent.com/SZ97RCEv5EVH6iMCDIdHeGJM_BNyHYcnRQ4EdK4V_VyVxLlQS8GY1U3xB8atEBH55OM"/> */}
+        <Box borderLeft="1px solid gray" overflowY="scroll" d="flex" flexDirection="column"  backgroundColor="white" backgroundImage={backgroundImg} h="100vh">
+          {data.map((mes,index)=>{
+            return (
+             <Box h={8} key={index} m={5} d="flex" justifyContent={mes.send?"flex-end":"flex-start"} >
+               <Box borderRadius={5}  d="felx" justifyContent="center" alignItems="center" backgroundColor={mes.send?"gray":"blue"} flexDirection="row" p={2} minW={6} w="fit-content">
+                <p>{mes.message}</p>
+               </Box>
+             </Box>
+            )
+          })}
+          <Box h={90} mt={20} ref={mesref}></Box>
         </Box>
       <Box  borderLeft="1px solid gray"   alignItems="center" h={20} d="flex" flexDirection="row">
           <Icon w={8} h={8} color="rgba(150,150,150,1)" as={TiAttachmentOutline}/>

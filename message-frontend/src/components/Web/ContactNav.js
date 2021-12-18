@@ -11,7 +11,7 @@ export default function ContactNav(props) {
         <Box d="flex" alignItems="center" justifyContent="space-between" backgroundColor="#128c7e" h="100%">
             <Box ml={2} d="flex" alignItems="center" h="100%">
            
-        <Avatar  src={props.src} />
+        <Avatar  src={props.src} name={props.name} />
             </Box>
             <Icon color="white" mr={3} fontSize={28}  as={AiOutlinePlusSquare}/>
       </Box>

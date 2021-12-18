@@ -6,6 +6,7 @@ import {useNavigate} from "react-router-dom"
 export default function MessageNav(props) {
     const history=useNavigate()
     const handleBack=()=>{
+      props.discon()
         history(-1)
     }
   return (

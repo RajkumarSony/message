@@ -1,30 +1,37 @@
-import React,{useState} from "react";
-import { Link } from "react-router-dom";
-import { Box, Image, Button } from "@chakra-ui/react";
+import React ,{useState} from "react";
+import { useNavigate,Link } from "react-router-dom";
+import { Box, Image, Button, Icon } from "@chakra-ui/react";
 import whatsapp from "../../assets/icons/Whatsapp.svg";
+import {signOut,onAuthStateChanged} from "firebase/auth"
 import {auth} from "../../FirebaseConfig"
-import {signOut,signInWithEmailAndPassword} from "firebase/auth"
+import {AiOutlineLogin,AiOutlineLogout} from "react-icons/ai"
 
 
 function Navbar() {
+  const navigate=useNavigate();
   
-  const [user, setUser] = useState(localStorage.getItem("user"))
+  const [user, Setuser] = useState(localStorage.getItem('user') || auth.currentUser)
   
   const logOut=()=>{
     signOut(auth).then(()=>{
+     Setuser(false)
+     localStorage.removeItem("user")
      
-      setUser(localStorage.getItem("user"))
-     
+     navigate("/auth/login")
     })
   }
   const login=()=>{
-    signInWithEmailAndPassword(auth,"nktech@gmail.com","password").then((userCredential)=>{
-      setUser(localStorage.getItem("user"))
-    
-     
-    })
-    
+  //   signInWithEmailAndPassword(auth,"nktech@gmail.com","password").then((userCredential)=>{
+    navigate("/auth/login")
   }
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is signed in, see docs for a list of available properties
+      // https://firebase.google.com/docs/reference/js/firebase.User
+Setuser(true)      // ...
+    } else {
+      Setuser(false) 
+    }})
   return (
     // Header
     <Box
@@ -39,6 +46,7 @@ function Navbar() {
       minW="100%"
       justifyContent="center"
       alignItems="center"
+      zIndex={1}
    
     >
 
@@ -91,7 +99,7 @@ function Navbar() {
             onClick={user? logOut:login}
             variant ="ghost"
           >
-            <h5 style={{ padding: "0 4px" }}>{user?"logout":"login"}</h5>
+            <Icon  style={{ padding: "0 4px" ,fontSize: "28",fontWeight: "bold" }} as={user?AiOutlineLogout:AiOutlineLogin}/>
           </Button>
         </Box>
       </Box>
