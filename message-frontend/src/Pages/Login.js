@@ -23,6 +23,7 @@ export default function SimpleCard() {
     error: false,
     message: null,
   });
+ 
   const login = () => {
     if (
       email !== "" &&
@@ -37,19 +38,24 @@ export default function SimpleCard() {
         })
         .catch((error) => {
           if (
-            error.code === "auth/user-not-found" ||
-            error.code === "auth/wrong-password"
+            error.code === "auth/user-not-found"
           ) {
             Seterror({
               code: error.code,
               error: true,
-              message: `Incorrect Email or Password`,
+              message: "Email not registered plese SignUp first",
             });
           }else if(error.code==="auth/invalid-email"){
             Seterror({
               code:error.code,
               error:true,
               message:"Invalid Email address"
+            })
+          }else if(error.code==="auth/wrong-password"){
+            Seterror({
+              code:error.code,
+              error:true,
+              message:"Forget your password? Reset it"
             })
           }
            else {
