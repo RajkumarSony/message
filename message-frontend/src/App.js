@@ -11,38 +11,31 @@ import Security from "./Pages/security";
 import NotFound from "./Pages/NotFound";
 import theme from "./theme";
 import "@fontsource/roboto";
-import Login from "./Pages/Login"
-import Signup from "./Pages/Signup"
+import Login from "./Pages/Login";
+import Signup from "./Pages/Signup";
 
 function App() {
   return (
-    
-      <ChakraProvider theme={theme}>
-        <Router>
-          <Navbar />
-          <Routes>
-            {["home", "", "Home", "index.html", "index.js"].map(
-              (path, index) => (
-                <Route path={path} element={<Home />} key={index} />
-              )
-            )}
-
+    <ChakraProvider theme={theme}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Navbar />}>
+            <Route index element={<Home />} />
             <Route path={"features"} element={<Features />} />
-
             <Route path="download" element={<Download />} />
             <Route path="security" element={<Security />} />
             <Route path="help-center" element={<HelpCenter />} />
-
+            <Route path="auth">
+              <Route path="login" element={<Login />} />
+              <Route path="signup" element={<Signup />} />
+            </Route>
             <Route path="*" element={<NotFound />} />
-<Route path="/auth">
-  <Route path="login" element={<Login />} />
-  <Route path="signup" element={<Signup/>}/>
-</Route>
-            <Route path="/web" element={<Web />} />
-          </Routes>
-        </Router>
-      </ChakraProvider>
-    
+          </Route>
+
+          <Route path="/web" element={<Web />} />
+        </Routes>
+      </Router>
+    </ChakraProvider>
   );
 }
 

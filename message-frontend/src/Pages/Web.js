@@ -1,11 +1,9 @@
-import React, { useState} from "react";
-import SplitPane, { Pane } from "react-split-pane";
+import React, { useState } from "react";
 import Contact from "../components/Web/Contact";
 import Messanger from "../components/Web/Messanger";
 import ContactNav from "../components/Web/ContactNav";
 import MessageNav from "../components/Web/MessageNav";
 import { Box } from "@chakra-ui/react";
-import "./Pane.css";
 import data from "./data.json";
 import { Navigate } from "react-router-dom";
 import { auth } from "../FirebaseConfig";
@@ -17,93 +15,77 @@ export default function Web() {
     name: "",
     Uid: "",
   });
-
+const [width, setWidth] = useState("100%")
+const [xwidth, setXwidth] = useState("0%")
   if (auth.currentUser) {
     const token=auth.currentUser.accessToken
     const socket= io("http://localhost:5000", {
       extraHeaders: {
         token: token,
-      }
-  });
-    const Disconnect = () => {
-      socket.disconnect();
-    };
-    return (
-      <SplitPane
-        m={0}
-        minSize={350}
-        maxSize={450}
-        defaultSize="400px"
-        style={{ height: "100vh", overflow: "hidden" }}
-        split="vertical"
-      >
-        <Pane
-          className="Resizer"
-          m={0}
-          borderRight="1px solid gray"
-          zIndex="1000"
-        >
-          <SplitPane
-            split="horizontal"
-            defaultSize={58}
-            minSize={50}
-            maxSize={50}
-          >
-            <Pane className="Resizer" d="flex" h="100%" w="100%">
-              <ContactNav src={auth.currentUser.photoURL} name={auth.currentUser.displayName} />
-            </Pane>
-            <Pane className="Resizer" top={20}>
-              <Box
-                style={{ height: "90vh", overflowY: "scroll" }}
-                css={{
-                  "&::-webkit-scrollbar": {
-                    display: "none",
-                  },
-                }}
-              >
-                {data.map((info, index) => {
-                  return (
-                    <Contact
-                      onClick={() => {
-                        setMnav({
-                          src: info.ProfileImg,
-                          name: info.Name,
-                        });
-                      }}
-                      {...info}
-                      key={index}
-                    />
-                  );
-                })}
-              </Box>
-            </Pane>
-          </SplitPane>
-        </Pane>
+      }});
 
-        <Pane h="100%" m={0} className="Resizer" style={{ overflow: "hidden" }}>
-          <SplitPane
-            split="horizontal"
-            defaultSize={58}
-            minSize={50}
-            maxSize={50}
-          >
-            <Pane
-              backgroundColor="white"
-              className="Resizer"
-              d="flex"
-              h="100%"
+   const updateWidth=()=>{
+     setWidth("100%")
+     setXwidth("0%")
+   }
+   
+    return (
+    <Box
+        d="flex"
+        flexDirection="row"
+        h="100vh"
+        w="100vw"
+        overflow="hidden"
+      >
+        <Box
+          d="flex"
+          flexDirection="column"
+          h="100%"
+          w={{md:"40%",sm:width,lg:"30%"}}
+         
+        >
+          <Box w="100%"  h={{md:"10vh",sm:"15vh"}}>
+            <ContactNav name={auth.currentUser.displayName}/>
+          </Box>
+          <Box h={{md:"90vh",sm:"85vh"}} overflowy="scroll">
+            <Box
+              style={{ height: "90vh", overflowY: "scroll" }}
               w="100%"
+              overflowY="scroll"
+              css={{
+                "&::-webkit-scrollbar": {
+                  display: "none",
+                },
+              }}
             >
-              <MessageNav {...Mnav} discon={Disconnect} />
-            </Pane>
-            <Pane className="Resizer" top={20}>
-              <Box h="90vh">
-                <Messanger socket={socket} />
-              </Box>
-            </Pane>
-          </SplitPane>
-        </Pane>
-      </SplitPane>
+              {data.map((info, index) => {
+                return (
+                  <Contact
+                    onClick={() => {
+                      setMnav({
+                        src: info.ProfileImg,
+                        name: info.Name,
+                      });
+                      setWidth("0%")
+                      setXwidth("100%")
+                    }}
+                    {...info}
+                    key={index}
+                  />
+                );
+              })}
+            </Box>
+          </Box>
+        </Box>
+        <Box h="100%" zIndex="1" w={{md:"60%",sm:xwidth,lg:"70%"}} backgroundColor="green">
+          <Box w="100%"h={{md:"10vh",sm:"15vh"}}>
+            <MessageNav updateWidth={updateWidth} {...Mnav}/>
+          </Box>
+          <Box h={{md:"90vh",sm:"85vh"}}  w="100%">
+            <Messanger socket={socket}/>
+          </Box>
+        </Box>
+      </Box>
     );
   }
   return <Navigate to="/auth/login" />;

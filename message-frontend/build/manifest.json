@@ -3,8 +3,44 @@
   "name": "Create React App Sample",
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "64x64 32x32 24x24 16x16",
+      "src": "./Icons/16x16.png",
+      "sizes": "16x16",
+      "type": "image/x-icon"
+    }
+    ,{
+      "src": "./Icons/GooglePlayStore.png",
+      "sizes": "512x512",
+      "type": "image/x-icon"
+    }
+    ,{
+      "src": "./Icons/ldpi.png",
+      "sizes": "36x36",
+      "type": "image/x-icon"
+    }
+    ,{
+      "src": "./Icons/mdpi.png",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+    ,{
+      "src": "./Icons/xhdpi.png",
+      "sizes": "96x96",
+      "type": "image/x-icon"
+    }
+    ,{
+      "src": "./Icons/xxhdpi.png",
+      "sizes": "144x144",
+      "type": "image/x-icon",
+      "purpose":"any"
+    }
+    ,{
+      "src": "./Icons/xxxhdpi.png",
+      "sizes": "192x192",
+      "type": "image/x-icon"
+    }
+    ,{
+      "src": "./Icons/Icon-144x144.png",
+      "sizes": "144x144",
       "type": "image/x-icon"
     }
   ],

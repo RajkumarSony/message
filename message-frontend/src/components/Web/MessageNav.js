@@ -2,12 +2,11 @@ import { Box, Avatar, Icon ,Text} from "@chakra-ui/react";
 import React from "react";
 import { AiTwotoneSetting } from "react-icons/ai";
 import { IoMdArrowRoundBack} from "react-icons/io";
-import {useNavigate} from "react-router-dom"
+// import {useNavigate} from "react-router-dom"
 export default function MessageNav(props) {
-    const history=useNavigate()
+    // const history=useNavigate()
     const handleBack=()=>{
-      props.discon()
-        history(-1)
+      props.updateWidth()
     }
   return (
     // <Box d="flex" h="100%" w="100%" backgroundColor="green">
@@ -17,6 +16,7 @@ export default function MessageNav(props) {
         justifyContent="space-between"
         backgroundColor="#e337d4"
         h="100%"
+        zIndex="1000"
       >
         <Box ml={2} d="flex" alignItems="center" h="100%" >
           <Icon color="white" mr={2} onClick={handleBack} fontSize={28} as={IoMdArrowRoundBack} />

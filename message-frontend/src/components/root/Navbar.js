@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { useNavigate, Link as reachLink} from "react-router-dom";
-import { Box, Image, Button, Icon ,Link} from "@chakra-ui/react";
+import { useNavigate, Link as reachLink ,Outlet} from "react-router-dom";
+import { Box, Image, Button, Icon, Link } from "@chakra-ui/react";
 import whatsapp from "../../assets/icons/Whatsapp.svg";
 import whatsappIcon from "../../assets/icons/WhatsappIcon.svg";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../FirebaseConfig";
 import { AiOutlineLogin, AiOutlineLogout } from "react-icons/ai";
-import {GiHamburgerMenu} from "react-icons/gi"
+import { GiHamburgerMenu } from "react-icons/gi";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -37,12 +37,12 @@ function Navbar() {
     }
   });
   return (
-    // Header
+    <>
     <Box
-      position={{md:"sticky",sm:"relative"}}
+      position={{ md: "sticky", sm: "relative" }}
       boxSizing="content-box"
-      h={{ md: "74px", lg: "91px" ,sm:"61px"}}
-      pb={{sm:"61px",md:"0"}}
+      h={{ md: "74px", lg: "91px", sm: "61px" }}
+      pb={{ sm: "61px", md: "0" }}
       d="flex"
       flexDirection="row"
       backgroundColor="#128c7e"
@@ -54,71 +54,83 @@ function Navbar() {
     >
       <Box
         d="flex"
-        pl={{ md:"2rem",sm:"0.5rem" }}
-        pr={{ md:"2rem",sm:"0.5rem" }}
-        maxW={{ md: "1050px",sm:"100%" }}
+        pl={{ md: "2rem", sm: "0.5rem" }}
+        pr={{ md: "2rem", sm: "0.5rem" }}
+        maxW={{ md: "1050px", sm: "100%" }}
         flexDirection="row"
         color="white"
         lineHeight="26px"
-        width={{md:"100%",sm:"90%"}}
+        width={{ md: "100%", sm: "90%" }}
         alignItems="center"
-        justifyContent={{md:"space-between",sm:"flex-end"}}
+        justifyContent={{ md: "space-between", sm: "flex-end" }}
       >
         {/* <Icon d={{md:"none"}} alignSelf="flex-end" as={GiHamburgerMenu} /> */}
-        <Box d="flex" alignItems="center">
-          
-          <Box d="flex" width="100%" >
-            <Link 
-            as={reachLink} 
-            position={{md:'sticky',sm:"absolute"}}
-            left={{sm:"50%",md:"unset"}}
-            top={{sm:"64px",md:"unset"}}
-            transform={{sm:"translateX(-50%)",md:"unset"}}
-            to="/"
+        <Box d="flex" width="80%" alignItems="center">
+          <Box w="100%" d={{ lg: "block", sm: "none" }}>
+            <Link
+              as={reachLink}
+              to="/"
             >
               <Image
-                d={{ lg: "block", sm: "none" }}
+                
                 src={whatsapp}
                 alt="Brand Logo"
-                h={{md:"auto"}}
+                h={{ md: "auto" }}
               />
+            </Link>
+          </Box>
+          <Box  d={{lg:"none",sm:"block"}}
+              position={{ md: "sticky", sm: "absolute" }}
+              left={{ sm: "50%", md: "unset" }}
+              top={{ sm: "64px", md: "unset" }}
+              transform={{ sm: "translateX(-50%)", md: "unset" }}>
+            <Link as={reachLink} to="/">
               <Image
-                d={{ lg: "none", sm: "block" }}
+               
                 src={whatsappIcon}
                 alt="Brand Logo"
                 w="auto"
-                h={{md:"auto",sm:"77px"}}
-
+                h={{ md: "auto", sm: "77px" }}
               />
             </Link>
           </Box>
         </Box>
         <Box
           d="flex"
-          minW={{ md: "90%"}}
+          minW={{ md: "90%" }}
           flexDirection="row"
           justifyContent="flex-end"
           alignItems="center"
         >
           <Box
-            d={{md:"flex",sm:"none"}}
+            d={{ md: "flex", sm: "none" }}
             alignItems="center"
             justifyContent="space-evenly"
             flexGrow="1"
           >
-            <Link as={reachLink} to="/web">WHATSAPP WEB</Link>
+            <Link as={reachLink} to="/web">
+              WHATSAPP WEB
+            </Link>
 
-            <Link as={reachLink} to="/features">FEATURES</Link>
+            <Link as={reachLink} to="/features">
+              FEATURES
+            </Link>
 
-            <Link as={reachLink} to="/download">DOWNLOAD</Link>
+            <Link as={reachLink} to="/download">
+              DOWNLOAD
+            </Link>
 
-            <Link as={reachLink} to="/security">SECURITY</Link>
+            <Link as={reachLink} to="/security">
+              SECURITY
+            </Link>
 
-            <Link as={reachLink} to="/help-center">HELP CENTER</Link>
+            <Link as={reachLink} to="/help-center">
+              HELP CENTER
+            </Link>
           </Box>
 
           <Button
-          d={{sm:"none",md:"inline-block"}}
+            d={{ sm: "none", md: "inline-block" }}
             colorScheme="transparent"
             onClick={user ? logOut : login}
             variant="ghost"
@@ -128,14 +140,22 @@ function Navbar() {
               as={user ? AiOutlineLogout : AiOutlineLogin}
             />
           </Button>
-          <Box  fontSize={25} fontWeight={500} lineHeight="120%" h="16px" d={{md:"none"}}>
-<Icon cursor="pointer" as={GiHamburgerMenu}/>
+          <Box
+            fontSize={25}
+            fontWeight={500}
+            lineHeight="120%"
+            h="16px"
+            d={{ md: "none" }}
+          >
+            <Icon cursor="pointer" as={GiHamburgerMenu} />
           </Box>
         </Box>
       </Box>
 
       {/* </Flex> */}
     </Box>
+    <Outlet/>
+    </>
   );
 }
 export default Navbar;

@@ -8,7 +8,7 @@ export default function ContactNav(props) {
    
     
     return (
-        <Box d="flex" alignItems="center" justifyContent="space-between" backgroundColor="#128c7e" h="100%">
+        <Box d="flex" w="100%" alignItems="center" justifyContent="space-between" backgroundColor="#128c7e" h="100%">
             <Box ml={2} d="flex" alignItems="center" h="100%">
            
         <Avatar  src={props.src} name={props.name} />
