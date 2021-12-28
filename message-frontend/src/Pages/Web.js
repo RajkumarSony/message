@@ -275,7 +275,7 @@ const [uid, setUid] = useState(null)
             <MessageNav updateWidth={updateWidth} {...Mnav} />
           </Box>
           <Box h={{ md: "90vh", sm: "85vh" }} w="100%">
-            <Messanger />
+            <Messanger uid={uid}/>
           </Box>
         </Box>
       </Box>

@@ -97,6 +97,35 @@ app.post("/uploadprofile",(req,res)=>{
     }
   })
 })
+app.post("/sendmessage",(req,res)=>{
+  getAuth()
+  .verifyIdToken(req.headers.authorization)
+  .then(decodeToken=>{
+    if(req.body.uid===decodeToken.uid){
+     
+      const refSend=db.ref(`${decodeToken.uid}/chats/${req.body.Recipetuid}`)
+      const refRecive=db.ref(`${req.body.Recipetuid}/chats/${decodeToken.uid}`)
+      refSend.push().set({
+        message:req.body.message,
+        send:true
+      })
+      refRecive.push().set({
+        message:req.body.message,
+        send:false
+      })
+      res.status(200)
+      res.send("done")
+    }else{
+      res.status(403)
+      res.send("Unatorize")
+    }
+  })
+  .catch(error=>{
+    res.status(503)
+    res.send("Internal Server Error")
+  })
+  
+})
 app.use(express.static(path.join(__dirname, "/message-frontend/build")));
 
 app.use((req, res, next) => {

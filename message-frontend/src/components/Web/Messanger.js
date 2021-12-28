@@ -3,66 +3,68 @@ import { Box, Textarea, Icon ,Button} from "@chakra-ui/react";
 import { MdSend, MdMic,MdOutlineEmojiEmotions } from "react-icons/md";
 import {TiAttachmentOutline} from "react-icons/ti"
 import backgroundImg from "../../assets/Img/Background.png"
-import {auth} from "../../FirebaseConfig"
+import {auth,db} from "../../FirebaseConfig"
+import axios from "axios";
+import {get,ref} from "firebase/database"
 
-const data=[
-  {
-    message:"hello",
-    send:true
-  },
-  {
-    message:"hi",
-    send:false
-  },
-  {
-    message:"who?",
-    send:true
+// const data=[
+//   {
+//     message:"hello",
+//     send:true
+//   },
+//   {
+//     message:"hi",
+//     send:false
+//   },
+//   {
+//     message:"who?",
+//     send:true
 
-  }
-  ,{
-    message:"hello",
-    send:true
-  },
-  {
-    message:"hi",
-    send:false
-  },
-  {
-    message:"who?",
-    send:true
+//   }
+//   ,{
+//     message:"hello",
+//     send:true
+//   },
+//   {
+//     message:"hi",
+//     send:false
+//   },
+//   {
+//     message:"who?",
+//     send:true
 
-  }
-  ,{
-    message:"hello",
-    send:true
-  },
-  {
-    message:"hi",
-    send:false
-  },
-  {
-    message:"who?",
-    send:true
+//   }
+//   ,{
+//     message:"hello",
+//     send:true
+//   },
+//   {
+//     message:"hi",
+//     send:false
+//   },
+//   {
+//     message:"who?",
+//     send:true
 
-  }
-  ,{
-    message:"hello",
-    send:true
-  },
-  {
-    message:"hi",
-    send:false
-  },
-  {
-    message:"who?",
-    send:true
+//   }
+//   ,{
+//     message:"hello",
+//     send:true
+//   },
+//   {
+//     message:"hi",
+//     send:false
+//   },
+//   {
+//     message:"who?",
+//     send:true
 
-  }
-];
+//   }
+// ];
 export default function Messanger(props) {
   const mesref=useRef(null)
   const [micIcon, setMicIcon] = useState(true);
- 
+ const [data, setData] = useState()
  
   const [Val, setVal] = useState("")
   const handelChange = (event) => {
@@ -77,19 +79,24 @@ export default function Messanger(props) {
   const handleMic=()=>{
 console.log(Val)
   }
- const  handleSubmit= async()=>{
+ const  handleSubmit= ()=>{
    if(Val!==""){
-   mesref.current
-   .scrollIntoView({ behavior: "smooth" })
-   const token=await auth.currentUser.accessToken;
-      props.socket.emit("SendMesaage",{message:Val,uid:auth.currentUser.uid,token:token});
-   
-    data.push({
-      message:Val,
-      send:true,
-      // uid:auth.currentUser.uid
-    })
-    console.log(data)
+  
+   axios.post(
+    "/sendmessage",
+    {
+      message: Val,
+      Recipetuid:props.uid,
+      uid:auth.currentUser.uid
+    },
+    {
+      headers: {
+        authorization: auth.currentUser.accessToken,
+        "Content-Type": "application/json",
+      },
+    }
+  )
+
     setVal("");
     setMicIcon(true);
    }
@@ -100,11 +107,22 @@ console.log(Val)
     handleSubmit()
   }
  }
+ const contactsRef = ref(db, `${auth.currentUser.uid}/chats/${props.uid}`);
+ let x = [];
+ get(contactsRef).then((data) => {
+   data.forEach(data=>{
 
+     x.push({
+       ...data.val(),
+     });
+   })
+   
+   setData(x);
+ });
   return (
     <Box h="100%" flexDirection="column" d="flex">
         <Box  overflowY="scroll" d="flex" flexDirection="column"  backgroundColor="white" backgroundImage={backgroundImg} h="100vh">
-          {data.map((mes,index)=>{
+          {data?data.map((mes,index)=>{
             return (
              <Box h={8} key={index} m={5} d="flex" justifyContent={mes.send?"flex-end":"flex-start"} >
                <Box borderRadius={5}  d="felx" justifyContent="center" alignItems="center" backgroundColor={mes.send?"gray":"blue"} flexDirection="row" p={2} minW={6} w="fit-content">
@@ -112,7 +130,11 @@ console.log(Val)
                </Box>
              </Box>
             )
-          })}
+          }):(<>
+          <Box>
+
+          </Box>
+          </>)}
           <Box h={90} mt={20} ></Box>
         </Box>
       <Box  borderLeft="1px solid gray" backgroundColor="white"  alignItems="center" h={20} d="flex" flexDirection="row">
