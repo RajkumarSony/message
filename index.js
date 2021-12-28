@@ -105,6 +105,8 @@ app.post("/sendmessage",(req,res)=>{
      
       const refSend=db.ref(`${decodeToken.uid}/chats/${req.body.Recipetuid}`)
       const refRecive=db.ref(`${req.body.Recipetuid}/chats/${decodeToken.uid}`)
+      console.log(req.body.message)
+      console.log(req.body.Recipetuid)
       refSend.push().set({
         message:req.body.message,
         send:true
