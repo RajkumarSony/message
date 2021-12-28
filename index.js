@@ -98,12 +98,7 @@ app.post("/uploadprofile",(req,res)=>{
   })
 })
 app.use(express.static(path.join(__dirname, "/message-frontend/build")));
-app.get("/manifest.json",(req,res)=>{
-  res.sendFile(path.join(__dirname,"/message-frontend/build","manifest.html"))
-})
-app.get("/service-worker.js",(req,res)=>{
-  res.sendFile(path.join(__dirname,"/message-frontend/build","service-worker.js"))
-})
+
 app.use((req, res, next) => {
   res.sendFile(path.join(__dirname, "/message-frontend/build", "index.html"));
 });
