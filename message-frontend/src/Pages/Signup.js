@@ -19,6 +19,23 @@ import { useState } from "react";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../FirebaseConfig";
+import axios from "axios";
+const register=()=>{
+  axios.post(
+    "/register",
+    {
+      uid:auth.currentUser.uid,
+      name:auth.currentUser.displayName
+
+    },
+    {
+      headers: {
+        Authorization: auth.currentUser.accessToken,
+        'Content-Type': 'application/json'
+      },
+    }
+  );
+}
 export default function SignupCard() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState(null);
@@ -31,7 +48,8 @@ export default function SignupCard() {
     message: null,
   });
   const navigate = useNavigate();
-  const signup = () => {
+  const signup = (event) => {
+    event.preventDefault();
     console.log(email);
     if (
       email !== "" &&
@@ -44,21 +62,27 @@ export default function SignupCard() {
       console.log(fname);
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
+          
           if (lname === null || lname === "") {
             updateProfile(auth.currentUser, {
               displayName: `${fname}`,
             }).then(() => {
-              console.log(userCredential);
+              
+              register()
             });
+            
           } else {
             updateProfile(auth.currentUser, {
               displayName: `${fname} ${lname}`,
             }).then(() => {
-              console.log(userCredential);
+              
+              register()
             });
           }
-          console.log("userCreated");
+        
+          
           navigate("/");
+         
         })
         .catch((error) => {
           if (error.code === "auth/email-already-in-use") {
@@ -164,57 +188,66 @@ export default function SignupCard() {
                 {error.message}
                 {"    "}
               </Text>
-              <HStack>
-                <Box>
-                  <FormControl id="firstName" isRequired>
-                    <FormLabel>First Name</FormLabel>
-                    <Input onChange={handleFname} type="text" />
-                  </FormControl>
-                </Box>
-                <Box>
-                  <FormControl id="lastName">
-                    <FormLabel>Last Name</FormLabel>
-                    <Input onChange={handleLname} type="text" />
-                  </FormControl>
-                </Box>
-              </HStack>
-              <FormControl id="email" isRequired>
-                <FormLabel>Email address</FormLabel>
-                <Input onChange={handleEmail} type="email" />
-              </FormControl>
-              <FormControl id="password" isRequired>
-                <FormLabel>Password</FormLabel>
-                <InputGroup>
+              <form onSubmit={signup}>
+                <HStack>
+                  <Box>
+                    <FormControl id="firstName" isRequired>
+                      <FormLabel>First Name</FormLabel>
+                      <Input onChange={handleFname} type="text" />
+                    </FormControl>
+                  </Box>
+                  <Box>
+                    <FormControl id="lastName">
+                      <FormLabel>Last Name</FormLabel>
+                      <Input onChange={handleLname} type="text" />
+                    </FormControl>
+                  </Box>
+                </HStack>
+                <FormControl id="email" isRequired>
+                  <FormLabel>Email address</FormLabel>
                   <Input
-                    onChange={handlePassword}
-                    type={showPassword ? "text" : "password"}
+                    autoComplete="username"
+                    onChange={handleEmail}
+                    type="email"
                   />
-                  <InputRightElement h={"full"}>
-                    <Button
-                      variant={"ghost"}
-                      onClick={() =>
-                        setShowPassword((showPassword) => !showPassword)
-                      }
-                    >
-                     <Icon as={showPassword ? AiFillEye : AiFillEyeInvisible}/> 
-                    </Button>
-                  </InputRightElement>
-                </InputGroup>
-              </FormControl>
-              <Stack spacing={10} pt={2}>
-                <Button
-                  loadingText="Submitting"
-                  onClick={signup}
-                  size="lg"
-                  bg={"blue.400"}
-                  color={"white"}
-                  _hover={{
-                    bg: "blue.500",
-                  }}
-                >
-                  Sign up
-                </Button>
-              </Stack>
+                </FormControl>
+                <FormControl id="password" isRequired>
+                  <FormLabel>Password</FormLabel>
+                  <InputGroup>
+                    <Input
+                      onChange={handlePassword}
+                      autoComplete="current-password"
+                      type={showPassword ? "text" : "password"}
+                    />
+                    <InputRightElement h={"full"}>
+                      <Button
+                        variant={"ghost"}
+                        onClick={() =>
+                          setShowPassword((showPassword) => !showPassword)
+                        }
+                      >
+                        <Icon
+                          as={showPassword ? AiFillEye : AiFillEyeInvisible}
+                        />
+                      </Button>
+                    </InputRightElement>
+                  </InputGroup>
+                </FormControl>
+                <Stack spacing={10} pt={2}>
+                  <Button
+                    loadingText="Submitting"
+                    type="submit"
+                    size="lg"
+                    bg={"blue.400"}
+                    color={"white"}
+                    _hover={{
+                      bg: "blue.500",
+                    }}
+                  >
+                    Sign up
+                  </Button>
+                </Stack>
+              </form>
               <Stack pt={3}>
                 <Text pt={3} align={"center"}>
                   Already a user?{" "}

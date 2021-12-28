@@ -77,10 +77,12 @@ export default function Messanger(props) {
   const handleMic=()=>{
 console.log(Val)
   }
- const handleSubmit=()=>{
+ const  handleSubmit= async()=>{
    if(Val!==""){
-   mesref.current.scrollIntoView({ behavior: "smooth" })
-    props.socket.emit("SendMesaage",{message:Val,uid:auth.currentUser.uid});
+   mesref.current
+   .scrollIntoView({ behavior: "smooth" })
+   const token=await auth.currentUser.accessToken;
+      props.socket.emit("SendMesaage",{message:Val,uid:auth.currentUser.uid,token:token});
    
     data.push({
       message:Val,
@@ -92,14 +94,7 @@ console.log(Val)
     setMicIcon(true);
    }
  }
- props.socket.on("Sm",(msg)=>{
-  data.push({
-    message:msg.message,
-    send:false,
-    // uid:auth.currentUser.uid
-  })
-  console.log(msg)
-    })
+ 
  const handleKeyDown=(event)=>{
   if ((event.keyCode === 10 || event.keyCode === 13) && event.ctrlKey){
     handleSubmit()
@@ -118,7 +113,7 @@ console.log(Val)
              </Box>
             )
           })}
-          <Box h={90} mt={20} ref={mesref}></Box>
+          <Box h={90} mt={20} ></Box>
         </Box>
       <Box  borderLeft="1px solid gray" backgroundColor="white"  alignItems="center" h={20} d="flex" flexDirection="row">
           <Icon w={8} h={8} color="rgba(150,150,150,1)" as={TiAttachmentOutline}/>

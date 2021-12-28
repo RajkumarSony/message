@@ -24,7 +24,8 @@ export default function SimpleCard() {
     message: null,
   });
  
-  const login = () => {
+  const login = (event) => {
+    event.preventDefault()
     if (
       email !== "" &&
       email !== null &&
@@ -135,13 +136,14 @@ export default function SimpleCard() {
                   { error.message}
                   {"    "}
                 </Text>
+                <form onSubmit={login}>
               <FormControl id="email">
                 <FormLabel>Email address</FormLabel>
-                <Input onChange={handleEmail} type="email" />
+                <Input onChange={handleEmail} autoComplete="username" type="email" />
               </FormControl>
               <FormControl id="password">
                 <FormLabel>Password</FormLabel>
-                <Input onChange={handlePassword} type="password" />
+                <Input onChange={handlePassword} autoComplete="current-password" type="password" />
               </FormControl>
               <Stack spacing={10}>
                 <Stack
@@ -153,7 +155,7 @@ export default function SimpleCard() {
                   <Link color={"blue.400"}>Forgot password?</Link>
                 </Stack>
                 <Button
-                  onClick={login}
+                 type="submit"
                   bg={"blue.400"}
                   color={"white"}
                   _hover={{
@@ -163,6 +165,7 @@ export default function SimpleCard() {
                   Log In
                 </Button>
               </Stack>
+                </form>
               <Stack pt={6}>
              
                 <Text h={10} p="2" align={"center"}>

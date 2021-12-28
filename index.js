@@ -4,73 +4,103 @@ const dotenv = require("dotenv");
 dotenv.config();
 const admin = require("firebase-admin");
 const express = require("express");
-const { createServer } = require("http");
-const { Server } = require("socket.io");
-const {getAuth}= require("firebase-admin/auth")
+const { getAuth,getUserByEmail } = require("firebase-admin/auth");
 const app = express();
-const httpServer = createServer(app);
-const io = new Server(httpServer, {
-  cors: {
-    origin: "*",
-  },
-});
+const { getDatabase } = require("firebase-admin/database");
+const { getStorage,ref } = require("firebase-admin/storage");
+
 const port = process.env.PORT || 5000;
 const serviceAccount = {
-  "type": process.env.type,
-  "project_id": process.env.project_id,
-  "private_key_id": process.env.private_key_id,
-  "client_email": process.env.client_email,
- "client_id": process.env.client_id,
-  "auth_uri": process.env.auth_uri,
-  "token_uri": process.env.token_uri,
-  "auth_provider_x509_cert_url": process.env.auth_provider_x509_cert_url,
-  "client_x509_cert_url": process.env.client_x509_cert_url,
-  "private_key":process.env.private_key.replace(/\\n/g, '\n')
+  type: process.env.type,
+  project_id: process.env.project_id,
+  private_key_id: process.env.private_key_id,
+  client_email: process.env.client_email,
+  client_id: process.env.client_id,
+  auth_uri: process.env.auth_uri,
+  token_uri: process.env.token_uri,
+  auth_provider_x509_cert_url: process.env.auth_provider_x509_cert_url,
+  client_x509_cert_url: process.env.client_x509_cert_url,
+  private_key: process.env.private_key.replace(/\\n/g, "\n"),
 };
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL:
     "https://any-time-message-default-rtdb.asia-southeast1.firebasedatabase.app",
-});
-app.use(express.json())
+    storageBucket:process.env.storageBucket
 
-io.on("connection", (socket) => {
-  const token=socket.handshake.headers.token;
-  console.log("connected:",socket.id)
-  socket.on("SendMesaage", (msg) => {
-      getAuth()
-      .verifyIdToken(token)
-        .then((decodeToken)=>{
-          console.log(decodeToken)
-            
-          
-        })
-    .catch((error) => {
-        console.log("error")
+});
+const db = getDatabase();
+const bucket=getStorage().bucket();
+app.use(express.json());
+
+app.post("/register", (req, res) => {
+  // console.log(req.headers)
+  getAuth()
+    .verifyIdToken(req.headers.authorization)
+    .then((Decodetoken) => {
+      if (req.body.uid === Decodetoken.uid) {
+        const ref = db.ref(`${Decodetoken.uid}`);
+        const {uid,email}=Decodetoken
+        const Name=req.body.name
+        console.log(req.body)
+        console.log(Decodetoken)
+        ref.set({
+          email:email,
+          uid:uid,
+          Name:Name,
+          photoURL:""
+        }); 
+        res.status(200);
+      } else {
+        req.status(401);
+      }
     })
-
-    console.log({ ...msg });
-  });
-  socket.emit("Sm",{message:"hello",socketId:socket.id})
-  // console.log("connected");
-
-  socket.on("disconnect", () => {
-    console.log("Dissconect",socket.id)
-    // console.log("user disconnected");
-  });
+    .catch((error) => {
+      res.status(500);
+    });
+  res.send("hel");
 });
+app.post("/addcontact",(req,res)=>{
+  getAuth().verifyIdToken(req.headers.authorization)
+  .then((decodeToken)=>{
 
-app.post("/send", (req, res) => {
-  const {message}=req.body
-  // console.log(message)
-  socket.emit("Sm",{message:message});
-  res.send("dome")
-  
+    getAuth().getUserByEmail(req.body.email)
+    .then((user)=>{
+        const ref=db.ref(`${decodeToken.uid}/contacts`)
+        ref.push().set({
+        uid:user.uid,
+        name:user.displayName,
+        email:user.email,
+        photoURL:user.photoURL||""
+        })
+        console.log(user)
+    }).catch(error=>{
+      console.log(error.code)
+    })
+  })
+  .catch(error=>{
+    console.log(error)
+  })
+  res.send("jel")
+})
+app.post("/uploadprofile",(req,res)=>{
+  getAuth()
+  .verifyIdToken(req.headers.authorization)
+  .then((Decodetoken) => {
+    if (req.body.uid === Decodetoken.uid) {
+      const ref=ref(bucket,Decodetoken.uid+"/profileImg")
+      uploadBytes(ref, file).then((snapshot) => {
+        console.log('Uploaded a blob or file!');
+      });
+      
+
+    }
+  })
 })
 app.use(express.static(path.join(__dirname, "/message-frontend/build")));
 app.use((req, res, next) => {
   res.sendFile(path.join(__dirname, "/message-frontend/build", "index.html"));
 });
-httpServer.listen(port, () => {
+app.listen(port, () => {
   console.log(`App listening on http://127.0.0.1:${port} !`);
 });
