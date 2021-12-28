@@ -7,60 +7,7 @@ import {auth,db} from "../../FirebaseConfig"
 import axios from "axios";
 import {get,ref} from "firebase/database"
 
-// const data=[
-//   {
-//     message:"hello",
-//     send:true
-//   },
-//   {
-//     message:"hi",
-//     send:false
-//   },
-//   {
-//     message:"who?",
-//     send:true
 
-//   }
-//   ,{
-//     message:"hello",
-//     send:true
-//   },
-//   {
-//     message:"hi",
-//     send:false
-//   },
-//   {
-//     message:"who?",
-//     send:true
-
-//   }
-//   ,{
-//     message:"hello",
-//     send:true
-//   },
-//   {
-//     message:"hi",
-//     send:false
-//   },
-//   {
-//     message:"who?",
-//     send:true
-
-//   }
-//   ,{
-//     message:"hello",
-//     send:true
-//   },
-//   {
-//     message:"hi",
-//     send:false
-//   },
-//   {
-//     message:"who?",
-//     send:true
-
-//   }
-// ];
 export default function Messanger(props) {
   const mesref=useRef(null)
   const [micIcon, setMicIcon] = useState(true);
