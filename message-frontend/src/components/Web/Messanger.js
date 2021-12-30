@@ -68,7 +68,7 @@ console.log(Val)
  });
   return (
     <Box h="100%" flexDirection="column" d="flex">
-        <Box  overflowY="scroll" d="flex" flexDirection="column"  backgroundColor="white" backgroundImage={backgroundImg} h="100vh">
+        <Box  overflowY="scroll" d="flex" flexDirection="column"  backgroundColor="white" backgroundImage={backgroundImg} h="100%">
           {data?data.map((mes,index)=>{
             return (
              <Box h={8} key={index} m={5} d="flex" justifyContent={mes.send?"flex-end":"flex-start"} >
@@ -82,7 +82,6 @@ console.log(Val)
 
           </Box>
           </>)}
-          <Box h={90} mt={20} ></Box>
         </Box>
       <Box  borderLeft="1px solid gray" backgroundColor="white"  alignItems="center" h={20} d="flex" flexDirection="row">
           <Icon w={8} h={8} color="rgba(150,150,150,1)" as={TiAttachmentOutline}/>

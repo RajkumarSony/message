@@ -8,8 +8,8 @@ export default function ContactNav(props) {
    
     
     return (
-        <Box d="flex" w="100%" alignItems="center" justifyContent="space-between" backgroundColor="#128c7e" h="100%">
-            <Box ml={2} d="flex" alignItems="center" h="100%">
+        <Box d="flex" w="100%" alignItems="center" justifyContent="space-between" boxSizing='content-box' pb={{md:"5px"}} backgroundColor="#128c7e" h="100%">
+            <Box ml={2} d="flex" alignItems="center" h="100%" >
            
         <Avatar onClick={props.profile} cursor="pointer"  src={props.src} name={props.name} />
             </Box>

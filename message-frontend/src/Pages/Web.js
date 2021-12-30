@@ -100,10 +100,11 @@ const [uid, setUid] = useState(null)
         <Box
           d="flex"
           flexDirection="column"
-          h="100%"
+          h="100vh"
+          overflow="hidden"
           w={{ md: "40%", sm: width, lg: "30%" }}
         >
-          <Box w="100%" h={{ md: "10vh", sm: "15vh" }}>
+          <Box w="100%"  h={{ md: "7vh", sm: "9vh",lg:"8vh" }}>
             <ContactNav
               popup={updatePopup}
               po={popupContact}
@@ -111,10 +112,10 @@ const [uid, setUid] = useState(null)
               name={auth.currentUser.displayName}
             />
           </Box>
-          <Box h={{ md: "90vh", sm: "85vh" }} overflowy="scroll">
+          <Box h={{ md: "93vh", sm: "91vh",lg:"92vh" }} mt={{md:"5px"}} overflowY="">
             <Box
               d={!popupContact && !popupProfile ? "block" : "none"}
-              h="90vh"
+              h="100%"
               overflowY="scroll"
               w="100%"
               transition="display 1s fade"
@@ -154,10 +155,10 @@ const [uid, setUid] = useState(null)
             <Box
               d={popupContact ? "block" : "none"}
               transition="display 1s fade"
-              h="10px"
+              h="100%"
             >
               <Flex
-                h="90vh"
+                h="100%"
                 overflowY="bolck"
                 mt="5vh"
                 // align={"center"}
@@ -271,10 +272,10 @@ const [uid, setUid] = useState(null)
           w={{ md: "60%", sm: xwidth, lg: "70%" }}
           backgroundColor="green"
         >
-          <Box w="100%" h={{ md: "10vh", sm: "15vh" }}>
+          <Box w="100%"  h={{ md: "7vh", sm: "9vh",lg:"8vh" }}>
             <MessageNav updateWidth={updateWidth} {...Mnav} />
           </Box>
-          <Box h={{ md: "90vh", sm: "85vh" }} w="100%">
+          <Box h={{ md: "93vh", sm: "91vh" ,lg:"92vh"}} mt={{md:"5px"}}  w="100%">
             <Messanger uid={uid}/>
           </Box>
         </Box>
