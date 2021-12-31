@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Contact from "../components/Web/Contact";
 import Messanger from "../components/Web/Messanger";
 import ContactNav from "../components/Web/ContactNav";
@@ -18,7 +18,7 @@ import {
 // import data from "./data.json";
 import { Navigate } from "react-router-dom";
 import { auth, db } from "../FirebaseConfig";
-import {  ref, get } from "firebase/database";
+import { ref, onValue } from "firebase/database";
 
 export default function Web() {
   const [Mnav, setMnav] = useState({
@@ -32,7 +32,8 @@ export default function Web() {
   const [email, setEmail] = useState();
   const [popupProfile, setPopupProfile] = useState(false);
   const [data, setData] = useState();
-const [uid, setUid] = useState(null)
+
+  const [uid, setUid] = useState(null);
   const updatePopup = () => {
     setPopup(!popupContact);
     setPopupProfile(false);
@@ -70,23 +71,31 @@ const [uid, setUid] = useState(null)
         console.log(error);
       });
   };
+
+  useEffect(() => {
+    
+    if (auth.currentUser) {
+      const contactsRef = ref(db, `${auth.currentUser.uid}/contacts`);
+      onValue(
+        contactsRef,
+        (datax) => {
+          let x = [];
+          datax.forEach((contact) => {
+            x.push({ ...contact.val() });
+          });
+          setData(x);
+         
+        }
+      );
+    }
+  }, []);
+
   if (auth.currentUser) {
     const updateWidth = () => {
       setWidth("100%");
       setXwidth("0%");
     };
-    const contactsRef = ref(db, `${auth.currentUser.uid}/contacts`);
-    let x = [];
-    get(contactsRef).then((data) => {
-      data.forEach(data=>{
 
-        x.push({
-          ...data.val(),
-        });
-      })
-      
-      setData(x);
-    });
     return (
       <Box
         d="flex"
@@ -104,7 +113,7 @@ const [uid, setUid] = useState(null)
           overflow="hidden"
           w={{ md: "40%", sm: width, lg: "30%" }}
         >
-          <Box w="100%"  h={{ md: "7vh", sm: "9vh",lg:"8vh" }}>
+          <Box w="100%" h={{ md: "7vh", sm: "9vh", lg: "8vh" }}>
             <ContactNav
               popup={updatePopup}
               po={popupContact}
@@ -112,7 +121,11 @@ const [uid, setUid] = useState(null)
               name={auth.currentUser.displayName}
             />
           </Box>
-          <Box h={{ md: "93vh", sm: "91vh",lg:"92vh" }} mt={{md:"5px"}} overflowY="">
+          <Box
+            h={{ md: "93vh", sm: "91vh", lg: "92vh" }}
+            mt={{ md: "5px" }}
+            overflowY=""
+          >
             <Box
               d={!popupContact && !popupProfile ? "block" : "none"}
               h="100%"
@@ -125,8 +138,6 @@ const [uid, setUid] = useState(null)
                 },
               }}
             >
-              
-                
               {data ? (
                 data.map((info, index) => {
                   return (
@@ -135,9 +146,8 @@ const [uid, setUid] = useState(null)
                         setMnav({
                           src: info.photoURL,
                           name: info.name,
-                          
                         });
-                        setUid(info.uid)
+                        setUid(info.uid);
                         setWidth("0%");
                         setXwidth("100%");
                       }}
@@ -163,7 +173,7 @@ const [uid, setUid] = useState(null)
                 mt="5vh"
                 // align={"center"}
                 justify={"center"}
-                // bg={("gray.50", "gray.800")}
+              // bg={("gray.50", "gray.800")}
               >
                 <Stack spacing={8} mx={"auto"} maxW={"lg"} px={6}>
                   <Stack align={"center"}>
@@ -217,7 +227,7 @@ const [uid, setUid] = useState(null)
                 mt="5vh"
                 // align={"center"}
                 justify={"center"}
-                // bg={("gray.50", "gray.800")}
+              // bg={("gray.50", "gray.800")}
               >
                 <Stack spacing={8} mx={"auto"} maxW={"lg"} px={6}>
                   <Stack align={"center"}>
@@ -272,11 +282,15 @@ const [uid, setUid] = useState(null)
           w={{ md: "60%", sm: xwidth, lg: "70%" }}
           backgroundColor="green"
         >
-          <Box w="100%"  h={{ md: "7vh", sm: "9vh",lg:"8vh" }}>
+          <Box w="100%" h={{ md: "7vh", sm: "9vh", lg: "8vh" }}>
             <MessageNav updateWidth={updateWidth} {...Mnav} />
           </Box>
-          <Box h={{ md: "93vh", sm: "91vh" ,lg:"92vh"}} mt={{md:"5px"}}  w="100%">
-            <Messanger uid={uid}/>
+          <Box
+            h={{ md: "93vh", sm: "91vh", lg: "92vh" }}
+            mt={{ md: "5px" }}
+            w="100%"
+          >
+            <Messanger uid={uid} />
           </Box>
         </Box>
       </Box>

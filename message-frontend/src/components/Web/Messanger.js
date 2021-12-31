@@ -56,16 +56,16 @@ console.log(Val)
  }
  const contactsRef = ref(db, `${auth.currentUser.uid}/chats/${props.uid}`);
  let x = [];
- get(contactsRef).then((data) => {
-   data.forEach(data=>{
+//  get(contactsRef).then((data) => {
+//    data.forEach(data=>{
 
-     x.push({
-       ...data.val(),
-     });
-   })
+//      x.push({
+//        ...data.val(),
+//      });
+//    })
    
-   setData(x);
- });
+//    setData(x);
+//  });
   return (
     <Box h="100%" flexDirection="column" d="flex">
         <Box  overflowY="scroll" d="flex" flexDirection="column"  backgroundColor="white" backgroundImage={backgroundImg} h="100%">
