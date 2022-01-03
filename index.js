@@ -44,6 +44,7 @@ app.post("/register", (req, res) => {
         const Name=req.body.name
         console.log(req.body)
         console.log(Decodetoken)
+        console.log("register",ref)
         ref.set({
           email:email,
           uid:uid,
@@ -68,6 +69,7 @@ app.post("/addcontact",(req,res)=>{
     getAuth().getUserByEmail(req.body.email)
     .then((user)=>{
         const ref=db.ref(`${decodeToken.uid}/contacts`)
+        console.log("addContact",ref)
         let present=[];
         ref.once("value",(data)=>{
           data.forEach(childData=>{
@@ -133,6 +135,9 @@ app.post("/sendmessage",(req,res)=>{
       const refRecive=db.ref(`${req.body.Recipetuid}/chats/${decodeToken.uid}`)
       console.log(req.body.message)
       console.log(req.body.Recipetuid)
+
+      console.log("sendRef",refSend)
+      console.log("reciveRef",refRecive)
       refSend.push().set({
         message:req.body.message,
         send:true
