@@ -146,6 +146,9 @@ app.post("/sendmessage",(req,res)=>{
         message:req.body.message,
         send:false
       })
+      ref.once(refSend,data=>{
+        console.log(data.val())
+      })
       res.status(200)
       res.send("done")
     }else{
