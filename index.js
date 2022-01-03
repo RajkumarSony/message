@@ -97,7 +97,7 @@ app.post("/addcontact",(req,res)=>{
 
        
     }).catch(error=>{
-      console.log(error.code)
+      console.log(error)
       res.status(500)
       res.send("No User with this email")
     })
