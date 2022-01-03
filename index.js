@@ -50,13 +50,14 @@ app.post("/register", (req, res) => {
           Name:Name,
           photoURL:""
         }); 
-        res.status(200);
+        res.status(201);
       } else {
         req.status(401);
       }
     })
     .catch((error) => {
       res.status(500);
+      console.log(error)
     });
   res.send("hel");
 });
@@ -67,21 +68,46 @@ app.post("/addcontact",(req,res)=>{
     getAuth().getUserByEmail(req.body.email)
     .then((user)=>{
         const ref=db.ref(`${decodeToken.uid}/contacts`)
-        ref.push().set({
-        uid:user.uid,
-        name:user.displayName,
-        email:user.email,
-        photoURL:user.photoURL||""
-        })
-        console.log(user)
+        let present=[];
+        ref.once("value",(data)=>{
+          data.forEach(childData=>{
+            if(childData.val().email===req.body.email){
+              present.push(childData.val().email)
+            } 
+          })
+         
+          if(!present.includes(req.body.email)){
+            ref.push().set({
+              uid:user.uid,
+              name:user.displayName,
+              email:user.email,
+              photoURL:user.photoURL||""
+              })
+
+              console.log("Contact Added to the server ")
+              res.status(201)
+              res.send("Contact Added to the server ")
+            }
+            else{
+              res.status(409)
+              res.send("user already in contact list")
+            }
+            console.log(user)
+          })
+
+       
     }).catch(error=>{
       console.log(error.code)
+      res.status(500)
+      res.send("No User with this email")
     })
   })
   .catch(error=>{
     console.log(error)
+    res.status(500)
+    res.send("internal server error")
   })
-  res.send("jel")
+ 
 })
 app.post("/uploadprofile",(req,res)=>{
   getAuth()

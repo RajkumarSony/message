@@ -32,11 +32,21 @@ export default function Web() {
   const [email, setEmail] = useState();
   const [popupProfile, setPopupProfile] = useState(false);
   const [data, setData] = useState();
+  const [error, setError] = useState({
+    error: false,
+    code: null,
+    message: null,
+  });
 
   const [uid, setUid] = useState(null);
   const updatePopup = () => {
     setPopup(!popupContact);
     setPopupProfile(false);
+    setError({
+      error: false,
+      code: null,
+      message: null,
+    });
   };
   const updatePopupProfile = () => {
     setPopupProfile(!popupProfile);
@@ -44,6 +54,11 @@ export default function Web() {
   };
   const handleEmail = (event) => {
     setEmail(event.target.value);
+    setError({
+      error: false,
+      code: null,
+      message: null,
+    });
   };
   const uploadProfile = (event) => {
     event.preventDefault();
@@ -51,6 +66,11 @@ export default function Web() {
   };
   const addContact = (event) => {
     event.preventDefault();
+    setError({
+      error: false,
+      code: null,
+      message: null,
+    });
     axios
       .post(
         "/addcontact",
@@ -66,27 +86,30 @@ export default function Web() {
       )
       .then((res) => {
         console.log(res, res.status);
+        updatePopup()
       })
       .catch((error) => {
-        console.log(error);
+       
+        if (error.response) {
+          setError({
+            error: true,
+            code: error.response.code,
+            message: error.response.data,
+          });
+        }
       });
   };
 
   useEffect(() => {
-    
     if (auth.currentUser) {
       const contactsRef = ref(db, `${auth.currentUser.uid}/contacts`);
-      onValue(
-        contactsRef,
-        (datax) => {
-          let x = [];
-          datax.forEach((contact) => {
-            x.push({ ...contact.val() });
-          });
-          setData(x);
-         
-        }
-      );
+      onValue(contactsRef, (datax) => {
+        let x = [];
+        datax.forEach((contact) => {
+          x.push({ ...contact.val() });
+        });
+        setData(x);
+      });
     }
   }, []);
 
@@ -173,7 +196,7 @@ export default function Web() {
                 mt="5vh"
                 // align={"center"}
                 justify={"center"}
-              // bg={("gray.50", "gray.800")}
+                // bg={("gray.50", "gray.800")}
               >
                 <Stack spacing={8} mx={"auto"} maxW={"lg"} px={6}>
                   <Stack align={"center"}>
@@ -189,6 +212,22 @@ export default function Web() {
                     p={8}
                   >
                     <Stack spacing={4}>
+                      <Text
+                        h={10}
+                        d={"flex"}
+                        opacity={error.error ? 1 : 0}
+                        p="2"
+                        alignItems="center"
+                        justifyContent={"center"}
+                        borderRadius={10}
+                        backgroundColor="rgba(232, 39, 39, 0.5)"
+                        align={"center"}
+                        color="white"
+                        transition="opacity 0.5s ease"
+                      >
+                        {error.message}
+                        {"    "}
+                      </Text>
                       <form onSubmit={addContact}>
                         <FormControl id="email">
                           <FormLabel>Email address</FormLabel>
@@ -227,7 +266,7 @@ export default function Web() {
                 mt="5vh"
                 // align={"center"}
                 justify={"center"}
-              // bg={("gray.50", "gray.800")}
+                // bg={("gray.50", "gray.800")}
               >
                 <Stack spacing={8} mx={"auto"} maxW={"lg"} px={6}>
                   <Stack align={"center"}>

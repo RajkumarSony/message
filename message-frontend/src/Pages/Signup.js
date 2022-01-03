@@ -175,7 +175,7 @@ export default function SignupCard() {
               <Text
                 h={10}
                 d={"flex"}
-                opacity={error.code ? 1 : 0}
+                opacity={error.error ? 1 : 0}
                 p="2"
                 alignItems="center"
                 justifyContent={"center"}

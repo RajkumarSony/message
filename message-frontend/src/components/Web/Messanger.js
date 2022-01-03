@@ -1,15 +1,15 @@
-import React, { useState ,useRef} from "react";
+import React, { useState ,useEffect} from "react";
 import { Box, Textarea, Icon ,Button} from "@chakra-ui/react";
 import { MdSend, MdMic,MdOutlineEmojiEmotions } from "react-icons/md";
 import {TiAttachmentOutline} from "react-icons/ti"
 import backgroundImg from "../../assets/Img/Background.png"
 import {auth,db} from "../../FirebaseConfig"
 import axios from "axios";
-import {get,ref} from "firebase/database"
+import {onValue,ref} from "firebase/database"
 
 
 export default function Messanger(props) {
-  const mesref=useRef(null)
+
   const [micIcon, setMicIcon] = useState(true);
  const [data, setData] = useState()
  
@@ -22,7 +22,6 @@ export default function Messanger(props) {
       setMicIcon(false);
     }
   };
- mesref.current?.scrollIntoView({ behavior: "smooth" })
   const handleMic=()=>{
 console.log(Val)
   }
@@ -54,8 +53,7 @@ console.log(Val)
     handleSubmit()
   }
  }
- const contactsRef = ref(db, `${auth.currentUser.uid}/chats/${props.uid}`);
- let x = [];
+ 
 //  get(contactsRef).then((data) => {
 //    data.forEach(data=>{
 
@@ -66,9 +64,37 @@ console.log(Val)
    
 //    setData(x);
 //  });
+useEffect(() => {
+    const contactsRef =  ref(db, `${auth.currentUser.uid}/chats/${props.uid}`);
+    onValue(
+      contactsRef,
+      (datax) => {
+        let x = [];
+        datax.forEach((contact) => {
+          x.push({ ...contact.val() });
+        });
+        // console.log
+        setData(x);
+       
+      }
+    );
+  
+}, [props.uid]);
   return (
     <Box h="100%" flexDirection="column" d="flex">
-        <Box  overflowY="scroll" d="flex" flexDirection="column"  backgroundColor="white" backgroundImage={backgroundImg} h="100%">
+        <Box  overflowY="auto" d="flex" flexDirection="column" css={{
+    '&::-webkit-scrollbar': {
+      width: '4px',
+    },
+    '&::-webkit-scrollbar-track': {
+      width: '6px',
+      backgroundColor:"transparent"
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor:"rgba(81, 231, 176, 0.234)",
+      borderRadius: '34px',
+    },
+  }} backgroundColor="white" backgroundImage={backgroundImg} h="100%">
           {data?data.map((mes,index)=>{
             return (
              <Box h={8} key={index} m={5} d="flex" justifyContent={mes.send?"flex-end":"flex-start"} >
@@ -79,7 +105,6 @@ console.log(Val)
             )
           }):(<>
           <Box>
-
           </Box>
           </>)}
         </Box>
