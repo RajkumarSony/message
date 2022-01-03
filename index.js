@@ -20,7 +20,7 @@ const serviceAccount = {
   token_uri: process.env.token_uri,
   auth_provider_x509_cert_url: process.env.auth_provider_x509_cert_url,
   client_x509_cert_url: process.env.client_x509_cert_url,
-  private_key: process.env.private_key.replace(/\\n/g, "\n"),
+  private_key: process.env.private_key,
 };
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
