@@ -10,7 +10,7 @@ const { getDatabase } = require("firebase-admin/database");
 // const { getStorage,ref } = require("firebase-admin/storage");
 
 const port = process.env.port || 5000;
-console.log(process.env.private_key.replace(/\\n/g, "\n"))
+console.log(process.env.private_key)
 const serviceAccount = {
   type: process.env.type,
   project_id: process.env.project_id,
@@ -21,7 +21,7 @@ const serviceAccount = {
   token_uri: process.env.token_uri,
   auth_provider_x509_cert_url: process.env.auth_provider_x509_cert_url,
   client_x509_cert_url: process.env.client_x509_cert_url,
-  private_key: process.env.private_key.replace(/\\n/g, "\n"),
+  private_key: process.env.private_key,
 };
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
