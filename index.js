@@ -136,8 +136,8 @@ app.post("/sendmessage",(req,res)=>{
       console.log(req.body.message)
       console.log(req.body.Recipetuid)
 
-      console.log("sendRef",refSend)
-      console.log("reciveRef",refRecive)
+      // console.log("sendRef",refSend)
+      // console.log("reciveRef",refRecive)
       refSend.push().set({
         message:req.body.message,
         send:true
@@ -146,9 +146,7 @@ app.post("/sendmessage",(req,res)=>{
         message:req.body.message,
         send:false
       })
-      ref.once(refSend,data=>{
-        console.log(data.val())
-      })
+     
       res.status(200)
       res.send("done")
     }else{
@@ -158,6 +156,7 @@ app.post("/sendmessage",(req,res)=>{
   })
   .catch(error=>{
     res.status(503)
+    console.log(error)
     res.send("Internal Server Error")
   })
   
