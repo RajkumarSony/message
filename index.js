@@ -7,7 +7,7 @@ const express = require("express");
 const { getAuth,getUserByEmail } = require("firebase-admin/auth");
 const app = express();
 const { getDatabase } = require("firebase-admin/database");
-const { getStorage,ref } = require("firebase-admin/storage");
+// const { getStorage,ref } = require("firebase-admin/storage");
 
 const port = process.env.PORT || 5000;
 const serviceAccount = {
@@ -26,11 +26,11 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL:
     "https://any-time-message-default-rtdb.asia-southeast1.firebasedatabase.app",
-    storageBucket:process.env.storageBucket
+    // storageBucket:process.env.storageBucket
 
 });
 const db = getDatabase();
-const bucket=getStorage().bucket();
+// const bucket=getStorage().bucket();
 app.use(express.json());
 
 app.post("/register", (req, res) => {
