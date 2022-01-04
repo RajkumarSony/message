@@ -10,7 +10,7 @@ export default function Header() {
     return (
         <Box >
           <Box color={{md:"black"}}>
-      <Box pb={{md:"56px",sm:"0px"}} color={{sm:"#fff",md:"#1c1e21"}} backgroundColor={{sm:"#128c7e",md:"white"}} pt={"56px"} textAlign={{md:"left",sm:"center"}} >
+      <Box pb={{md:"56px",sm:"0px"}} color={{sm:"#fff",md:"#1c1e21"}} backgroundColor={{sm:"#e359ea",md:"white"}} pt={"56px"} textAlign={{md:"left",sm:"center"}} >
         <Box  mx="auto" width="100%" maxW={{xl:"788px",sm:"80%"}} >
         <Box flexDirection={{md:"row",sm:"column"}} d="flex" justifyContent="space-between" textAlign={{md:"left",sm:"center"}}>
           <Box d="flex" alignItems="center" flexWrap="wrap" width={{md:"50%",sm:"100%"}}  >
@@ -27,7 +27,7 @@ export default function Header() {
            </Box>
            <Box fontWeight={400}>
           
-             <Link borderRadius={40 } lineHeight="120%" mb="40px" p="1rem 2rem" fontSize="16px" cursor="pointer" variant="solid" backgroundColor="#075e55" color="white" d={{sm:"inline-block",md:"none"}}>DOWNLOAD NOW</Link>
+             <Link borderRadius={40 } lineHeight="120%" mb="40px" p="1rem 2rem" fontSize="16px" cursor="pointer" variant="solid" backgroundColor="#dc27cd" color="white" d={{sm:"inline-block",md:"none"}}>DOWNLOAD NOW</Link>
              <Stack d={{sm:'none',md:"flex"}} color={{md:"#1CB39B"}} fontSize={{md:"18px"}} lineHeight={{md:"26px"}}>
              <Box pb={{md:"1rem"}} m={0}> <Link  d="inline-flex" as={reachLink} alignItems="center" justifyContent="center" flexDirection="row"  to=""><Icon mr="1rem" as={AiFillAndroid}/> Android <Icon mx="0.5rem" as={IoIosArrowForward} /> </Link></Box>
              <Box pb={{md:"1rem"}} m={0}><Link  d="inline-flex" as={reachLink} alignItems="center"  flexDirection="row" to=""><Icon mr="1rem" as={AiFillApple}/>iPhone<Icon mx="0.5rem" as={IoIosArrowForward} /> </Link></Box>

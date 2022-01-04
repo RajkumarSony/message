@@ -37,6 +37,7 @@ export default function Web() {
     code: null,
     message: null,
   });
+  const [loading, setLoading] = useState(false)
 
   const [uid, setUid] = useState(null);
   const updatePopup = () => {
@@ -71,6 +72,7 @@ export default function Web() {
       code: null,
       message: null,
     });
+    setLoading(true)
     axios
       .post(
         "/addcontact",
@@ -87,9 +89,10 @@ export default function Web() {
       .then((res) => {
         console.log(res, res.status);
         updatePopup()
+        setLoading(false)
       })
       .catch((error) => {
-       
+        setLoading(false)
         if (error.response) {
           setError({
             error: true,
@@ -241,6 +244,8 @@ export default function Web() {
                         <Stack pt={6} spacing={10}>
                           <Box d="flex" justifyContent="center">
                             <Button
+                            isLoading={loading}
+                            // spinner={<BeatLoader size={8} color='white' />}
                               w="50%"
                               type="submit"
                               bg={"blue.400"}

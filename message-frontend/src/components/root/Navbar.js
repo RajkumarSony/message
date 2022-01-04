@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, Link as reachLink, Outlet } from "react-router-dom";
 import { Box, Image, Button, Icon, Link, Stack } from "@chakra-ui/react";
-import whatsapp from "../../assets/icons/Whatsapp.svg";
-import whatsappIcon from "../../assets/icons/WhatsappIcon.svg";
+import whatsapp from "../../assets/icons/iconwhite.png";
+import whatsappIcon from "../../assets/icons/iconmessage.png";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../FirebaseConfig";
 import { AiOutlineLogin, AiOutlineLogout } from "react-icons/ai";
@@ -61,7 +61,7 @@ function Navbar() {
         pb={{ sm: "61px", md: "0" }}
         d="flex"
         flexDirection="row"
-        backgroundColor="#128c7e"
+        backgroundColor="#e359ea"
         maxW="100%"
         minW="100%"
         justifyContent="center"
@@ -99,7 +99,7 @@ function Navbar() {
                   src={whatsappIcon}
                   alt="Brand Logo"
                   w="auto"
-                  h={{ md: "auto", sm: "77px" }}
+                  h={{ md: "50px", sm: "77px" }}
                 />
               </Link>
             </Box>
@@ -118,7 +118,7 @@ function Navbar() {
               flexGrow="1"
             >
               <Link as={reachLink} to="/web">
-                WHATSAPP WEB
+                CHATS
               </Link>
 
               <Link as={reachLink} to="/features">
@@ -179,7 +179,7 @@ function Navbar() {
                 right={smNav ? "0" : "-100%"}
                 zIndex={3}
                 boxSizing="border-box"
-                backgroundColor="#075e54"
+                backgroundColor="#dc27cd"
                 h="100%"
                 top="0"
                 w="100%"
@@ -221,27 +221,27 @@ function Navbar() {
                   />
                 </Button>
                 <Stack color="white" fontSize="16px" lineHeight="26px" fontWeight="400" pt="32px" my="0" mx="auto" w="80%">
-                  <Box  onClick={handleHamburger} borderBottom="1px solid #128c7e" m={0} py="16px">
+                  <Box  onClick={handleHamburger} borderBottom="1px solid #e359ea" m={0} py="16px">
                     <Link as={reachLink} to="/web">
-                      WHATSAPP WEB
+                      CHATS
                     </Link>
                   </Box>
-                  <Box  onClick={handleHamburger} borderBottom="1px solid #128c7e" m={0} py="16px">
+                  <Box  onClick={handleHamburger} borderBottom="1px solid #e359ea" m={0} py="16px">
                     <Link as={reachLink} to="/download">
                       DOWNLOAD
                     </Link>
                   </Box>
-                  <Box  onClick={handleHamburger} borderBottom="1px solid #128c7e" m={0} py="16px">
+                  <Box  onClick={handleHamburger} borderBottom="1px solid #e359ea" m={0} py="16px">
                     <Link as={reachLink} to="/features">
                       FEATURES
                     </Link>
                   </Box>
-                  <Box onClick={handleHamburger} borderBottom="1px solid #128c7e" m={0} py="16px">
+                  <Box onClick={handleHamburger} borderBottom="1px solid #e359ea" m={0} py="16px">
                     <Link as={reachLink} to="/security">
                       SECURITY
                     </Link>
                   </Box>
-                  <Box onClick={handleHamburger} borderBottom="1px solid #128c7e" m={0} py="16px">
+                  <Box onClick={handleHamburger} borderBottom="1px solid #e359ea" m={0} py="16px">
                     <Link as={reachLink} to="/help-center">
                       HELP CENTER
                     </Link>

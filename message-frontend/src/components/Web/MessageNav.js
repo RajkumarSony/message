@@ -14,11 +14,12 @@ export default function MessageNav(props) {
         d="flex"
         alignItems="center"
         justifyContent="space-between"
-        backgroundColor="#e337d4"
+        backgroundColor="#e359ea"
         h="100%"
         zIndex="1000"
         boxSizing="content-box"
         pb={{md:"5px"}}
+        borderLeft="1px solid #dc27cd"
       >
         <Box ml={2} d="flex" alignItems="center" h="100%" >
           <Icon color="white" mr={2} onClick={handleBack} fontSize={28} as={IoMdArrowRoundBack} />

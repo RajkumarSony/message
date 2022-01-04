@@ -10,7 +10,6 @@ const { getDatabase } = require("firebase-admin/database");
 // const { getStorage,ref } = require("firebase-admin/storage");
 
 const port =process.env.PORT || 8081;
-console.log(process.env.private_key.replace(/\\n/g, "\n"))
 const serviceAccount = {
   type: process.env.type,
   project_id: process.env.project_id,
@@ -43,9 +42,7 @@ app.post("/register", (req, res) => {
         const ref = db.ref(`${Decodetoken.uid}`);
         const {uid,email}=Decodetoken
         const Name=req.body.name
-        console.log(req.body)
-        console.log(Decodetoken)
-        console.log("register",ref)
+        
         ref.set({
           email:email,
           uid:uid,
@@ -70,7 +67,7 @@ app.post("/addcontact",(req,res)=>{
     getAuth().getUserByEmail(req.body.email)
     .then((user)=>{
         const ref=db.ref(`${decodeToken.uid}/contacts`)
-        console.log("addContact",ref)
+       
         let present=[];
         ref.once("value",(data)=>{
           data.forEach(childData=>{
@@ -95,7 +92,7 @@ app.post("/addcontact",(req,res)=>{
               res.status(409)
               res.send("user already in contact list")
             }
-            console.log(user)
+           
           })
 
        
@@ -134,8 +131,7 @@ app.post("/sendmessage",(req,res)=>{
      
       const refSend=db.ref(`${decodeToken.uid}/chats/${req.body.Recipetuid}`)
       const refRecive=db.ref(`${req.body.Recipetuid}/chats/${decodeToken.uid}`)
-      console.log(req.body.message)
-      console.log(req.body.Recipetuid)
+    
 
       // console.log("sendRef",refSend)
       // console.log("reciveRef",refRecive)
@@ -168,5 +164,5 @@ app.use((req, res, next) => {
   res.sendFile(path.join(__dirname, "/message-frontend/build", "index.html"));
 });
 app.listen(port, () => {
-  console.log(`App listening on http://127.0.0.1:${port} !`);
+  console.log(`App listening on http://localhost:${port} !`);
 });
