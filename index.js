@@ -9,7 +9,7 @@ const app = express();
 const { getDatabase } = require("firebase-admin/database");
 // const { getStorage,ref } = require("firebase-admin/storage");
 
-const port =process.env.port||8081;
+const port =8081;
 console.log(process.env.private_key.replace(/\\n/g, "\n"))
 const serviceAccount = {
   type: process.env.type,
