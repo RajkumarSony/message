@@ -70,7 +70,7 @@ function Navbar() {
       >
         <Box
           d="flex"
-          pl={{ md: "2rem", sm: "0.5rem" }}
+          pl={{ md: "1.2rem", sm: "0.5rem" }}
           pr={{ md: "2rem", sm: "0.5rem" }}
           maxW={{ md: "1050px", sm: "100%" }}
           flexDirection="row"
@@ -82,9 +82,9 @@ function Navbar() {
         >
           {/* <Icon d={{md:"none"}} alignSelf="flex-end" as={MdOutlineMenu} /> */}
           <Box d="flex" width="100%" alignItems="center">
-            <Box w="100%" d={{ lg: "block", sm: "none" }}>
+            <Box w={{md:"210px" }}d={{ lg: "block", sm: "none" }}>
               <Link as={reachLink} to="/">
-                <Image src={whatsapp} alt="Brand Logo" h={{ md: "40px" }} w={{md:"400px"}} />
+                <Image src={whatsapp} alt="Brand Logo" h={{ md: "55px" }} w={{md:"100%"}} />
               </Link>
             </Box>
             <Box
