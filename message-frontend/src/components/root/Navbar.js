@@ -266,7 +266,7 @@ function Navbar() {
 
         {/* </Flex> */}
       </Box>
-      <Box overflowY="auto"   css={{
+      <Box overflowY={{md:"auto"}}   css={{
     '&::-webkit-scrollbar': {
       width: '10px',
     },

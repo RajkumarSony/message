@@ -21,7 +21,7 @@ export default function Header() {
            <h2> Reliable messaging.</h2>
            </Box>
            <Text fontSize={{md:"18px",sm:"16px"}} lineHeight="26px" my="1em" >
-           With WhatsApp, you'll get fast, simple, secure messaging and calling for <span>free<sup>*</sup>,</span> available on  phones all over the world.
+           With MessageHub, you'll get fast, simple, secure messaging for <span>free<sup>*</sup>,</span> available on  phones all over the world.
            </Text>
            <Text fontSize="16px" d={{md:"block",sm:"none"}} lineHeight="21px" color="#5e5e5e"><sup>*</sup> Data charges may apply. Contact your provider for  details.</Text>
            </Box>
