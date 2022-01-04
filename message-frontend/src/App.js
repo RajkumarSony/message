@@ -13,6 +13,7 @@ import theme from "./theme";
 import "@fontsource/roboto";
 import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
+import "./style.css"
 
 function App() {
   return (

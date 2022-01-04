@@ -62,7 +62,7 @@ function Navbar() {
         d="flex"
         flexDirection="row"
         backgroundColor="#e359ea"
-        maxW="100%"
+        // maxW="100%"
         minW="100%"
         justifyContent="center"
         alignItems="center"
@@ -81,10 +81,10 @@ function Navbar() {
           justifyContent={{ md: "space-between", sm: "flex-end" }}
         >
           {/* <Icon d={{md:"none"}} alignSelf="flex-end" as={MdOutlineMenu} /> */}
-          <Box d="flex" width="80%" alignItems="center">
+          <Box d="flex" width="100%" alignItems="center">
             <Box w="100%" d={{ lg: "block", sm: "none" }}>
               <Link as={reachLink} to="/">
-                <Image src={whatsapp} alt="Brand Logo" h={{ md: "auto" }} />
+                <Image src={whatsapp} alt="Brand Logo" h={{ md: "40px" }} w={{md:"400px"}} />
               </Link>
             </Box>
             <Box
@@ -266,7 +266,21 @@ function Navbar() {
 
         {/* </Flex> */}
       </Box>
+      <Box overflowY="auto"   css={{
+    '&::-webkit-scrollbar': {
+      width: '10px',
+    },
+    '&::-webkit-scrollbar-track': {
+      width: '14px',
+      
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor:"#e359ea",
+      borderRadius: '34px',
+    },
+  }} h={{md:"83vh"}}>
       <Outlet />
+      </Box>
     </>
   );
 }
