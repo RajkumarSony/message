@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/static/css/main.68131f3a.chunk.css",
-    "main.js": "/static/js/main.f64565e3.chunk.js",
-    "main.js.map": "/static/js/main.f64565e3.chunk.js.map",
+    "main.js": "/static/js/main.dd095aeb.chunk.js",
+    "main.js.map": "/static/js/main.dd095aeb.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.4376a004.js",
     "runtime-main.js.map": "/static/js/runtime-main.4376a004.js.map",
     "static/css/2.d0df8735.chunk.css": "/static/css/2.d0df8735.chunk.css",
@@ -16,7 +16,6 @@
     "static/css/2.d0df8735.chunk.css.map": "/static/css/2.d0df8735.chunk.css.map",
     "static/css/main.68131f3a.chunk.css.map": "/static/css/main.68131f3a.chunk.css.map",
     "static/js/2.8b6de355.chunk.js.LICENSE.txt": "/static/js/2.8b6de355.chunk.js.LICENSE.txt",
-    "static/media/Background.21544187.png": "/static/media/Background.21544187.png",
     "static/media/Phone.346c0cff.png": "/static/media/Phone.346c0cff.png",
     "static/media/halfPhone.cc36f0a9.png": "/static/media/halfPhone.cc36f0a9.png",
     "static/media/iconwhite.e34491a5.png": "/static/media/iconwhite.e34491a5.png",
@@ -27,6 +26,6 @@
     "static/css/2.d0df8735.chunk.css",
     "static/js/2.8b6de355.chunk.js",
     "static/css/main.68131f3a.chunk.css",
-    "static/js/main.f64565e3.chunk.js"
+    "static/js/main.dd095aeb.chunk.js"
   ]
 }

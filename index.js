@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 const admin = require("firebase-admin");
 const express = require("express");
-const { getAuth,getUserByEmail } = require("firebase-admin/auth");
+const { getAuth} = require("firebase-admin/auth");
 const app = express();
 const { getDatabase } = require("firebase-admin/database");
 // const { getStorage,ref } = require("firebase-admin/storage");
@@ -34,7 +34,7 @@ const db = getDatabase();
 app.use(express.json());
 
 app.post("/register", (req, res) => {
-  // console.log(req.headers)
+  
   getAuth()
     .verifyIdToken(req.headers.authorization)
     .then((Decodetoken) => {
@@ -131,10 +131,7 @@ app.post("/sendmessage",(req,res)=>{
      
       const refSend=db.ref(`${decodeToken.uid}/chats/${req.body.Recipetuid}`)
       const refRecive=db.ref(`${req.body.Recipetuid}/chats/${decodeToken.uid}`)
-    
 
-      // console.log("sendRef",refSend)
-      // console.log("reciveRef",refRecive)
       refSend.push().set({
         message:req.body.message,
         send:true

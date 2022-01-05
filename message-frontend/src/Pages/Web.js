@@ -163,6 +163,7 @@ export default function Web() {
                   display: "none",
                 },
               }}
+              backgroundColor="#d8c9e3"
             >
               {data ? (
                 data.map((info, index) => {

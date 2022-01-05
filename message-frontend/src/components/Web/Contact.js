@@ -3,7 +3,7 @@ import { Box, Avatar } from "@chakra-ui/react";
 export default function Contact(props) {
 
   return (
-    <Box h="80px" backgroundColor="white" onClick={props.onClick} cursor="pointer"  d="flex" >
+    <Box h="80px" backgroundColor="#d8c9e3" onClick={props.onClick} cursor="pointer"  d="flex" >
       <Avatar my={3} mx={2}  name={props.name} cursor="pointer" size="lg" src={props.photoURL} />
       <Box mt={4} flexDirection="column" d="flex" width="90%" h="80%" style={{borderBottom:"1px solid rgba(32,32,23,0.23"}}>
           <Box>

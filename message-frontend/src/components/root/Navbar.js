@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, Link as reachLink, Outlet } from "react-router-dom";
 import { Box, Image, Button, Icon, Link, Stack } from "@chakra-ui/react";
-import whatsapp from "../../assets/icons/iconwhite.png";
-import whatsappIcon from "../../assets/icons/iconmessage.png";
+import messageHubLogo from "../../assets/icons/iconwhite.png";
+import messageHubLogoSmall from "../../assets/icons/iconmessage.png";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../FirebaseConfig";
 import { AiOutlineLogin, AiOutlineLogout } from "react-icons/ai";
@@ -84,7 +84,7 @@ function Navbar() {
           <Box d="flex" width="100%" alignItems="center">
             <Box w={{md:"210px" }}d={{ lg: "block", sm: "none" }}>
               <Link as={reachLink} to="/">
-                <Image src={whatsapp} alt="Brand Logo" h={{ md: "55px" }} w={{md:"100%"}} />
+                <Image src={messageHubLogo} alt="Brand Logo" h={{ md: "55px" }} w={{md:"100%"}} />
               </Link>
             </Box>
             <Box
@@ -96,7 +96,7 @@ function Navbar() {
             >
               <Link as={reachLink} to="/">
                 <Image
-                  src={whatsappIcon}
+                  src={messageHubLogoSmall}
                   alt="Brand Logo"
                   w="auto"
                   h={{ md: "50px", sm: "77px" }}
@@ -189,7 +189,7 @@ function Navbar() {
               >
                 <Image
                   cursor="pointer"
-                  src={whatsappIcon}
+                  src={messageHubLogoSmall}
                   alt="Brand Logo"
                   h="40px"
                   left="24px"

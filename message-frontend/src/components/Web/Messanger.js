@@ -2,7 +2,7 @@ import React, { useState ,useEffect} from "react";
 import { Box, Textarea, Icon ,Button} from "@chakra-ui/react";
 import { MdSend, MdMic,MdOutlineEmojiEmotions } from "react-icons/md";
 import {TiAttachmentOutline} from "react-icons/ti"
-import backgroundImg from "../../assets/Img/Background.png"
+
 import {auth,db} from "../../FirebaseConfig"
 import axios from "axios";
 import {onValue,ref} from "firebase/database"
@@ -94,7 +94,7 @@ useEffect(() => {
       backgroundColor:"rgba(81, 231, 176, 0.234)",
       borderRadius: '34px',
     },
-  }} backgroundColor="white" backgroundImage={backgroundImg} h="100%">
+  }} backgroundColor="#a1f0f0"  h="100%">
           {data?data.map((mes,index)=>{
             return (
              <Box h={8} key={index} m={5} d="flex" justifyContent={mes.send?"flex-end":"flex-start"} >
