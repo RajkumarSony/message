@@ -41,8 +41,6 @@ export default function RecentMsg(props) {
           }
         );
 
-
-        console.log(data.key);
       });
     });
   }, []);
