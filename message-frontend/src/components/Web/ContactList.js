@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Icon, Text,Spinner } from "@chakra-ui/react";
+import { Box, Icon, Text, Spinner } from "@chakra-ui/react";
 import { auth, db } from "../../FirebaseConfig";
 import { ref, onValue, query, orderByChild } from "firebase/database";
 import Contact from "./Contact";
@@ -8,18 +8,26 @@ import { AiOutlinePlusSquare, AiOutlineCloseSquare } from "react-icons/ai";
 
 export default function ContactList(props) {
   const [data, setData] = useState();
+  const [hasData, setHasData] = useState(true);
   useEffect(() => {
-    const contactsRef = query(
-      ref(db, `${auth.currentUser.uid}/contacts`),
-      orderByChild("name")
+    onValue(
+      query(ref(db, `${auth.currentUser.uid}/contacts`), orderByChild("name")),
+      (datax) => {
+        let x = [];
+        if (datax.hasChildren()) {
+          let count = 0;
+          datax.forEach((data) => {
+            x.push({ ...data.val() });
+            count++;
+            if (count === datax.size) {
+              setData(x);
+            }
+          });
+        } else {
+          setHasData(false);
+        }
+      }
     );
-    onValue(contactsRef, (datax) => {
-      let x = [];
-      datax.forEach((data) => {
-        x.push({ ...data.val() });
-      });
-      setData(x);
-    });
   }, []);
 
   return (
@@ -33,18 +41,18 @@ export default function ContactList(props) {
         justifyContent="space-between"
         h={{ md: "7vh", sm: "9vh", lg: "8vh" }}
       >
-          <Box h="100%" alignItems="center" d="flex">
-        <Icon
-          color="white"
-          fontSize={28}
-          cursor="pointer"
-          mr={2}
-          onClick={props.popupContactList}
-          as={IoMdArrowRoundBack}
-        />
-        <Text color="white" cursor="pointer" fontWeight={800} fontSize={28}>
-          New Chat
-        </Text>
+        <Box h="100%" alignItems="center" d="flex">
+          <Icon
+            color="white"
+            fontSize={28}
+            cursor="pointer"
+            mr={2}
+            onClick={props.popupContactList}
+            as={IoMdArrowRoundBack}
+          />
+          <Text color="white" cursor="pointer" fontWeight={800} fontSize={28}>
+            New Chat
+          </Text>
         </Box>
         <Icon
           color="white"
@@ -76,10 +84,28 @@ export default function ContactList(props) {
             />
           );
         })
-      ) :<Box d="flex" h="100vh" w="100%" justifyContent="center" alignItems="center">
-      <Spinner size="xl" />
-
-  </Box>}
+      ) : (
+        <Box
+          d="flex"
+          h="80vh"
+          w="100%"
+          justifyContent="center"
+          alignItems="center"
+        >
+          {hasData ? (
+            <Spinner size="xl" />
+          ) : (
+            <Text
+              textAlign="center"
+              fontSize={26}
+              fontWeight={600}
+              color="#137284"
+            >
+              No Contact's Add Contact to Message.
+            </Text>
+          )}
+        </Box>
+      )}
     </Box>
   );
 }
