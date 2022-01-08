@@ -64,7 +64,7 @@ useEffect(() => {
         datax.forEach((contact) => {
           x.push({ ...contact.val() });
         });
-        // console.log
+       
         setData(x);
        
       }
