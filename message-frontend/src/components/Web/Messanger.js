@@ -54,16 +54,7 @@ console.log(Val)
   }
  }
  
-//  get(contactsRef).then((data) => {
-//    data.forEach(data=>{
 
-//      x.push({
-//        ...data.val(),
-//      });
-//    })
-   
-//    setData(x);
-//  });
 useEffect(() => {
     const contactsRef =  ref(db, `${auth.currentUser.uid}/chats/${props.uid}`);
     onValue(
@@ -94,7 +85,7 @@ useEffect(() => {
       backgroundColor:"rgba(81, 231, 176, 0.234)",
       borderRadius: '34px',
     },
-  }} backgroundColor="#a1f0f0"  h="100%">
+  }} backgroundColor="#20796f"  h="100%">
           {data?data.map((mes,index)=>{
             return (
              <Box h={8} key={index} m={5} d="flex" justifyContent={mes.send?"flex-end":"flex-start"} >

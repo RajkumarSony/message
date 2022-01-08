@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import Contact from "../components/Web/Contact";
+import React, { useState } from "react";
+import ContactList from "../components/Web/ContactList";
 import Messanger from "../components/Web/Messanger";
 import ContactNav from "../components/Web/ContactNav";
 import axios from "axios";
@@ -15,10 +15,11 @@ import {
   Heading,
   Text,
 } from "@chakra-ui/react";
-// import data from "./data.json";
+
 import { Navigate } from "react-router-dom";
-import { auth, db } from "../FirebaseConfig";
-import { ref, onValue } from "firebase/database";
+import { auth } from "../FirebaseConfig";
+
+import RecentMsg from "../components/Web/RecentMsg";
 
 export default function Web() {
   const [Mnav, setMnav] = useState({
@@ -29,29 +30,50 @@ export default function Web() {
   const [width, setWidth] = useState("100%");
   const [xwidth, setXwidth] = useState("0%");
   const [popupContact, setPopup] = useState(false);
+  const [popupContactList, setPopupContactList] = useState("-100%");
   const [email, setEmail] = useState();
   const [popupProfile, setPopupProfile] = useState(false);
-  const [data, setData] = useState();
+
   const [error, setError] = useState({
     error: false,
     code: null,
     message: null,
   });
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const [uid, setUid] = useState(null);
   const updatePopup = () => {
     setPopup(!popupContact);
     setPopupProfile(false);
+
     setError({
       error: false,
       code: null,
       message: null,
     });
   };
+  const updatesetMnav = (x) => {
+    setMnav(x);
+  };
+  const updatesetUid = (x) => {
+    setUid(x);
+  };
+  const updatesetWidth = (x) => {
+    setWidth(x);
+  };
+  const updatesetXwidth = (x) => {
+    setXwidth(x);
+  };
   const updatePopupProfile = () => {
     setPopupProfile(!popupProfile);
     setPopup(false);
+  };
+  const updatepopupContactList = (x) => {
+    if (popupContactList === "-100%") {
+      setPopupContactList("0%");
+    } else {
+      setPopupContactList("-100%");
+    }
   };
   const handleEmail = (event) => {
     setEmail(event.target.value);
@@ -72,7 +94,7 @@ export default function Web() {
       code: null,
       message: null,
     });
-    setLoading(true)
+    setLoading(true);
     axios
       .post(
         "/addcontact",
@@ -88,11 +110,11 @@ export default function Web() {
       )
       .then((res) => {
         console.log(res, res.status);
-        updatePopup()
-        setLoading(false)
+        updatePopup();
+        setLoading(false);
       })
       .catch((error) => {
-        setLoading(false)
+        setLoading(false);
         if (error.response) {
           setError({
             error: true,
@@ -102,19 +124,6 @@ export default function Web() {
         }
       });
   };
-
-  useEffect(() => {
-    if (auth.currentUser) {
-      const contactsRef = ref(db, `${auth.currentUser.uid}/contacts`);
-      onValue(contactsRef, (datax) => {
-        let x = [];
-        datax.forEach((contact) => {
-          x.push({ ...contact.val() });
-        });
-        setData(x);
-      });
-    }
-  }, []);
 
   if (auth.currentUser) {
     const updateWidth = () => {
@@ -141,9 +150,9 @@ export default function Web() {
         >
           <Box w="100%" h={{ md: "7vh", sm: "9vh", lg: "8vh" }}>
             <ContactNav
-              popup={updatePopup}
-              po={popupContact}
+              
               profile={updatePopupProfile}
+              contactList={updatepopupContactList}
               name={auth.currentUser.displayName}
             />
           </Box>
@@ -158,6 +167,7 @@ export default function Web() {
               overflowY="scroll"
               w="100%"
               transition="display 1s fade"
+              zIndex={-1}
               css={{
                 "&::-webkit-scrollbar": {
                   display: "none",
@@ -165,30 +175,14 @@ export default function Web() {
               }}
               backgroundColor="#d8c9e3"
             >
-              {data ? (
-                data.map((info, index) => {
-                  return (
-                    <Contact
-                      onClick={() => {
-                        setMnav({
-                          src: info.photoURL,
-                          name: info.name,
-                        });
-                        setUid(info.uid);
-                        setWidth("0%");
-                        setXwidth("100%");
-                      }}
-                      {...info}
-                      key={index}
-                    />
-                  );
-                })
-              ) : (
-                <>
-                  <Box>No contacts add contacts to message</Box>
-                </>
-              )}
+              <RecentMsg
+                setMnav={updatesetMnav}
+                setUid={updatesetUid}
+                setWidth={updatesetWidth}
+                setXwidth={updatesetXwidth}
+              />
             </Box>
+
             <Box
               d={popupContact ? "block" : "none"}
               transition="display 1s fade"
@@ -245,8 +239,8 @@ export default function Web() {
                         <Stack pt={6} spacing={10}>
                           <Box d="flex" justifyContent="center">
                             <Button
-                            isLoading={loading}
-                            // spinner={<BeatLoader size={8} color='white' />}
+                              isLoading={loading}
+                              // spinner={<BeatLoader size={8} color='white' />}
                               w="50%"
                               type="submit"
                               bg={"blue.400"}
@@ -319,6 +313,30 @@ export default function Web() {
                 </Stack>
               </Flex>
             </Box>
+          </Box>
+          <Box
+            position="fixed"
+            left={popupContactList}
+            h="100%"
+            overflowY="scroll"
+            w={{ md: "40%", sm: width, lg: "30%" }}
+            transition="left 0.45s ease-in-out"
+            css={{
+              "&::-webkit-scrollbar": {
+                display: "none",
+              },
+            }}
+            backgroundColor="#d8c9e3"
+          >
+            <ContactList
+              setMnav={updatesetMnav}
+              popupContactList={updatepopupContactList}
+              setUid={updatesetUid}
+              setWidth={updatesetWidth}
+              setXwidth={updatesetXwidth}
+              popup={updatePopup}
+              po={popupContact}
+            />
           </Box>
         </Box>
         <Box

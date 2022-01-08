@@ -1,6 +1,5 @@
 import React from 'react'
-import {AiOutlinePlusSquare,AiOutlineCloseSquare} from "react-icons/ai"
-// import {IoMdArrowRoundBack} from "react-icons/io"
+import {BiMessageRoundedAdd} from "react-icons/bi"
 import {Box,Avatar,Icon} from "@chakra-ui/react"
 
 
@@ -13,7 +12,10 @@ export default function ContactNav(props) {
            
         <Avatar onClick={props.profile} cursor="pointer"  src={props.src} name={props.name} />
             </Box>
-            <Icon color="white" cursor="pointer" onClick={props.popup} mr={3} fontSize={28}  as={!props.po?AiOutlinePlusSquare:AiOutlineCloseSquare}/>
+            <Box d='flex' mr={3}  >
+            
+            <Icon color="white" fontSize={28} mr={3} onClick={props.contactList} as={BiMessageRoundedAdd}  cursor="pointer"/>
+            </Box >
       </Box>
     )
 } 
