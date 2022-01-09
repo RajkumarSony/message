@@ -39,12 +39,14 @@ export default function RecentMsg(props) {
                       setData(x);
                     }
                   });
+                },{
+                  onlyOnce:true
                 }
               );
-            },
-            {
-              onlyOnce: true,
+            },{
+              onlyOnce:true,
             }
+
           );
         });
       }else{

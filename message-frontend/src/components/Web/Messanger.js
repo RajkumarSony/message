@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState ,useEffect,useRef} from "react";
 import { Box, Textarea, Icon ,Button} from "@chakra-ui/react";
 import { MdSend, MdMic,MdOutlineEmojiEmotions } from "react-icons/md";
 import {TiAttachmentOutline} from "react-icons/ti"
@@ -12,6 +12,7 @@ export default function Messanger(props) {
 
   const [micIcon, setMicIcon] = useState(true);
  const [data, setData] = useState()
+ const [loading, setLoading] = useState(false)
  
   const [Val, setVal] = useState("")
   const handelChange = (event) => {
@@ -27,7 +28,7 @@ console.log(Val)
   }
  const  handleSubmit= ()=>{
    if(Val!==""){
-  
+  setLoading(true)
    axios.post(
     "/sendmessage",
     {
@@ -41,7 +42,14 @@ console.log(Val)
         "Content-Type": "application/json",
       },
     }
-  )
+  ).then(res=>{
+   if(res.status===201){
+    setLoading(false)
+
+   }
+  }).catch(error=>{
+    setLoading(false)
+  })
 
     setVal("");
     setMicIcon(true);
@@ -53,20 +61,35 @@ console.log(Val)
     handleSubmit()
   }
  }
- 
+ const messagesEndRef = useRef(null)
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [data]);
 
 useEffect(() => {
     const contactsRef =  ref(db, `${auth.currentUser.uid}/chats/${props.uid}`);
     onValue(
       contactsRef,
       (datax) => {
-        let x = [];
-        datax.forEach((contact) => {
-          x.push({ ...contact.val() });
-        });
-       
-        setData(x);
-       
+        if( datax.hasChildren()){
+          let x = [];
+          let count=0
+          datax.forEach((contact) => {
+            x.push({ ...contact.val() });
+            count++
+            if(count===datax.size){
+              setData(x);
+            }
+          });
+         
+        }
+        
+
       }
     );
   
@@ -96,8 +119,10 @@ useEffect(() => {
             )
           }):(<>
           <Box>
+            no data
           </Box>
           </>)}
+          <Box ref={messagesEndRef}></Box>
         </Box>
       <Box  borderLeft="1px solid gray" backgroundColor="white"  alignItems="center" h={20} d="flex" flexDirection="row">
           <Icon w={8} h={8} color="rgba(150,150,150,1)" as={TiAttachmentOutline}/>
@@ -107,6 +132,7 @@ useEffect(() => {
         <Textarea
           onChange={handelChange}
           onKeyDown={handleKeyDown}
+          isDisabled={props.uid?false:true}
           backgroundColor="rgba(100,100,100,0.3)"
         resize="none"
           placeholder="Type Message"
@@ -124,7 +150,7 @@ useEffect(() => {
           
           />
         </Box>
-         <Button type={micIcon ? "button" : "submit"} onClick={micIcon? handleMic:handleSubmit} variant="ghost"><Icon color="rgba(18,140,126,1)" w={8} h={8} as={micIcon ? MdMic : MdSend} /></Button> 
+         <Button type={micIcon ? "button" : "submit"} isLoading={loading}  isDisabled={props.uid?false:true} onClick={micIcon? handleMic:handleSubmit} variant="ghost"><Icon color="rgba(18,140,126,1)" w={8} h={8} as={micIcon ? MdMic : MdSend} /></Button> 
      
          
        
