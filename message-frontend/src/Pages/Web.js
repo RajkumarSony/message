@@ -1,18 +1,17 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import ContactList from "../components/Web/ContactList";
 import Messanger from "../components/Web/Messanger";
 import ContactNav from "../components/Web/ContactNav";
 import AddContact from "../components/Web/AddContact";
 import MessageNav from "../components/Web/MessageNav";
-import { Box } from "@chakra-ui/react";
+import { Box ,Text} from "@chakra-ui/react";
 
 import { Navigate } from "react-router-dom";
 import { auth, db } from "../FirebaseConfig";
 
 import RecentMsg from "../components/Web/RecentMsg";
 import UpdateProfile from "../components/Web/UpdateProfile";
-import { onValue ,ref} from "firebase/database";
-
+import { onValue, ref } from "firebase/database";
 
 export default function Web() {
   const [Mnav, setMnav] = useState({
@@ -24,7 +23,7 @@ export default function Web() {
   const [xwidth, setXwidth] = useState("0%");
   const [popupContact, setPopup] = useState(false);
   const [popupContactList, setPopupContactList] = useState("-100%");
-const [url, setUrl] = useState()
+  const [url, setUrl] = useState();
   const [popupProfile, setPopupProfile] = useState(false);
 
   const [error, setError] = useState({
@@ -72,13 +71,12 @@ const [url, setUrl] = useState()
   };
 
   useEffect(() => {
-    if(auth.currentUser){
-
-      onValue(ref(db,`${auth.currentUser.uid}/photoURL`),(snapshot)=>{
-        setUrl(snapshot.val())
-      })
+    if (auth.currentUser) {
+      onValue(ref(db, `${auth.currentUser.uid}/photoURL`), (snapshot) => {
+        setUrl(snapshot.val());
+      });
     }
-  }, [])
+  }, []);
   if (auth.currentUser) {
     const updateWidth = () => {
       setWidth("100%");
@@ -179,10 +177,10 @@ const [url, setUrl] = useState()
           </Box>
         </Box>
         <Box
-          h="100%"
+          h="100vh"
           zIndex="1"
           w={{ md: "60%", sm: xwidth, lg: "70%" }}
-          backgroundColor="green"
+          d={{md:uid ? "block" : "none",sm:"block"}}
         >
           <Box w="100%" h={{ md: "7vh", sm: "9vh", lg: "8vh" }}>
             <MessageNav updateWidth={updateWidth} {...Mnav} />
@@ -194,6 +192,20 @@ const [url, setUrl] = useState()
           >
             <Messanger uid={uid} />
           </Box>
+        </Box>
+        <Box
+          h="100vh"
+          zIndex="1"
+          w={{ md: "60%", sm: xwidth, lg: "70%" }}
+          color="white"
+          backgroundColor="#20796f"
+          d={{md:!uid?"flex":"none",sm:"none"}}
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Text textAlign="center" fontSize={26} fontWeight={600}>
+            Select Contact to Send Message
+          </Text>
         </Box>
       </Box>
     );

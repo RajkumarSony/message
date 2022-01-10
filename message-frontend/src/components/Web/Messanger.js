@@ -119,7 +119,11 @@ useEffect(() => {
             )
           }):(<>
           <Box>
-            no data
+          <Box h={8}  m={5} d="flex" justifyContent="center" >
+               <Box borderRadius={5} color="white" d="felx" justifyContent="center" alignItems="center" backgroundColor="yellow.500" flexDirection="row" p={2} minW={6} w="fit-content">
+                <p>No Message Start Chating Now</p>
+               </Box>
+             </Box>
           </Box>
           </>)}
           <Box ref={messagesEndRef}></Box>
