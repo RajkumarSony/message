@@ -19,7 +19,7 @@ export default function RecentMsg(props) {
           onValue(
             ref(db, data.key),
             (snapshot) => {
-              let i = 0;
+              
 
               onValue(
                 query(
