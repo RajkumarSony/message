@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Box, Icon, Text, Spinner } from "@chakra-ui/react";
+import { Box, Icon, Text } from "@chakra-ui/react";
 import { auth, db } from "../../FirebaseConfig";
 import { ref, onValue, query, orderByChild } from "firebase/database";
 import Contact from "./Contact";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { AiOutlinePlusSquare, AiOutlineCloseSquare } from "react-icons/ai";
-
+import SkeletonContact from "./SkeletonContact";
 export default function ContactList(props) {
   const [data, setData] = useState();
   const [hasData, setHasData] = useState(true);
@@ -93,7 +93,18 @@ export default function ContactList(props) {
           alignItems="center"
         >
           {hasData ? (
-            <Spinner size="xl" />
+                  <Box>
+
+                  <SkeletonContact/>
+                  <SkeletonContact/>
+                  <SkeletonContact/>
+                  <SkeletonContact/>
+                  <SkeletonContact/>
+                  <SkeletonContact/>
+                  <SkeletonContact/>
+                  <SkeletonContact/>
+                  <SkeletonContact/>
+                </Box>
           ) : (
             <Text
               textAlign="center"

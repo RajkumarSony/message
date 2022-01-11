@@ -3,16 +3,17 @@ import { db, auth } from "../../FirebaseConfig";
 import { ref, onValue, limitToLast, query } from "firebase/database";
 import Contact from "./Contact";
 
-import { Box, Spinner, Text } from "@chakra-ui/react";
+import { Box, Text} from "@chakra-ui/react";
+import SkeletonContact from "./SkeletonContact";
 
 export default function RecentMsg(props) {
   const [data, setData] = useState();
-  const [hasData, setHasData] = useState(true)
+  const [hasData, setHasData] = useState(true);
   useEffect(() => {
     onValue(ref(db, `${auth.currentUser.uid}/chats`), (datax) => {
       const x = [];
       let itemsProcessed = 0;
-      
+
       if (datax.hasChildren()) {
         datax.forEach((data) => {
           onValue(
@@ -39,18 +40,19 @@ export default function RecentMsg(props) {
                       setData(x);
                     }
                   });
-                },{
-                  onlyOnce:true
+                },
+                {
+                  onlyOnce: true,
                 }
               );
-            },{
-              onlyOnce:true,
+            },
+            {
+              onlyOnce: true,
             }
-
           );
         });
-      }else{
-        setHasData(false)
+      } else {
+        setHasData(false);
       }
     });
   }, []);
@@ -76,16 +78,35 @@ export default function RecentMsg(props) {
           );
         })
       ) : (
-        <Box
-          d="flex"
-          h="80vh"
-          w="100%"
-          justifyContent="center"
-          alignItems="center"
-        >
-     {hasData?<Spinner size="xl" />:<Text textAlign="center" fontSize={26} fontWeight={600} color="#137284">
-No Message to show Start Chating now.
-       </Text>}
+        <Box>
+          {hasData ? (
+            <Box>
+
+              <SkeletonContact/>
+              <SkeletonContact/>
+              <SkeletonContact/>
+              <SkeletonContact/>
+              <SkeletonContact/>
+              <SkeletonContact/>
+              <SkeletonContact/>
+              <SkeletonContact/>
+              <SkeletonContact/>
+            </Box>
+          ) : (
+            <Text
+              d="flex"
+              h="80vh"
+              w="100%"
+              justifyContent="center"
+              alignItems="center"
+              textAlign="center"
+              fontSize={26}
+              fontWeight={600}
+              color="#137284"
+            >
+              No Message to show Start Chating now.
+            </Text>
+          )}
         </Box>
       )}
     </Box>
