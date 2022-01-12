@@ -10,13 +10,16 @@ import {
   Heading,
   Text,
 } from "@chakra-ui/react";
-import axios from "axios";
+import axios from "axios"
+
 import { useDropzone } from "react-dropzone";
-import { auth } from "../../FirebaseConfig";
-export default function UpdateProfile() {
+import { auth,storage } from "../../FirebaseConfig";
+import { getDownloadURL, ref,uploadBytes } from "firebase/storage";
+
+export default function UpdateProfile(props) {
   const [files, setFiles] = useState([]);
   const [drop, setDrop] = useState(true);
-  
+  const [loading, setLoading] = useState(false)
 
   const onDrop = useCallback((acceptedFiles) => {
     setFiles(
@@ -28,6 +31,7 @@ export default function UpdateProfile() {
     );
     setDrop(false);
     console.log(acceptedFiles);
+    console.log(files);
   }, []);
 
   const { getRootProps, getInputProps, open, isDragReject, isDragActive } =
@@ -43,22 +47,30 @@ export default function UpdateProfile() {
   ));
   const uploadProfile = (event) => {
     event.preventDefault();
-    let formdata = new FormData();
-    formdata.append("image",files[0]);
-    formdata.append("name",files[0].name);
-    axios.post(
-      "/uploadprofile",
-      { data: formdata },
-      {
-        headers: {
-          authorization: auth.currentUser.accessToken,
-        },
-      }
-    );
-    console.log("clicked Upload");
+   setLoading(true)
+    const storageRef = ref(storage,`ProfileImage/${auth.currentUser.uid}/profile.${files[0].type.split("/")[1]}`);
+    uploadBytes(storageRef,files[0]).then((snapshot)=>{
+      console.log(snapshot)
+      getDownloadURL(storageRef).then(url=>{
+        axios.post("/uploadprofile",{url:url,uid:auth.currentUser.uid},{
+          headers:{
+            authorization:auth.currentUser.accessToken
+          }
+        }).then(res=>{
+          
+          setLoading(false)
+          props.profile()
+        })
+      })
+    }).catch(error=>{
+      console.log("file Upload Error",error)
+    })
+
+
+ 
   };
   useEffect(() => {
-    // Make sure to revoke the data uris to avoid memory leaks
+  
     return () => {
       files.forEach((file) => URL.revokeObjectURL(file.preview));
       console.log("cleanup");
@@ -145,6 +157,7 @@ export default function UpdateProfile() {
                     {!drop ? "Remove" : "Choose file"}
                   </Button>
                   <Button
+                  isLoading={loading}
                     w="40%"
                     d={!drop ? "block" : "none"}
                     type="submit"

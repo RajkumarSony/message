@@ -17,7 +17,7 @@ export default function RecentMsg(props) {
       if (datax.hasChildren()) {
         datax.forEach((data) => {
           onValue(
-            ref(db, data.key),
+            ref(db, `${data.key}/PersonalInfo`),
             (snapshot) => {
               
 
@@ -29,10 +29,7 @@ export default function RecentMsg(props) {
                 (mesg) => {
                   mesg.forEach((mesg) => {
                     x.push({
-                      name: snapshot.val().Name,
-                      email: snapshot.val().email,
-                      photoURL: snapshot.val().photoURL,
-                      uid: snapshot.val().uid,
+                  ...snapshot.val(),
                       message: mesg.val().message,
                     });
                     itemsProcessed++;

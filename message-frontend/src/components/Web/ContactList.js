@@ -17,11 +17,21 @@ export default function ContactList(props) {
         if (datax.hasChildren()) {
           let count = 0;
           datax.forEach((data) => {
-            x.push({ ...data.val() });
-            count++;
-            if (count === datax.size) {
-              setData(x);
-            }
+            onValue(ref(db,`${data.val().uid}/PersonalInfo`),(snap)=>{
+              x.push({
+                name:snap.val().name,
+              
+                uid:snap.val().uid,
+                photoURL:snap.val().photoURL,
+
+              })
+              count++;
+              if (count === datax.size) {
+                setData(x);
+              }
+            },{
+              onlyOnce:true
+            });
           });
         } else {
           setHasData(false);

@@ -72,7 +72,7 @@ export default function Web() {
 
   useEffect(() => {
     if (auth.currentUser) {
-      onValue(ref(db, `${auth.currentUser.uid}/photoURL`), (snapshot) => {
+      onValue(ref(db, `${auth.currentUser.uid}/PersonalInfo/photoURL`), (snapshot) => {
         setUrl(snapshot.val());
       });
     }
@@ -148,7 +148,7 @@ export default function Web() {
               />
             </Box>
             <Box d={popupProfile ? "block" : "none"}>
-              <UpdateProfile />
+              <UpdateProfile  profile={updatePopupProfile} />
             </Box>
           </Box>
           <Box

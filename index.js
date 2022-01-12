@@ -4,11 +4,10 @@ const dotenv = require("dotenv");
 dotenv.config();
 const admin = require("firebase-admin");
 const express = require("express");
+
 const { getAuth } = require("firebase-admin/auth");
 const app = express();
 const { getDatabase } = require("firebase-admin/database");
-const { ifError } = require("assert");
-// const { getStorage,ref } = require("firebase-admin/storage");
 
 const port = process.env.PORT || 8081;
 const serviceAccount = {
@@ -27,25 +26,24 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL:
     "https://any-time-message-default-rtdb.asia-southeast1.firebasedatabase.app",
-  // storageBucket:process.env.storageBucket
 });
 const db = getDatabase();
-// const bucket=getStorage().bucket();
 app.use(express.json());
+// for parsing multipart/form-data
 
 app.post("/register", (req, res) => {
   getAuth()
     .verifyIdToken(req.headers.authorization)
     .then((Decodetoken) => {
       if (req.body.uid === Decodetoken.uid) {
-        const ref = db.ref(`${Decodetoken.uid}`);
+        const ref = db.ref(`${Decodetoken.uid}/PersonalInfo`);
         const { uid, email } = Decodetoken;
         const Name = req.body.name;
 
         ref.set({
           email: email,
           uid: uid,
-          Name: Name,
+          name: Name,
           photoURL: "",
         });
         res.status(201);
@@ -79,9 +77,6 @@ app.post("/addcontact", (req, res) => {
             if (!present.includes(req.body.email)) {
               ref.push().set({
                 uid: user.uid,
-                name: user.displayName,
-                email: user.email,
-                photoURL: user.photoURL || "",
               });
 
               console.log("Contact Added to the server ");
@@ -110,11 +105,24 @@ app.post("/uploadprofile", (req, res) => {
     .verifyIdToken(req.headers.authorization)
     .then((Decodetoken) => {
       if (req.body.uid === Decodetoken.uid) {
-        const ref = ref(bucket, Decodetoken.uid + "/profileImg");
-        uploadBytes(ref, file).then((snapshot) => {
-          console.log("Uploaded a blob or file!");
-        });
+        const ProfileImg= db.ref(`${Decodetoken.uid}/PersonalInfo`)
+        ProfileImg.update({
+          "photoURL":req.body.url
+        },error=>{
+          if(!error){
+            res.status(200)
+            res.send("Update")
+          }else{
+            res.status(400)
+            res.send("error")
+          }
+        })
       }
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(400);
+      res.send("ping");
     });
 });
 app.post("/sendmessage", (req, res) => {
