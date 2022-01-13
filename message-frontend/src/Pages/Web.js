@@ -148,7 +148,7 @@ export default function Web() {
               />
             </Box>
             <Box d={popupProfile ? "block" : "none"}>
-              <UpdateProfile  profile={updatePopupProfile} />
+              <UpdateProfile  profile={updatePopupProfile} url={url} />
             </Box>
           </Box>
           <Box

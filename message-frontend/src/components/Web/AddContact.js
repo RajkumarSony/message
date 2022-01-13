@@ -65,13 +65,13 @@ export default function AddContact(props) {
       });
   };
   return (
-    <Flex h="100%" overflowY="bolck" mt="5vh" justify={"center"}>
+    <Flex direction="column" alignItems="flex-end" mt="5px" h="100%" overflowY="bolck"  >
          <Icon
           color="black"
           cursor="pointer"
           mr={3}
           onClick={() => {
-            props.popupContactList();
+          
             props.updatePopup();
           }}
           fontSize={28}
