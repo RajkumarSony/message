@@ -31,7 +31,8 @@ export default function Header() {
           backgroundColor={{ sm: "#e359ea", md: "white" }}
           pt={"56px"}
           textAlign={{ md: "left", sm: "center" }}
-          h="100vh"
+          h="fit-content"
+          minHeight="100vh"
         >
           <Box
             mx="auto"
