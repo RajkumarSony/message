@@ -14,10 +14,13 @@ import "@fontsource/roboto";
 import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import "./style.css"
+import ReactPWAInstallProvider from "react-pwa-install";
 
 function App() {
   return (
+    
     <ChakraProvider theme={theme}>
+      <ReactPWAInstallProvider>
       <Router>
         <Routes>
           <Route path="/" element={<Navbar />}>
@@ -36,6 +39,7 @@ function App() {
           <Route path="/web" element={<Web />} />
         </Routes>
       </Router>
+      </ReactPWAInstallProvider>
     </ChakraProvider>
   );
 }

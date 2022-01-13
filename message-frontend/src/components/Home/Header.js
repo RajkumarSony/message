@@ -6,7 +6,22 @@ import { Link as reachLink } from "react-router-dom";
 import {AiFillAndroid,AiFillApple} from "react-icons/ai"
 import {MdMonitor} from "react-icons/md"
 import {IoIosArrowForward} from "react-icons/io"
+import { useReactPWAInstall } from "react-pwa-install";
+import logo from "../../assets/icons/mdpi.png"
 export default function Header() {
+  const { pwaInstall, supported, isInstalled } = useReactPWAInstall();
+  const handleClick = () => {
+    pwaInstall({
+      title: "Install Message Hub ",
+      logo: logo,
+    
+      description:"Simple. Secure. Reliable messaging. With Message Hub, you'll get fast, simple, secure messaging for free*, available on the web all over the world."
+    }).catch(()=>{
+      console.log("Install cancelled")
+    })
+      
+  };
+
     return (
         <Box >
           <Box color={{md:"black"}}>
@@ -27,11 +42,11 @@ export default function Header() {
            </Box>
            <Box fontWeight={400}>
           
-             <Link borderRadius={40 } lineHeight="120%" mb="40px" p="1rem 2rem" fontSize="16px" cursor="pointer" variant="solid" backgroundColor="#dc27cd" color="white" d={{sm:"inline-block",md:"none"}}>DOWNLOAD NOW</Link>
+            {supported() && !isInstalled() &&  <Link borderRadius={40 } onClick={handleClick} lineHeight="120%" mb="40px" p="1rem 2rem" fontSize="16px" cursor="pointer" variant="solid" backgroundColor="#dc27cd" color="white" d={{sm:"inline-block",md:"none"}}>DOWNLOAD NOW</Link>}
              <Stack d={{sm:'none',md:"flex"}} color={{md:"#1CB39B"}} fontSize={{md:"18px"}} lineHeight={{md:"26px"}}>
-             <Box pb={{md:"1rem"}} m={0}> <Link  d="inline-flex" as={reachLink} alignItems="center" justifyContent="center" flexDirection="row"  to=""><Icon mr="1rem" as={AiFillAndroid}/> Android <Icon mx="0.5rem" as={IoIosArrowForward} /> </Link></Box>
-             <Box pb={{md:"1rem"}} m={0}><Link  d="inline-flex" as={reachLink} alignItems="center"  flexDirection="row" to=""><Icon mr="1rem" as={AiFillApple}/>iPhone<Icon mx="0.5rem" as={IoIosArrowForward} /> </Link></Box>
-             <Box pb={{md:"1rem"}} m={0}><Link d="inline-flex" alignItems="center" justifyContent="center" flexDirection="row" as={reachLink} to=""><Icon mr="1rem" as={MdMonitor}/>Mac or  Windows PC <Icon mx="0.5rem" as={IoIosArrowForward}/>	</Link></Box>
+             <Box pb={{md:"1rem"}} m={0}> <Link onClick={handleClick} d="inline-flex" as={reachLink} alignItems="center" justifyContent="center" flexDirection="row"  to=""><Icon mr="1rem" as={AiFillAndroid}/> Android <Icon mx="0.5rem" as={IoIosArrowForward} /> </Link></Box>
+             <Box pb={{md:"1rem"}} m={0}><Link onClick={handleClick} d="inline-flex" as={reachLink} alignItems="center"  flexDirection="row" to=""><Icon mr="1rem" as={AiFillApple}/>iPhone<Icon mx="0.5rem" as={IoIosArrowForward} /> </Link></Box>
+             <Box pb={{md:"1rem"}} m={0}><Link onClick={handleClick} d="inline-flex" alignItems="center" justifyContent="center" flexDirection="row" as={reachLink} to=""><Icon mr="1rem" as={MdMonitor}/>Mac or  Windows PC <Icon mx="0.5rem" as={IoIosArrowForward}/>	</Link></Box>
              </Stack>
            </Box>
           </Box></Box>
