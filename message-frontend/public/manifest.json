@@ -1,6 +1,6 @@
 {
-  "short_name": "message",
-  "name": "message any time",
+  "short_name": "Message Hub",
+  "name": "Message Hub - message any time any where",
   "icons": [
     {
       "src": "./Icons/16x16.png",
