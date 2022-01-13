@@ -1,7 +1,7 @@
 import React from "react";
 import { Image, Box, Text, Stack, Link, Icon } from "@chakra-ui/react";
 import Phone from "../../assets/Img/Phone.png";
-import PhoneHalf from "../../assets/Img/halfPhone.png";
+
 import { Link as reachLink } from "react-router-dom";
 import { AiFillAndroid, AiFillApple } from "react-icons/ai";
 import { MdMonitor } from "react-icons/md";
@@ -31,7 +31,7 @@ export default function Header() {
           backgroundColor={{ sm: "#e359ea", md: "white" }}
           pt={"56px"}
           textAlign={{ md: "left", sm: "center" }}
-          h="100%"
+          h="100vh"
         >
           <Box
             mx="auto"
@@ -171,7 +171,7 @@ export default function Header() {
                   <Image
                     d={{ md: "none" }}
                     maxW="100%"
-                    src={PhoneHalf}
+                    src={Phone}
                     alt="Phone Image"
                   />
                 </Box>
