@@ -23,7 +23,7 @@ export default function Header() {
   };
 
   return (
-    <Box>
+    <Box h="100vh">
       <Box color={{ md: "black" }}>
         <Box
           pb={{ md: "56px", sm: "0px" }}
