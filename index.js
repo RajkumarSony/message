@@ -64,8 +64,9 @@ app.post("/register", (req, res) => {
         LicenceToken(Decodetoken.uid).then(async (token) => {
           const nonce = (await randomBytes(32)).toString("base64");
           const databaseKey = `${nonce}:${req.sessionID}`;
-          res.cookie("sessionId", req.sessionID);
-          res.cookie("databaseKey", databaseKey);
+          res.cookie("sessionId", req.sessionID,{maxAge:new Date(23423432323232)});
+          res.cookie("databaseKey", databaseKey,{maxAge:new Date(23423432323232)});
+          res.cookie("appId",process.env.seald_appId,{maxAge:new Date(23423432323232)})
           res.status(201);
           res.send(token);
         });
@@ -88,6 +89,7 @@ app.post("/session/login", (req, res) => {
         const databaseKey = `${nonce}:${req.sessionID}`;
         res.cookie("sessionId", req.sessionID,{maxAge:new Date(23423432323232)});
         res.cookie("databaseKey", databaseKey,{maxAge:new Date(23423432323232)});
+        res.cookie("appId",process.env.seald_appId,{maxAge:new Date(23423432323232)})
         res.status(201);
         res.send("LogIn")
       }
@@ -98,6 +100,7 @@ app.post("/session/logout",(req,res)=>{
     req.session.destroy(err=>{
    res.clearCookie("sessionId")
    res.clearCookie("databaseKey")
+   res.clearCookie("appId")
       if(!err){
         res.status(200)
         res.send("done")

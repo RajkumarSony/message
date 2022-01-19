@@ -1,12 +1,12 @@
 import SealdSDK from "@seald-io/sdk-web";
 
 import SealdSDKPluginSSKSPassword from "@seald-io/sdk-plugin-ssks-password";
+import Cookies from "js-cookie";
 
-const appId = process.env.REACT_APP_seald_appId;
 let sealdSDKInstance = null;
 const instantiateSealdSDK = async ({ databaseKey, sessionID }) => {
   sealdSDKInstance = SealdSDK({
-    appId: appId,
+    appId: Cookies.get("appId"),
     databaseKey,
     databasePath: `seald-seacure-message-hub-${sessionID}`,
     plugins: [SealdSDKPluginSSKSPassword()],
