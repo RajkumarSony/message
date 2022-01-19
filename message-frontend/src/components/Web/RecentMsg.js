@@ -5,12 +5,15 @@ import Contact from "./Contact";
 
 import { Box, Text} from "@chakra-ui/react";
 import SkeletonContact from "./SkeletonContact";
+import {getSealdSDKInstance,retrieveIdentityFromLocalStorage} from "../../SealedInit";
+import Cookies from "js-cookie";
 
 export default function RecentMsg(props) {
   const [data, setData] = useState();
   const [hasData, setHasData] = useState(true);
-  useEffect(() => {
-    onValue(ref(db, `${auth.currentUser.uid}/chats`), (datax) => {
+  useEffect(async() => {
+    await  retrieveIdentityFromLocalStorage({databaseKey:Cookies.get("databaseKey"),sessionID:Cookies.get("sessionId")})
+    onValue(ref(db, `${auth.currentUser.uid}/chats/`), (datax) => {
       const x = [];
       let itemsProcessed = 0;
 
@@ -23,14 +26,17 @@ export default function RecentMsg(props) {
 
               onValue(
                 query(
-                  ref(db, `${auth.currentUser.uid}/chats/${data.key}`),
+                  ref(db, `${auth.currentUser.uid}/chats/${data.key}/messages`),
                   limitToLast(1)
                 ),
                 (mesg) => {
-                  mesg.forEach((mesg) => {
+                  mesg.forEach(async(mesg) => {
+                  
+                const session=await getSealdSDKInstance().retrieveEncryptionSession({encryptedMessage:mesg.val().message})
+                const decryptMessage= await session.decryptMessage(mesg.val().message)
                     x.push({
                   ...snapshot.val(),
-                      message: mesg.val().message,
+                      message: decryptMessage,
                     });
                     itemsProcessed++;
                     if (itemsProcessed === datax.size) {

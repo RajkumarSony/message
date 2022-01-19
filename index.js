@@ -1,15 +1,20 @@
 // express server
 const path = require("path");
 const dotenv = require("dotenv");
+const crypto = require("crypto");
+const { promisify } = require("util");
+
 dotenv.config();
 const admin = require("firebase-admin");
 const express = require("express");
-
+const LicenceToken = require("./LicenceToken");
 const { getAuth } = require("firebase-admin/auth");
 const app = express();
 const { getDatabase } = require("firebase-admin/database");
-
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
 const port = process.env.PORT || 8081;
+const randomBytes = promisify(crypto.randomBytes);
 const serviceAccount = {
   type: process.env.type,
   project_id: process.env.project_id,
@@ -29,6 +34,15 @@ admin.initializeApp({
 });
 const db = getDatabase();
 app.use(express.json());
+app.use(cookieParser());
+app.use(
+  session({
+    secret: process.env.serverSession_secret,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {expires: new Date(253402300000000)} 
+  })
+);
 // for parsing multipart/form-data
 
 app.post("/register", (req, res) => {
@@ -46,7 +60,15 @@ app.post("/register", (req, res) => {
           name: Name,
           photoURL: "",
         });
-        res.status(201);
+
+        LicenceToken(Decodetoken.uid).then(async (token) => {
+          const nonce = (await randomBytes(32)).toString("base64");
+          const databaseKey = `${nonce}:${req.sessionID}`;
+          res.cookie("sessionId", req.sessionID);
+          res.cookie("databaseKey", databaseKey);
+          res.status(201);
+          res.send(token);
+        });
       } else {
         req.status(401);
       }
@@ -55,8 +77,34 @@ app.post("/register", (req, res) => {
       res.status(500);
       console.log(error);
     });
-  res.send("hel");
 });
+
+app.post("/session/login", (req, res) => {
+  getAuth()
+    .verifyIdToken(req.headers.authorization)
+    .then(async(Decodetoken) => {
+      if (req.body.uid === Decodetoken.uid) {
+        const nonce = (await randomBytes(32)).toString("base64");
+        const databaseKey = `${nonce}:${req.sessionID}`;
+        res.cookie("sessionId", req.sessionID,{maxAge:new Date(23423432323232)});
+        res.cookie("databaseKey", databaseKey,{maxAge:new Date(23423432323232)});
+        res.status(201);
+        res.send("LogIn")
+      }
+    });
+});
+app.post("/session/logout",(req,res)=>{
+ 
+    req.session.destroy(err=>{
+   res.clearCookie("sessionId")
+   res.clearCookie("databaseKey")
+      if(!err){
+        res.status(200)
+        res.send("done")
+      }
+    })
+ 
+})
 app.post("/addcontact", (req, res) => {
   getAuth()
     .verifyIdToken(req.headers.authorization)
@@ -105,18 +153,21 @@ app.post("/uploadprofile", (req, res) => {
     .verifyIdToken(req.headers.authorization)
     .then((Decodetoken) => {
       if (req.body.uid === Decodetoken.uid) {
-        const ProfileImg= db.ref(`${Decodetoken.uid}/PersonalInfo`)
-        ProfileImg.update({
-          "photoURL":req.body.url
-        },error=>{
-          if(!error){
-            res.status(200)
-            res.send("Update")
-          }else{
-            res.status(400)
-            res.send("error")
+        const ProfileImg = db.ref(`${Decodetoken.uid}/PersonalInfo`);
+        ProfileImg.update(
+          {
+            photoURL: req.body.url,
+          },
+          (error) => {
+            if (!error) {
+              res.status(200);
+              res.send("Update");
+            } else {
+              res.status(400);
+              res.send("error");
+            }
           }
-        })
+        );
       }
     })
     .catch((error) => {
@@ -125,18 +176,33 @@ app.post("/uploadprofile", (req, res) => {
       res.send("ping");
     });
 });
+
 app.post("/sendmessage", (req, res) => {
+ 
   getAuth()
     .verifyIdToken(req.headers.authorization)
     .then((decodeToken) => {
       if (req.body.uid === decodeToken.uid) {
         const refSend = db.ref(
-          `${decodeToken.uid}/chats/${req.body.Recipetuid}`
+          `${decodeToken.uid}/chats/${req.body.Recipetuid}/messages`
         );
         const refRecive = db.ref(
+          `${req.body.Recipetuid}/chats/${decodeToken.uid}/messages`
+        );
+        const reciveSession = db.ref(
           `${req.body.Recipetuid}/chats/${decodeToken.uid}`
         );
-
+        const sendSession = db.ref(
+          `${decodeToken.uid}/chats/${req.body.Recipetuid}`
+        );
+        if (req.body.sessionId) {
+          sendSession.update({
+            sessionId: req.body.sessionId,
+          });
+          reciveSession.update({
+            sessionId: req.body.sessionId,
+          });
+        }
         refSend.push().set(
           {
             message: req.body.message,

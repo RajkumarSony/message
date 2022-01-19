@@ -14,6 +14,9 @@ import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../FirebaseConfig";
 import { Navigate, useNavigate, Link as reachLink } from "react-router-dom";
+import seald, { retrieveIdentity } from "../SealedInit";
+import Cookies from "js-cookie";
+import axios from "axios";
 export default function SimpleCard() {
   const navigate = useNavigate();
   const [email, setEmail] = useState(null);
@@ -23,9 +26,9 @@ export default function SimpleCard() {
     error: false,
     message: null,
   });
- 
+
   const login = (event) => {
-    event.preventDefault()
+    event.preventDefault();
     if (
       email !== "" &&
       email !== null &&
@@ -33,41 +36,49 @@ export default function SimpleCard() {
       password !== null
     ) {
       signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
+        .then(async (userCredential) => {
           localStorage.setItem("user", auth.currentUser);
-          navigate("/");
+          axios.post("/session/login",  {
+            uid:auth.currentUser.uid,
+          },
+          {
+            headers: {
+              Authorization: auth.currentUser.accessToken,
+              'Content-Type': 'application/json'
+            },
+          }).then(async (res)=>{
+
+          await  retrieveIdentity({userId:auth.currentUser.uid,password:password,databaseKey:Cookies.get("databaseKey"),sessionID:Cookies.get("sessionId")})
+            navigate("/");
+          })
         })
         .catch((error) => {
-          if (
-            error.code === "auth/user-not-found"
-          ) {
+          if (error.code === "auth/user-not-found") {
             Seterror({
               code: error.code,
               error: true,
               message: "Email not registered plese SignUp first",
             });
-          }else if(error.code==="auth/invalid-email"){
+          } else if (error.code === "auth/invalid-email") {
             Seterror({
-              code:error.code,
-              error:true,
-              message:"Invalid Email address"
-            })
-          }else if(error.code==="auth/wrong-password"){
+              code: error.code,
+              error: true,
+              message: "Invalid Email address",
+            });
+          } else if (error.code === "auth/wrong-password") {
             Seterror({
-              code:error.code,
-              error:true,
-              message:"Forget your password? Reset it"
-            })
+              code: error.code,
+              error: true,
+              message: "Forget your password? Reset it",
+            });
+          } else {
+            Seterror({
+              code: error.code,
+              error: true,
+              message: "Something went wrong try again",
+            });
+            console.log(error.code);
           }
-           else {
-            Seterror({
-              code:error.code,
-              error:true,
-              message:"Something went wrong try again"
-            })
-            console.log(error.code)
-          }
-       
         });
     } else {
       Seterror({
@@ -120,54 +131,61 @@ export default function SimpleCard() {
             p={8}
           >
             <Stack spacing={4}>
-            <Text
-                  h={10}
-                  d={"flex" }
-                  opacity={error.code?1:0}
-                  p="2"
-                  alignItems="center"
-                  justifyContent={"center"}
-                  borderRadius={10}
-                  backgroundColor="rgba(232, 39, 39, 0.5)"
-                  align={"center"}
-                  color="white" 
-                  transition="opacity 0.5s ease-in-out"
-                >
-                  { error.message}
-                  {"    "}
-                </Text>
-                <form onSubmit={login}>
-              <FormControl id="email">
-                <FormLabel>Email address</FormLabel>
-                <Input onChange={handleEmail} autoComplete="username" type="email" />
-              </FormControl>
-              <FormControl id="password">
-                <FormLabel>Password</FormLabel>
-                <Input onChange={handlePassword} autoComplete="current-password" type="password" />
-              </FormControl>
-              <Stack spacing={10}>
-                <Stack
-                  direction={{ base: "column", sm: "row" }}
-                  align={"start"}
-                  justify={"space-between"}
-                >
-                  {/* <p>New user?</p> <Link m={0} to="/auth/signup" as={reachLink}>Sign Up</Link> */}
-                  <Link color={"blue.400"}>Forgot password?</Link>
+              <Text
+                h={10}
+                d={"flex"}
+                opacity={error.code ? 1 : 0}
+                p="2"
+                alignItems="center"
+                justifyContent={"center"}
+                borderRadius={10}
+                backgroundColor="rgba(232, 39, 39, 0.5)"
+                align={"center"}
+                color="white"
+                transition="opacity 0.5s ease-in-out"
+              >
+                {error.message}
+                {"    "}
+              </Text>
+              <form onSubmit={login}>
+                <FormControl id="email">
+                  <FormLabel>Email address</FormLabel>
+                  <Input
+                    onChange={handleEmail}
+                    autoComplete="username"
+                    type="email"
+                  />
+                </FormControl>
+                <FormControl id="password">
+                  <FormLabel>Password</FormLabel>
+                  <Input
+                    onChange={handlePassword}
+                    autoComplete="current-password"
+                    type="password"
+                  />
+                </FormControl>
+                <Stack spacing={10}>
+                  <Stack
+                    direction={{ base: "column", sm: "row" }}
+                    align={"start"}
+                    justify={"space-between"}
+                  >
+                    {/* <p>New user?</p> <Link m={0} to="/auth/signup" as={reachLink}>Sign Up</Link> */}
+                    <Link color={"blue.400"}>Forgot password?</Link>
+                  </Stack>
+                  <Button
+                    type="submit"
+                    bg={"blue.400"}
+                    color={"white"}
+                    _hover={{
+                      bg: "blue.500",
+                    }}
+                  >
+                    Log In
+                  </Button>
                 </Stack>
-                <Button
-                 type="submit"
-                  bg={"blue.400"}
-                  color={"white"}
-                  _hover={{
-                    bg: "blue.500",
-                  }}
-                >
-                  Log In
-                </Button>
-              </Stack>
-                </form>
+              </form>
               <Stack pt={6}>
-             
                 <Text h={10} p="2" align={"center"}>
                   New user?{"    "}
                   <Link as={reachLink} to="/auth/signup" color={"blue.400"}>

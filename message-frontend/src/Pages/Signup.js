@@ -20,22 +20,9 @@ import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../FirebaseConfig";
 import axios from "axios";
-const register=()=>{
-  axios.post(
-    "/register",
-    {
-      uid:auth.currentUser.uid,
-      name:auth.currentUser.displayName
+import {createIdentity} from "../SealedInit";
+import Cookies from 'js-cookie';
 
-    },
-    {
-      headers: {
-        Authorization: auth.currentUser.accessToken,
-        'Content-Type': 'application/json'
-      },
-    }
-  );
-}
 export default function SignupCard() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState(null);
@@ -48,6 +35,27 @@ export default function SignupCard() {
     message: null,
   });
   const navigate = useNavigate();
+  const register=()=>{
+    axios.post(
+      "/register",
+      {
+        uid:auth.currentUser.uid,
+        name:auth.currentUser.displayName
+  
+      },
+      {
+        headers: {
+          Authorization: auth.currentUser.accessToken,
+          'Content-Type': 'application/json'
+        },
+      }
+    ).then(async (res)=>{
+     const  token=res.data
+      const databaseKey=Cookies.get("databaseKey")
+      const sessionID= Cookies.get("sessionId")
+      await createIdentity({userId:auth.currentUser.uid,password:password,userLicenseToken:token,databaseKey:databaseKey,sessionID:sessionID})
+    })
+  }
   const signup = (event) => {
     event.preventDefault();
     console.log(email);
@@ -75,8 +83,8 @@ export default function SignupCard() {
             updateProfile(auth.currentUser, {
               displayName: `${fname} ${lname}`,
             }).then(() => {
-              
               register()
+              
             });
           }
         
