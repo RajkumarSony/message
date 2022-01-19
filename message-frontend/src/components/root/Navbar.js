@@ -7,7 +7,7 @@ import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../FirebaseConfig";
 import { AiOutlineLogin, AiOutlineLogout } from "react-icons/ai";
 import { MdClose, MdOutlineMenu } from "react-icons/md";
-
+import axios from "axios";
 function Navbar() {
   const navigate = useNavigate();
 
@@ -18,18 +18,33 @@ function Navbar() {
   const logOut = () => {
     signOut(auth).then(() => {
       Setuser(false);
-      localStorage.removeItem("user");
+      axios.post("/session/logout", {reqest:"logout"},  {
+        headers: {
+         
+          "Content-Type": "application/json",
+        },
+      }).then(res=>{
+        console.log(res)
+        localStorage.removeItem("user");
+        navigate("/auth/login");
+      })
 
-      navigate("/auth/login");
     });
   };
   const smLogOut = () => {
     signOut(auth).then(() => {
       Setuser(false);
-      localStorage.removeItem("user");
-
-      navigate("/auth/login");
-      handleHamburger()
+      axios.post("/session/logout", {reqest:"logout"},  {
+        headers: {
+          
+          "Content-Type": "application/json",
+        },
+      }).then(res=>{
+        console.log(res)
+        localStorage.removeItem("user");
+        navigate("/auth/login");
+        handleHamburger()
+      })
     });
   };
   const login = () => {
