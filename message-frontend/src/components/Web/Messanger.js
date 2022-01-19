@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Box, Textarea, Icon, Button } from "@chakra-ui/react";
+import { Box, Textarea, Icon, Button,Text } from "@chakra-ui/react";
 import { MdSend, MdMic, MdOutlineEmojiEmotions } from "react-icons/md";
 import { TiAttachmentOutline } from "react-icons/ti";
 
@@ -7,7 +7,7 @@ import { auth, db } from "../../FirebaseConfig";
 import axios from "axios";
 import { onValue, ref, get } from "firebase/database";
 import {getSealdSDKInstance} from "../../SealedInit";
-
+import {BiLockAlt} from "react-icons/bi"
 export default function Messanger(props) {
   const [micIcon, setMicIcon] = useState(true);
   const [data, setData] = useState();
@@ -172,6 +172,26 @@ export default function Messanger(props) {
         backgroundColor="#20796f"
         h="100%"
       >
+        <Box minH={8} h="fit-content" m={5} mb="10px" d="flex" justifyContent="center">
+                <Box
+                  borderRadius={5}
+                  color="white"
+                  d="felx"
+
+                  justifyContent="center"
+                  alignItems="center"
+                  backgroundColor="yellow.500"
+                  flexDirection="row"
+                  p={2}
+                  minW={6}
+                  minH={8} 
+                  h="fit-content"
+                  w="fit-content"
+                  textAlign="center"
+                >
+                  <Text><Icon color="white" as={BiLockAlt}/> Messages are end-to-end encrypted. No one outside of this chat, not even We , can read or listen to them </Text>
+                </Box>
+              </Box>
         {data ? (
           data.map((mes, index) => {
             return (
@@ -200,21 +220,22 @@ export default function Messanger(props) {
           })
         ) : (
           <>
-            <Box>
-              <Box h={8} m={5} d="flex" justifyContent="center">
+            <Box h="100%" d="flex" alignItems="center" justifyContent="center">
+              <Box minH={8} h="fit-content" m={5} mb={40} d="flex" justifyContent="center">
                 <Box
                   borderRadius={5}
                   color="white"
                   d="felx"
                   justifyContent="center"
                   alignItems="center"
-                  backgroundColor="yellow.500"
+                  backgroundColor="red.500"
                   flexDirection="row"
                   p={2}
                   minW={6}
                   w="fit-content"
+                  textAlign="center"
                 >
-                  <p>No Message Start Chating Now</p>
+                  <Text>No Messages Start Chating Now</Text>
                 </Box>
               </Box>
             </Box>

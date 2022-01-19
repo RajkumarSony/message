@@ -12,9 +12,7 @@ import { auth, db } from "../FirebaseConfig";
 import RecentMsg from "../components/Web/RecentMsg";
 import UpdateProfile from "../components/Web/UpdateProfile";
 import { onValue, ref } from "firebase/database";
-import {retrieveIdentityFromLocalStorage} from "../SealedInit";
-import Cookies from "js-cookie";
-import { Cookie } from "express-session";
+
 
 export default function Web() {
   const [Mnav, setMnav] = useState({

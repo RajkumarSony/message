@@ -11,53 +11,56 @@ import Cookies from "js-cookie";
 export default function RecentMsg(props) {
   const [data, setData] = useState();
   const [hasData, setHasData] = useState(true);
-  useEffect(async() => {
-    await  retrieveIdentityFromLocalStorage({databaseKey:Cookies.get("databaseKey"),sessionID:Cookies.get("sessionId")})
-    onValue(ref(db, `${auth.currentUser.uid}/chats/`), (datax) => {
-      const x = [];
-      let itemsProcessed = 0;
-
-      if (datax.hasChildren()) {
-        datax.forEach((data) => {
-          onValue(
-            ref(db, `${data.key}/PersonalInfo`),
-            (snapshot) => {
-              
-
-              onValue(
-                query(
-                  ref(db, `${auth.currentUser.uid}/chats/${data.key}/messages`),
-                  limitToLast(1)
-                ),
-                (mesg) => {
-                  mesg.forEach(async(mesg) => {
-                  
-                const session=await getSealdSDKInstance().retrieveEncryptionSession({encryptedMessage:mesg.val().message})
-                const decryptMessage= await session.decryptMessage(mesg.val().message)
-                    x.push({
-                  ...snapshot.val(),
-                      message: decryptMessage,
+  useEffect(() => {
+    async function recentMsg(){
+      await  retrieveIdentityFromLocalStorage({databaseKey:Cookies.get("databaseKey"),sessionID:Cookies.get("sessionId")})
+      onValue(ref(db, `${auth.currentUser.uid}/chats/`), (datax) => {
+        const x = [];
+        let itemsProcessed = 0;
+  
+        if (datax.hasChildren()) {
+          datax.forEach((data) => {
+            onValue(
+              ref(db, `${data.key}/PersonalInfo`),
+              (snapshot) => {
+                
+  
+                onValue(
+                  query(
+                    ref(db, `${auth.currentUser.uid}/chats/${data.key}/messages`),
+                    limitToLast(1)
+                  ),
+                  (mesg) => {
+                    mesg.forEach(async(mesg) => {
+                    
+                  const session=await getSealdSDKInstance().retrieveEncryptionSession({encryptedMessage:mesg.val().message})
+                  const decryptMessage= await session.decryptMessage(mesg.val().message)
+                      x.push({
+                    ...snapshot.val(),
+                        message: decryptMessage,
+                      });
+                      itemsProcessed++;
+                      if (itemsProcessed === datax.size) {
+                        setData(x);
+                      }
                     });
-                    itemsProcessed++;
-                    if (itemsProcessed === datax.size) {
-                      setData(x);
-                    }
-                  });
-                },
-                {
-                  onlyOnce: true,
-                }
-              );
-            },
-            {
-              onlyOnce: true,
-            }
-          );
-        });
-      } else {
-        setHasData(false);
-      }
-    });
+                  },
+                  {
+                    onlyOnce: true,
+                  }
+                );
+              },
+              {
+                onlyOnce: true,
+              }
+            );
+          });
+        } else {
+          setHasData(false);
+        }
+      });
+    }
+    recentMsg()
   }, []);
 
   return (

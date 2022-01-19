@@ -14,7 +14,7 @@ import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../FirebaseConfig";
 import { Navigate, useNavigate, Link as reachLink } from "react-router-dom";
-import seald, { retrieveIdentity } from "../SealedInit";
+import { retrieveIdentity } from "../SealedInit";
 import Cookies from "js-cookie";
 import axios from "axios";
 export default function SimpleCard() {
