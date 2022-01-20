@@ -69,6 +69,8 @@ your Identity is stored in the database in your browser's `IndexDb`or most suita
 10. create on last variable named `serverSession_secret` and assign any random string to it. Recommendation use `crypto.randomBytes` to genrate a random string or use your own does not matter 
 11. change directory to message-frontend using command `cd ./message-frontend` and run command `yarn build` after build complete go back to parent directory using command `cd ..`
 12. Use command  `yarn start`  to start the server. 
-13. open `locahost:8081` in your browser and now your can see the websie running in your browser. 
+13. open `locahost:8081` in your browser and now your can see the websie running in your browser.
+
+
 use this for developing your own chat app project with new and cool fetures or you can contribute to this project and help me growing and developing this project. 
 #### Note :- you can set value to env variables like this `env_var_name=value` for eg :- `serverSession_secret=myServerSessionSecret`
