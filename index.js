@@ -15,6 +15,8 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const port = process.env.PORT || 8081;
 const randomBytes = promisify(crypto.randomBytes);
+
+// Firebase service account configurations.
 const serviceAccount = {
   type: process.env.type,
   project_id: process.env.project_id,
@@ -25,16 +27,18 @@ const serviceAccount = {
   token_uri: process.env.token_uri,
   auth_provider_x509_cert_url: process.env.auth_provider_x509_cert_url,
   client_x509_cert_url: process.env.client_x509_cert_url,
-  private_key: process.env.private_key.replace(/\\n/g, "\n"),
+  private_key: process.env.private_key.replace(/\\n/g, "\n"), // Parsing private key by replacing 
 };
+
+// Initializing Firebase Admin SDK
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL:
     "https://any-time-message-default-rtdb.asia-southeast1.firebasedatabase.app",
 });
 const db = getDatabase();
-app.use(express.json());
-app.use(cookieParser());
+app.use(express.json()); // Parse the body to json format 
+app.use(cookieParser()); // parse cookie middle-ware
 app.use(
   session({
     secret: process.env.serverSession_secret,
@@ -43,27 +47,28 @@ app.use(
     cookie: {expires: new Date(253402300000000)} 
   })
 );
-// for parsing multipart/form-data
 
+// Listen for "/register" post request called every time after successfull creation of a new user accout.
 app.post("/register", (req, res) => {
   getAuth()
-    .verifyIdToken(req.headers.authorization)
+    .verifyIdToken(req.headers.authorization) // Verify the user using JWT send in header as authorization token
     .then((Decodetoken) => {
+      // callback function after varification
       if (req.body.uid === Decodetoken.uid) {
-        const ref = db.ref(`${Decodetoken.uid}/PersonalInfo`);
-        const { uid, email } = Decodetoken;
-        const Name = req.body.name;
-
+        const ref = db.ref(`${Decodetoken.uid}/PersonalInfo`); // Database reference to userID/PersonalInfo
+        const { uid, email } = Decodetoken; // Destructring Decodetoken to get email and uid
+        const Name = req.body.name; // Name of the user 
+       // Setting value in the database Reference
         ref.set({
           email: email,
           uid: uid,
           name: Name,
           photoURL: "",
         });
-
+        // Generating uniqe token for the user to validate and varify uniquely 
         LicenceToken(Decodetoken.uid).then(async (token) => {
-          const nonce = (await randomBytes(32)).toString("base64");
-          const databaseKey = `${nonce}:${req.sessionID}`;
+          const nonce = (await randomBytes(32)).toString("base64"); // Random string used to make Client local database key string
+          const databaseKey = `${nonce}:${req.sessionID}`; //Random Database key for the Client localStorage
           res.cookie("sessionId", req.sessionID,{maxAge:new Date(23423432323232)});
           res.cookie("databaseKey", databaseKey,{maxAge:new Date(23423432323232)});
           res.cookie("appId",process.env.seald_appId,{maxAge:new Date(23423432323232)})
@@ -74,33 +79,39 @@ app.post("/register", (req, res) => {
         req.status(401);
       }
     })
+    // Catch error in athentication JWT Token 
     .catch((error) => {
       res.status(500);
       console.log(error);
     });
 });
 
+// Listen for Post reqest made on "/session/login"  called every time after successfull login of the User . 
 app.post("/session/login", (req, res) => {
-  getAuth()
-    .verifyIdToken(req.headers.authorization)
+  getAuth() 
+    .verifyIdToken(req.headers.authorization) // Verfiy the user using JWT . 
     .then(async(Decodetoken) => {
+
       if (req.body.uid === Decodetoken.uid) {
+        // Set session Cookie after verifying the user is authentcated
         const nonce = (await randomBytes(32)).toString("base64");
-        const databaseKey = `${nonce}:${req.sessionID}`;
-        res.cookie("sessionId", req.sessionID,{maxAge:new Date(23423432323232)});
-        res.cookie("databaseKey", databaseKey,{maxAge:new Date(23423432323232)});
-        res.cookie("appId",process.env.seald_appId,{maxAge:new Date(23423432323232)})
+        const databaseKey = `${nonce}:${req.sessionID}`; //database key for seald-identity stored on client device
+        res.cookie("sessionId", req.sessionID,{maxAge:new Date(23423432323232)}); // set session id 
+        res.cookie("databaseKey", databaseKey,{maxAge:new Date(23423432323232)}); //set databaseKey
+        res.cookie("appId",process.env.seald_appId,{maxAge:new Date(23423432323232)}) // set AppId
         res.status(201);
         res.send("LogIn")
       }
     });
 });
+
+// Listen for Post reqest made on "/session/logout"  called every time after user Logout. 
 app.post("/session/logout",(req,res)=>{
- 
+//  Destroy the session and clear sessionId
     req.session.destroy(err=>{
-   res.clearCookie("sessionId")
-   res.clearCookie("databaseKey")
-   res.clearCookie("appId")
+   res.clearCookie("sessionId") // Clear sessionId
+   res.clearCookie("databaseKey") // clear databaseKey 
+   res.clearCookie("appId") // clear appId
       if(!err){
         res.status(200)
         res.send("done")
@@ -108,23 +119,27 @@ app.post("/session/logout",(req,res)=>{
     })
  
 })
+
+// Listen for Post reqest made on "/addcontact"  called when user add a Contact. 
 app.post("/addcontact", (req, res) => {
   getAuth()
-    .verifyIdToken(req.headers.authorization)
+    .verifyIdToken(req.headers.authorization) // Verify user  using Firebase JWT 
     .then((decodeToken) => {
       getAuth()
-        .getUserByEmail(req.body.email)
+        .getUserByEmail(req.body.email) // tries to get user by email return user if exist otherwise give error 
         .then((user) => {
-          const ref = db.ref(`${decodeToken.uid}/contacts`);
+          // User recived 
+          const ref = db.ref(`${decodeToken.uid}/contacts`); // Referece to database. 
 
-          let present = [];
+          let present = []; //variable ot hold present Contact
+          // Retrive all Present Contact of the user 
           ref.once("value", (data) => {
             data.forEach((childData) => {
               if (childData.val().email === req.body.email) {
                 present.push(childData.val().email);
               }
             });
-
+            // Check if the user already added in Contact' s if not add it 
             if (!present.includes(req.body.email)) {
               ref.push().set({
                 uid: user.uid,
@@ -134,18 +149,22 @@ app.post("/addcontact", (req, res) => {
               res.status(201);
               res.send("Contact Added to the server ");
             } else {
+              // Else Raise error . 
               res.status(409);
               res.send("user already in contact list");
             }
           });
         })
         .catch((error) => {
+          // catch no user exist with the email send error no user exist 
           console.log(error);
           res.status(500);
           res.send("No User with this email");
         });
     })
     .catch((error) => {
+
+    // Catch error in athentication JWT Token 
       console.log(error);
       res.status(500);
       res.send("internal server error");
@@ -188,38 +207,38 @@ app.post("/sendmessage", (req, res) => {
       if (req.body.uid === decodeToken.uid) {
         const refSend = db.ref(
           `${decodeToken.uid}/chats/${req.body.Recipetuid}/messages`
-        );
+        ); // Referense for sender accout
         const refRecive = db.ref(
           `${req.body.Recipetuid}/chats/${decodeToken.uid}/messages`
-        );
+        ); // Referense for reciver accout
         const reciveSession = db.ref(
           `${req.body.Recipetuid}/chats/${decodeToken.uid}`
-        );
+        );// Referense for sender session
         const sendSession = db.ref(
           `${decodeToken.uid}/chats/${req.body.Recipetuid}`
-        );
-        if (req.body.sessionId) {
+        ); // Referense for resiver session
+        if (req.body.sessionId) { // check if sessionId is send by frontend or not 
           sendSession.update({
             sessionId: req.body.sessionId,
-          });
+          }); // save sesion id for sender
           reciveSession.update({
             sessionId: req.body.sessionId,
-          });
+          });// save sesion id for Reciver
         }
         refSend.push().set(
           {
             message: req.body.message,
             send: true,
-          },
+          }, //Save messag for sender 
           (error) => {
-            if (!error) {
+            if (!error) { // Check for error
               refRecive.push().set(
                 {
                   message: req.body.message,
                   send: false,
-                },
-                (error) => {
-                  if (!error) {
+                }, //Save messag for Reciver
+                (error) => { 
+                  if (!error) { //Check for error
                     res.status(201);
                     res.send("done");
                   } else {

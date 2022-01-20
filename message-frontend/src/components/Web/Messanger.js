@@ -154,8 +154,7 @@ export default function Messanger(props) {
     <Box h="100%" flexDirection="column" d="flex">
       <Box
         overflowY="auto"
-        d="flex"
-        flexDirection="column"
+       
         css={{
           "&::-webkit-scrollbar": {
             width: "4px",
