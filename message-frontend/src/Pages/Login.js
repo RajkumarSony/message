@@ -19,14 +19,14 @@ import Cookies from "js-cookie";
 import axios from "axios";
 export default function SimpleCard() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
+  const [email, setEmail] = useState(null); // Manage Email State input from user
+  const [password, setPassword] = useState(null); // Manage password State input from user
   const [error, Seterror] = useState({
     code: null,
     error: false,
     message: null,
-  });
-
+  }); // Manage Error State
+// Login Handler 
   const login = (event) => {
     event.preventDefault();
     if (
@@ -35,9 +35,10 @@ export default function SimpleCard() {
       password !== "" &&
       password !== null
     ) {
-      signInWithEmailAndPassword(auth, email, password)
+      signInWithEmailAndPassword(auth, email, password) // Login user with email and password firebase auth
         .then(async (userCredential) => {
-          localStorage.setItem("user", auth.currentUser);
+          localStorage.setItem("user", auth.currentUser); // Set user in Local Storage
+          // Request sesseion id and databaeKey
           axios.post("/session/login",  {
             uid:auth.currentUser.uid,
           },
@@ -47,24 +48,27 @@ export default function SimpleCard() {
               'Content-Type': 'application/json'
             },
           }).then(async (res)=>{
-
+            // Retrive password protected Idetity from SSKS server and store in local database encrupted with databaseKey
           await  retrieveIdentity({userId:auth.currentUser.uid,password:password,databaseKey:Cookies.get("databaseKey"),sessionID:Cookies.get("sessionId")})
-            navigate("/");
+            navigate("/"); // Navigate to homePage
           })
         })
         .catch((error) => {
+          // Error Handling user not found
           if (error.code === "auth/user-not-found") {
             Seterror({
               code: error.code,
               error: true,
               message: "Email not registered plese SignUp first",
             });
+             // Error Handling Invalid Email Id
           } else if (error.code === "auth/invalid-email") {
             Seterror({
               code: error.code,
               error: true,
               message: "Invalid Email address",
             });
+              // Error Handling Wrong Password
           } else if (error.code === "auth/wrong-password") {
             Seterror({
               code: error.code,
@@ -72,6 +76,7 @@ export default function SimpleCard() {
               message: "Forget your password? Reset it",
             });
           } else {
+              // Error Handling Unknown Error
             Seterror({
               code: error.code,
               error: true,
@@ -81,6 +86,7 @@ export default function SimpleCard() {
           }
         });
     } else {
+      // Error Handling no email provided
       Seterror({
         code: "email empty",
         error: true,
@@ -88,6 +94,8 @@ export default function SimpleCard() {
       });
     }
   };
+
+  // Email handler update email state on change of email field in form 
   const handleEmail = (event) => {
     setEmail(event.target.value);
     Seterror({
@@ -96,6 +104,7 @@ export default function SimpleCard() {
       message: null,
     });
   };
+    // password handler update password state on change of passwordl field in form 
   const handlePassword = (event) => {
     setPassword(event.target.value);
     Seterror({
@@ -111,13 +120,14 @@ export default function SimpleCard() {
         minH={"100vh"}
         align={"center"}
         justify={"center"}
-        // bg={("gray.50", "gray.800")}
+       
       >
         <Stack spacing={8} mx={"auto"} maxW={"lg"} py={12} px={6}>
           <Stack align={"center"}>
             <Heading fontSize={"4xl"}>LogIn to your account</Heading>
             <Text fontSize={"lg"} color={"gray.600"}>
               to enjoy all of our cool{" "}
+              {/* reacLink is Defined as react Link from react-router-dom */}
               <Link as={reachLink} to="/features" color={"blue.400"}>
                 features
               </Link>{" "}
@@ -126,7 +136,7 @@ export default function SimpleCard() {
           </Stack>
           <Box
             rounded={"lg"}
-            // bg={("white", "gray.700")}
+           
             boxShadow={"lg"}
             p={8}
           >

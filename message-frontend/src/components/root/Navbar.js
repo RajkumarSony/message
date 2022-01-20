@@ -14,10 +14,12 @@ function Navbar() {
   const [user, Setuser] = useState(
     localStorage.getItem("user") || auth.currentUser
   );
-  const [smNav, setSmNav] = useState(false);
+  const [smNav, setSmNav] = useState(false); // Handle Hamburger on Small device navbar
   const logOut = () => {
+    // Ṣignout user from the firebase auth account 
     signOut(auth).then(() => {
       Setuser(false);
+      // Request to clear databaekey and session id and destroy the session after logout
       axios.post("/session/logout", {reqest:"logout"},  {
         headers: {
          
@@ -33,7 +35,9 @@ function Navbar() {
   };
   const smLogOut = () => {
     signOut(auth).then(() => {
+      // Ṣignout user from the firebase auth account 
       Setuser(false);
+      // Request to clear databaekey and session id and destroy the session after logout on small device
       axios.post("/session/logout", {reqest:"logout"},  {
         headers: {
           
@@ -48,10 +52,11 @@ function Navbar() {
     });
   };
   const login = () => {
-    
+    // Handel Login BUton redirect page
     navigate("/auth/login");
   };
   const smLogin = () => {
+     // Handel Login BUton redirect page
     navigate("/auth/login");
     handleHamburger()
   };
@@ -61,7 +66,19 @@ function Navbar() {
       // https://firebase.google.com/docs/reference/js/firebase.User
       Setuser(true); // ...
     } else {
-      Setuser(false);
+      
+      axios.post("/session/logout", {reqest:"logout"},  {
+        headers: {
+          
+          "Content-Type": "application/json",
+        },
+      }).then(res=>{
+        console.log(res)
+        localStorage.removeItem("user");
+        navigate("/auth/login");
+       
+        Setuser(false);
+      })
     }
   });
   const handleHamburger = () => {
