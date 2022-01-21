@@ -13,6 +13,7 @@ export default function Messanger(props) {
   const [data, setData] = useState();
   const [loading, setLoading] = useState(false);
   const [Val, setVal] = useState("");
+  const inputFocus=useRef()
   const handelChange = (event) => {
     setVal(event.target.value);
     if (event.target.value === "") {
@@ -26,6 +27,7 @@ export default function Messanger(props) {
   };
   const handleSubmit = () => {
     if (Val !== "") {
+      inputFocus.current?.focus()
       setLoading(true);
       // SOlve this Error of not updation
       get(ref(db, `${auth.currentUser.uid}/chats/${props.uid}/sessionId`)).then(
@@ -283,6 +285,7 @@ export default function Messanger(props) {
             style={{ border: "1px solid white", width: "100%" }}
             align="center"
             value={Val}
+            ref={inputFocus}
             css={{
               "&::-webkit-scrollbar": {
                 display: "none",

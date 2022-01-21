@@ -67,18 +67,10 @@ function Navbar() {
       Setuser(true); // ...
     } else {
       
-      axios.post("/session/logout", {reqest:"logout"},  {
-        headers: {
-          
-          "Content-Type": "application/json",
-        },
-      }).then(res=>{
-        console.log(res)
-        localStorage.removeItem("user");
-        navigate("/auth/login");
+   
        
         Setuser(false);
-      })
+     
     }
   });
   const handleHamburger = () => {
