@@ -102,7 +102,7 @@ export default function Header() {
                         DOWNLOAD NOW
                       </Link>
                     )}
-                    <Stack
+                    {supported()&& !isInstalled()&& <Stack
                       d={{ sm: "none", md: "flex" }}
                       color={{ md: "#1CB39B" }}
                       fontSize={{ md: "18px" }}
@@ -152,7 +152,7 @@ export default function Header() {
                           <Icon mx="0.5rem" as={IoIosArrowForward} />{" "}
                         </Link>
                       </Box>
-                    </Stack>
+                    </Stack>}
                   </Box>
                 </Box>
               </Box>
