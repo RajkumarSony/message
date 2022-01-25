@@ -266,7 +266,9 @@ export default function Messanger(props) {
         )}
         <Box ref={messagesEndRef}></Box>
       </Box>
-      {showPicker&&<Picker disableSearchBar={true} preload={true} pickerStyle={{height:"200px",width:"100%",position:"absolute",bottom:y,transition:"all 0.8s ease-in-out"}} onEmojiClick={onEmojiClick} />}
+      {showPicker&&<Box   w={{ md: "60%", sm: "100%", lg: "70%" }} position="absolute" h="200px" bottom={y} transition="all 0.8s ease-in-out">
+        <Picker disableSearchBar={true} preload={true} pickerStyle={{height:"100%",width:"100%"}} onEmojiClick={onEmojiClick} />
+        </Box>}
       <Box
         borderLeft="1px solid gray"
         backgroundColor="white"
