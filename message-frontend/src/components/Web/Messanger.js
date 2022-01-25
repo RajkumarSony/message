@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Box, Textarea, Icon, Button,Text } from "@chakra-ui/react";
+import { Box, Textarea, Icon, Button,Text, background } from "@chakra-ui/react";
 import { MdSend, MdMic, MdOutlineEmojiEmotions } from "react-icons/md";
 import { TiAttachmentOutline } from "react-icons/ti";
 
@@ -8,11 +8,16 @@ import axios from "axios";
 import { onValue, ref, get } from "firebase/database";
 import {getSealdSDKInstance} from "../../SealedInit";
 import {BiLockAlt} from "react-icons/bi"
+import Picker from 'emoji-picker-react';
+
 export default function Messanger(props) {
+  const [chosenEmoji, setChosenEmoji] = useState(null);
+  const [showPicker, setShowPicker] = useState(false);
   const [micIcon, setMicIcon] = useState(true);
   const [data, setData] = useState();
   const [loading, setLoading] = useState(false);
   const [Val, setVal] = useState("");
+  const [y, setY] = useState("-100%");
   const inputFocus=useRef()
   const handelChange = (event) => {
     setVal(event.target.value);
@@ -117,7 +122,24 @@ export default function Messanger(props) {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+  const handleEmoji=()=>{
+    inputFocus.current.focus()
+    setShowPicker(!showPicker)
+    if(y==="-100%"){
+      setY("55px")
 
+    }else{
+      setY("-100%")
+    }
+  }
+  const onEmojiClick = (event, emojiObject) => {
+    inputFocus.current.focus()
+    setChosenEmoji(emojiObject);
+    console.log(emojiObject.emoji)
+    setVal(Val+emojiObject.emoji)
+    setMicIcon(false)
+    
+  };
   useEffect(() => {
     scrollToBottom();
   }, [data]);
@@ -244,11 +266,12 @@ export default function Messanger(props) {
         )}
         <Box ref={messagesEndRef}></Box>
       </Box>
+      {showPicker&&<Picker disableSearchBar={true} preload={true} pickerStyle={{height:"200px",width:"100%",position:"absolute",bottom:y,transition:"all 0.8s ease-in-out"}} onEmojiClick={onEmojiClick} />}
       <Box
         borderLeft="1px solid gray"
         backgroundColor="white"
         alignItems="center"
-        h={20}
+        h="60px"
         d="flex"
         flexDirection="row"
       >
@@ -262,9 +285,10 @@ export default function Messanger(props) {
           w={8}
           h={8}
           color="rgba(100,100,100,0.3)"
+          onClick={handleEmoji}
           as={MdOutlineEmojiEmotions}
         />
-
+ 
         <Box
           h={10}
           d="flex"
