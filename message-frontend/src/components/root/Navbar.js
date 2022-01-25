@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, Link as reachLink, Outlet } from "react-router-dom";
 import { Box, Image, Button, Icon, Link, Stack } from "@chakra-ui/react";
 import messageHubLogo from "../../assets/icons/iconwhite.png";
@@ -8,9 +8,10 @@ import { auth } from "../../FirebaseConfig";
 import { AiOutlineLogin, AiOutlineLogout } from "react-icons/ai";
 import { MdClose, MdOutlineMenu } from "react-icons/md";
 import axios from "axios";
-function Navbar() {
+function Navbar(props) {
   const navigate = useNavigate();
-
+  const [isHome, SetisHome] = useState(true)
+  
   const [user, Setuser] = useState(
     localStorage.getItem("user") || auth.currentUser
   );
@@ -20,12 +21,12 @@ function Navbar() {
     signOut(auth).then(() => {
       Setuser(false);
       // Request to clear databaekey and session id and destroy the session after logout
-      axios.post("/session/logout", {reqest:"logout"},  {
+      axios.post("/session/logout", { reqest: "logout" }, {
         headers: {
-         
+
           "Content-Type": "application/json",
         },
-      }).then(res=>{
+      }).then(res => {
         console.log(res)
         localStorage.removeItem("user");
         navigate("/auth/login");
@@ -38,12 +39,12 @@ function Navbar() {
       // Ṣignout user from the firebase auth account 
       Setuser(false);
       // Request to clear databaekey and session id and destroy the session after logout on small device
-      axios.post("/session/logout", {reqest:"logout"},  {
+      axios.post("/session/logout", { reqest: "logout" }, {
         headers: {
-          
+
           "Content-Type": "application/json",
         },
-      }).then(res=>{
+      }).then(res => {
         console.log(res)
         localStorage.removeItem("user");
         navigate("/auth/login");
@@ -56,23 +57,26 @@ function Navbar() {
     navigate("/auth/login");
   };
   const smLogin = () => {
-     // Handel Login BUton redirect page
+    // Handel Login BUton redirect page
     navigate("/auth/login");
     handleHamburger()
   };
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/firebase.User
-      Setuser(true); // ...
-    } else {
-      
-   
-       
+  useEffect(() => {
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, see docs for a list of available properties
+        // https://firebase.google.com/docs/reference/js/firebase.User
+        Setuser(true); // ...
+      } else {
+
+
+
         Setuser(false);
-     
-    }
-  });
+
+      }
+    });
+  }, [])
   const handleHamburger = () => {
     setSmNav(!smNav);
   };
@@ -106,24 +110,24 @@ function Navbar() {
         >
           {/* <Icon d={{md:"none"}} alignSelf="flex-end" as={MdOutlineMenu} /> */}
           <Box d="flex" width="100%" alignItems="center">
-            <Box w={{md:"210px" }}d={{ lg: "block", sm: "none" }}>
+            <Box w={{ md: "210px" }} d={{ lg: "block", sm: "none" }}>
               <Link as={reachLink} to="/">
-                <Image src={messageHubLogo} alt="Brand Logo" h={{ md: "55px" }} w={{md:"100%"}} />
+                <Image src={messageHubLogo} alt="Brand Logo" h={{ md: "55px" }} w={{ md: "100%" }} />
               </Link>
             </Box>
             <Box
               d={{ lg: "none", sm: "block" }}
-              position={{ md: "sticky", sm: "absolute" }}
+              position={{ md: "sticky", sm: isHome ? "absolute" : "sticky" }}
               left={{ sm: "50%", md: "unset" }}
               top={{ sm: "64px", md: "unset" }}
-              transform={{ sm: "translateX(-50%)", md: "unset" }}
+              transform={{ sm: isHome ? "translateX(-50%)" : "none", md: "unset" }}
             >
               <Link as={reachLink} to="/">
                 <Image
                   src={messageHubLogoSmall}
                   alt="Brand Logo"
                   w="auto"
-                  h={{ md: "50px", sm: "77px" }}
+                  h={{ md: "50px", sm: isHome ? "77px" : "40px" }}
                 />
               </Link>
             </Box>
@@ -177,7 +181,7 @@ function Navbar() {
               fontSize={25}
               fontWeight={500}
               lineHeight="120%"
-              h="16px"
+              h="fit-content"
               d={{ md: "none" }}
             >
               <Button
@@ -245,17 +249,17 @@ function Navbar() {
                   />
                 </Button>
                 <Stack color="white" fontSize="16px" lineHeight="26px" fontWeight="400" pt="32px" my="0" mx="auto" w="80%">
-                  <Box  onClick={handleHamburger} borderBottom="1px solid #e359ea" m={0} py="16px">
+                  <Box onClick={handleHamburger} borderBottom="1px solid #e359ea" m={0} py="16px">
                     <Link as={reachLink} to="/web">
                       CHATS
                     </Link>
                   </Box>
-                  <Box  onClick={handleHamburger} borderBottom="1px solid #e359ea" m={0} py="16px">
+                  <Box onClick={handleHamburger} borderBottom="1px solid #e359ea" m={0} py="16px">
                     <Link as={reachLink} to="/download">
                       DOWNLOAD
                     </Link>
                   </Box>
-                  <Box  onClick={handleHamburger} borderBottom="1px solid #e359ea" m={0} py="16px">
+                  <Box onClick={handleHamburger} borderBottom="1px solid #e359ea" m={0} py="16px">
                     <Link as={reachLink} to="/features">
                       FEATURES
                     </Link>
@@ -271,16 +275,16 @@ function Navbar() {
                     </Link>
                   </Box>
                   <Box m={0} py="16px">
-                  <Box
-             
-              onClick={user ? smLogOut : smLogin}
-              variant="ghost"
-            >
-              <Icon
-                style={{ padding: "0 4px", fontSize: "28", fontWeight: "bold" }}
-                as={user ? AiOutlineLogout : AiOutlineLogin}
-              />
-            </Box>
+                    <Box
+
+                      onClick={user ? smLogOut : smLogin}
+                      variant="ghost"
+                    >
+                      <Icon
+                        style={{ padding: "0 4px", fontSize: "28", fontWeight: "bold" }}
+                        as={user ? AiOutlineLogout : AiOutlineLogin}
+                      />
+                    </Box>
                   </Box>
                 </Stack>
               </Box>
@@ -290,20 +294,20 @@ function Navbar() {
 
         {/* </Flex> */}
       </Box>
-      <Box overflowY={{md:"auto"}}   css={{
-    '&::-webkit-scrollbar': {
-      width: '10px',
-    },
-    '&::-webkit-scrollbar-track': {
-      width: '14px',
-      
-    },
-    '&::-webkit-scrollbar-thumb': {
-      backgroundColor:"#e359ea",
-      borderRadius: '34px',
-    },
-  }} h={{md:"83vh"}}>
-      <Outlet />
+      <Box overflowY={{ md: "auto" }} css={{
+        '&::-webkit-scrollbar': {
+          width: '10px',
+        },
+        '&::-webkit-scrollbar-track': {
+          width: '14px',
+
+        },
+        '&::-webkit-scrollbar-thumb': {
+          backgroundColor: "#e359ea",
+          borderRadius: '34px',
+        },
+      }} h={{ md: "83vh" }}>
+        <Outlet context={[isHome,SetisHome]} />
       </Box>
     </>
   );

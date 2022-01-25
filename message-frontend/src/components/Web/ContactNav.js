@@ -10,7 +10,7 @@ export default function ContactNav(props) {
         <Box d="flex" w="100%" alignItems="center" borderRight="1px solid #dc27cd" justifyContent="space-between" boxSizing='content-box' pb={{md:"5px"}} backgroundColor="#e359ea" h="100%">
             <Box ml={2} d="flex" alignItems="center" h="100%" >
            
-        <Avatar onClick={props.profile} cursor="pointer"  src={props.src} name={props.name} />
+        <Avatar onClick={props.profile} cursor="pointer" maxH="100%" src={props.src} name={props.name} />
             </Box>
             <Box d='flex' mr={3}  >
             

@@ -23,7 +23,7 @@ export default function MessageNav(props) {
       >
         <Box ml={2} d="flex" alignItems="center" h="100%" >
           <Icon color="white" mr={2} onClick={handleBack} fontSize={28} as={IoMdArrowRoundBack} />
-          <Avatar name={props.name} src={props.src} mr={2}/>
+          <Avatar name={props.name} maxH="100%" src={props.src} mr={2}/>
           <Text color="white" fontSize="xl">
              {props.name}
           </Text>

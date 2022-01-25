@@ -32,7 +32,7 @@ export default function UpdateProfile(props) {
     setDrop(false);
     console.log(acceptedFiles);
     console.log(files);
-  }, []);
+      },[files]);
 
   const { getRootProps, getInputProps, open, isDragReject, isDragActive } =
     useDropzone({
