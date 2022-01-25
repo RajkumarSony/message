@@ -26,7 +26,6 @@ const MESSAGES = () => {
     </Box>
   );
 };
-
 const SECURITY=()=>{
   return(
     <Box>

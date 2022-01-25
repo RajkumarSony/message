@@ -5,7 +5,6 @@ import { ChakraProvider } from "@chakra-ui/react";
 import Home from "./Pages/Home";
 import Web from "./Pages/Web";
 import Features from "./Pages/Features";
-import Download from "./Pages/Download";
 import HelpCenter from "./Pages/HelpCenter";
 import Security from "./Pages/security";
 import NotFound from "./Pages/NotFound";
@@ -31,7 +30,6 @@ function App() {
               {/* Sub Rotues of / */}
               <Route index element={<Home  />} />
               <Route path={"features"} element={<Features  />} />
-              <Route path="download" element={<Download />} />
               <Route path="security" element={<Security  />} />
               <Route path="help-center" element={<HelpCenter />} />
               <Route path="auth">
