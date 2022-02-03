@@ -17,10 +17,12 @@ import { Navigate, useNavigate, Link as reachLink } from "react-router-dom";
 import { retrieveIdentity } from "../SealedInit";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { load } from "dotenv";
 export default function SimpleCard() {
   const navigate = useNavigate();
   const [email, setEmail] = useState(null); // Manage Email State input from user
   const [password, setPassword] = useState(null); // Manage password State input from user
+  const [loading,Setloading]=useState(false)
   const [error, Seterror] = useState({
     code: null,
     error: false,
@@ -28,6 +30,7 @@ export default function SimpleCard() {
   }); // Manage Error State
 // Login Handler 
   const login = (event) => {
+    Setloading(true)
     event.preventDefault();
     if (
       email !== "" &&
@@ -54,6 +57,7 @@ export default function SimpleCard() {
           })
         })
         .catch((error) => {
+          Setloading(false)
           // Error Handling user not found
           if (error.code === "auth/user-not-found") {
             Seterror({
@@ -92,6 +96,7 @@ export default function SimpleCard() {
         error: true,
         message: "Email & Password is required for login",
       });
+      Setloading(false)
     }
   };
 
@@ -184,6 +189,8 @@ export default function SimpleCard() {
                     <Link color={"blue.400"}>Forgot password?</Link>
                   </Stack>
                   <Button
+                  loadingText="Checking Info..."
+                  isLoading={loading}
                     type="submit"
                     bg={"blue.400"}
                     color={"white"}

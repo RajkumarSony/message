@@ -279,16 +279,23 @@ export default function Messanger(props) {
       >
         <Icon
           w={8}
+          cursor='pointer'
           h={8}
           color="rgba(150,150,150,1)"
           as={TiAttachmentOutline}
+          _hover={{color:"green"}}
+       
         />
         <Icon
           w={8}
           h={8}
           color="rgba(100,100,100,0.3)"
           onClick={handleEmoji}
+          cursor="pointer"
           as={MdOutlineEmojiEmotions}
+          _hover={{color:"yellow"}}
+           
+     
         />
  
         <Box

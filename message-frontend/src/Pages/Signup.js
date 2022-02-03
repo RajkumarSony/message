@@ -29,6 +29,7 @@ export default function SignupCard() {
   const [password, setPassword] = useState(null);
   const [fname, setFname] = useState(null);
   const [lname, setLname] = useState(null);
+  const [loading,Setloading]=useState(false)
   const [error, Seterror] = useState({
     code: null,
     error: false,
@@ -57,6 +58,7 @@ export default function SignupCard() {
     })
   }
   const signup = (event) => {
+    Setloading(true)
     event.preventDefault();
     console.log(email);
     if (
@@ -93,6 +95,7 @@ export default function SignupCard() {
          
         })
         .catch((error) => {
+          Setloading(false)
           if (error.code === "auth/email-already-in-use") {
             Seterror({
               code: error.code,
@@ -120,6 +123,7 @@ export default function SignupCard() {
         error: true,
         message: "fill required filds marked with *",
       });
+      Setloading(false)
       console.log(email);
     }
   };
@@ -243,7 +247,8 @@ export default function SignupCard() {
                 </FormControl>
                 <Stack spacing={10} pt={2}>
                   <Button
-                    loadingText="Submitting"
+                    loadingText="Creating Account..."
+                 isLoading={loading}
                     type="submit"
                     size="lg"
                     bg={"blue.400"}
