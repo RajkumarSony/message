@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/root/Navbar";
 import { ChakraProvider } from "@chakra-ui/react";
@@ -14,8 +14,30 @@ import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import "./style.css";
 import ReactPWAInstallProvider from "react-pwa-install";
-
+import {messaging} from "./FirebaseConfig"
+import { getToken ,onMessage} from "firebase/messaging";
 function App() {
+useEffect(() => {
+  
+getToken(messaging,{vapidKey:process.env.REACT_APP_vapidkey}).then((currentToken)=>{
+  if (currentToken) {
+    // Send the token to your server and update the UI if necessary
+    // ...
+    console.warn("token: ", currentToken)
+  } else {  
+    // Show permission request UI
+    console.log('No registration token available. Request permission to generate one.');
+    // ...
+  }
+})
+}, [])
+useEffect(() => {
+  onMessage(messaging, (payload) => {
+    console.log('Message received. ', payload);
+   
+    // ...
+  });
+}, [])
 
   return (
     // wraph the app in ChkraProvider to use Chakra element inside it
