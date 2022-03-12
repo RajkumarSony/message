@@ -106,7 +106,7 @@ function Navbar(props) {
         pb={{ sm: "61px", md: "0" }}
         d="flex"
         flexDirection="row"
-        backgroundColor="#e359ea"
+        backgroundColor="#05c2c8"
         // maxW="100%"
         minW="100%"
         justifyContent="center"

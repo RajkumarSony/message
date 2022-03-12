@@ -4,15 +4,15 @@ import Messanger from "../components/Web/Messanger";
 import ContactNav from "../components/Web/ContactNav";
 import AddContact from "../components/Web/AddContact";
 import MessageNav from "../components/Web/MessageNav";
-import { Box ,Text} from "@chakra-ui/react";
-
+import { Box ,Text,Icon} from "@chakra-ui/react";
+import {BiNotification,BiNotificationOff} from "react-icons/bi"
 import { Navigate } from "react-router-dom";
-import { auth, db } from "../FirebaseConfig";
+import { auth, db,messaging } from "../FirebaseConfig";
 
 import RecentMsg from "../components/Web/RecentMsg";
 import UpdateProfile from "../components/Web/UpdateProfile";
 import { onValue, ref } from "firebase/database";
-
+import { getToken ,onMessage} from "firebase/messaging";
 
 export default function Web() {
   const [Mnav, setMnav] = useState({
@@ -26,7 +26,7 @@ export default function Web() {
   const [popupContactList, setPopupContactList] = useState("-100%");
   const [url, setUrl] = useState();
   const [popupProfile, setPopupProfile] = useState(false);
-
+const [notification, Setnotification] = useState(false)
   const [error, setError] = useState({
     error: false,
     code: null,
@@ -70,7 +70,35 @@ export default function Web() {
       setPopupContactList("-100%");
     }
   };
+  useEffect(() => {
+    if (auth.currentUser) {
+    getToken(messaging,{vapidKey:process.env.REACT_APP_vapidkey}).then((currentToken)=>{
+      if (currentToken) {
+        // Send the token to your server and update the UI if necessary
+        // ...
+        Setnotification(true)
+        console.warn("token: ", currentToken)
+      } else {  
+        // Show permission request UI
+        console.log('No registration token available. Request permission to generate one.');
+        Setnotification(false)
 
+        // ...
+      }
+    }).catch((error)=>{
+      console.log("rejected Permission")
+      console.log(error.code)
+      Setnotification(false)
+    })
+  }
+    }, [])
+    useEffect(() => {
+      onMessage(messaging, (payload) => {
+        console.log('Message received. ', payload);
+       
+        // ...
+      });
+    }, [])
   useEffect(() => {
     if (auth.currentUser) {
       onValue(ref(db, `${auth.currentUser.uid}/PersonalInfo/photoURL`), (snapshot) => {
@@ -86,6 +114,7 @@ export default function Web() {
     };
 
     return (
+      <>
       <Box
         d="flex"
         position="absolute"
@@ -200,7 +229,7 @@ export default function Web() {
           zIndex="1"
           w={{ md: "60%", sm: xwidth, lg: "70%" }}
           color="white"
-          backgroundColor="#20796f"
+          backgroundColor="#bceef7"
           d={{md:!uid?"flex":"none",sm:"none"}}
           justifyContent="center"
           alignItems="center"
@@ -210,6 +239,11 @@ export default function Web() {
           </Text>
         </Box>
       </Box>
+      <Box position="absolute"  left="80px" top="5px">
+        <Icon color="white" fontSize={{sm:"28px",md:"34px"}} as={notification?BiNotificationOff:BiNotification}/>
+        </Box>
+
+      </>
     );
   }
   return <Navigate to="/auth/login" />;

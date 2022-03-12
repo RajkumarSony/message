@@ -188,11 +188,11 @@ export default function Messanger(props) {
             backgroundColor: "transparent",
           },
           "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "rgba(81, 231, 176, 0.234)",
+            backgroundColor: "#e5ebef",
             borderRadius: "34px",
           },
         }}
-        backgroundColor="#20796f"
+        backgroundColor="#bceef7"
         h="100%"
       >
         <Box minH={8} h="fit-content" m={5} mb="10px" d="flex" justifyContent="center">
@@ -230,7 +230,7 @@ export default function Messanger(props) {
                   d="felx"
                   justifyContent="center"
                   alignItems="center"
-                  backgroundColor={mes.send ? "gray" : "blue"}
+                  backgroundColor={mes.send ? "#f0d1d1" : "#a2d7fc"}
                   flexDirection="row"
                   p={2}
                   minW={6}

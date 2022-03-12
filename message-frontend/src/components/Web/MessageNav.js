@@ -14,7 +14,7 @@ export default function MessageNav(props) {
         d="flex"
         alignItems="center"
         justifyContent="space-between"
-        backgroundColor="#e359ea"
+        backgroundColor="#05c2c8"
         h="100%"
         zIndex="1000"
         boxSizing="content-box"
