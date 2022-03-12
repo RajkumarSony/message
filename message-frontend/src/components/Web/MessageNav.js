@@ -19,7 +19,7 @@ export default function MessageNav(props) {
         zIndex="1000"
         boxSizing="content-box"
         pb={{md:"5px"}}
-        borderLeft="1px solid #dc27cd"
+        borderLeft="1px solid #05c2c8"
       >
         <Box ml={2} d="flex" alignItems="center" h="100%" >
           <Icon color="white" mr={2} onClick={handleBack} fontSize={28} as={IoMdArrowRoundBack} />

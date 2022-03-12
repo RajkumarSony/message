@@ -5,7 +5,7 @@ import ContactNav from "../components/Web/ContactNav";
 import AddContact from "../components/Web/AddContact";
 import MessageNav from "../components/Web/MessageNav";
 import { Box ,Text,Icon} from "@chakra-ui/react";
-import {BiNotification,BiNotificationOff} from "react-icons/bi"
+// import {BiNotification,BiNotificationOff} from "react-icons/bi"
 import { Navigate } from "react-router-dom";
 import { auth, db,messaging } from "../FirebaseConfig";
 
@@ -13,6 +13,7 @@ import RecentMsg from "../components/Web/RecentMsg";
 import UpdateProfile from "../components/Web/UpdateProfile";
 import { onValue, ref } from "firebase/database";
 import { getToken ,onMessage} from "firebase/messaging";
+import axios from "axios";
 
 export default function Web() {
   const [Mnav, setMnav] = useState({
@@ -26,7 +27,7 @@ export default function Web() {
   const [popupContactList, setPopupContactList] = useState("-100%");
   const [url, setUrl] = useState();
   const [popupProfile, setPopupProfile] = useState(false);
-const [notification, Setnotification] = useState(false)
+// const [notification, Setnotification] = useState(false)
   const [error, setError] = useState({
     error: false,
     code: null,
@@ -76,19 +77,32 @@ const [notification, Setnotification] = useState(false)
       if (currentToken) {
         // Send the token to your server and update the UI if necessary
         // ...
-        Setnotification(true)
+
+        axios.post("/notification",{
+          token:currentToken
+        },{
+          headers:{
+            authorization: auth.currentUser.accessToken,
+            "Content-Type": "application/json",
+          }
+        }).then(res=>{
+          console.log(res.status)
+        }).catch(err=>{
+          console.log(err)
+        })
+        // Setnotification(true)
         console.warn("token: ", currentToken)
       } else {  
         // Show permission request UI
         console.log('No registration token available. Request permission to generate one.');
-        Setnotification(false)
+        // Setnotification(false)
 
         // ...
       }
     }).catch((error)=>{
       console.log("rejected Permission")
       console.log(error.code)
-      Setnotification(false)
+      // Setnotification(false)
     })
   }
     }, [])
@@ -239,9 +253,7 @@ const [notification, Setnotification] = useState(false)
           </Text>
         </Box>
       </Box>
-      <Box position="absolute"  left="80px" top="5px">
-        <Icon color="white" fontSize={{sm:"28px",md:"34px"}} as={notification?BiNotificationOff:BiNotification}/>
-        </Box>
+     
 
       </>
     );

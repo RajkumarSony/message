@@ -353,7 +353,7 @@ function Navbar(props) {
             width: "14px",
           },
           "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "#e359ea",
+            backgroundColor: "#05c2c8",
             borderRadius: "34px",
           },
         }}
