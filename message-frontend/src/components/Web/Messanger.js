@@ -219,11 +219,12 @@ export default function Messanger(props) {
           data.map((mes, index) => {
             return (
               <Box
-                h={8}
+                minH={8}
                 key={index}
                 m={5}
                 d="flex"
                 justifyContent={mes.send ? "flex-end" : "flex-start"}
+                h="fit-content"
               >
                 <Box
                   borderRadius={5}
@@ -234,9 +235,14 @@ export default function Messanger(props) {
                   flexDirection="row"
                   p={2}
                   minW={6}
+                  minH={5}
                   w="fit-content"
+                  h="fit-content"
+                  maxW="70%"
                 >
                   <p>{mes.message}</p>
+                  
+               
                 </Box>
               </Box>
             );
