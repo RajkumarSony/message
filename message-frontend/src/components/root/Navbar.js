@@ -232,7 +232,7 @@ function Navbar(props) {
                 right={smNav ? "0" : "-100%"}
                 zIndex={3}
                 boxSizing="border-box"
-                backgroundColor="#dc27cd"
+                backgroundColor="#05c2c8"
                 h="100%"
                 top="0"
                 w="100%"

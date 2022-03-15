@@ -95,7 +95,7 @@ export default function Header() {
                         fontSize="16px"
                         cursor="pointer"
                         variant="solid"
-                        backgroundColor="#dc27cd"
+                        backgroundColor="#05c2c8"
                         color="white"
                         d={{ sm: "inline-block", md: "none" }}
                       >
