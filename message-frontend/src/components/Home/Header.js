@@ -28,7 +28,7 @@ export default function Header() {
         <Box
           pb={{ md: "56px", sm: "0px" }}
           color={{ sm: "#fff", md: "#1c1e21" }}
-          backgroundColor={{ sm: "#e359ea", md: "white" }}
+          backgroundColor={{ sm: "#05c2c8", md: "white" }}
           pt={"56px"}
           textAlign={{ md: "left", sm: "center" }}
           h="fit-content"
@@ -95,7 +95,7 @@ export default function Header() {
                         fontSize="16px"
                         cursor="pointer"
                         variant="solid"
-                        backgroundColor="#05c2c8"
+                        backgroundColor="#dc27cd"
                         color="white"
                         d={{ sm: "inline-block", md: "none" }}
                       >
