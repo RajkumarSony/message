@@ -285,7 +285,7 @@ function Navbar(props) {
                 >
                   <Box
                     onClick={handleHamburger}
-                    borderBottom="1px solid #0d7477"
+                    borderBottom="1px solid #48eaef"
                     m={0}
                     py="16px"
                   >
@@ -295,7 +295,7 @@ function Navbar(props) {
                   </Box>
                   <Box
                     onClick={handleHamburger}
-                    borderBottom="1px solid #0d7477"
+                    borderBottom="1px solid #48eaef"
                     m={0}
                     py="16px"
                   >
@@ -305,7 +305,7 @@ function Navbar(props) {
                   </Box>
                   <Box
                     onClick={handleHamburger}
-                    borderBottom="1px solid #0d7477"
+                    borderBottom="1px solid #48eaef"
                     m={0}
                     py="16px"
                   >
@@ -315,7 +315,7 @@ function Navbar(props) {
                   </Box>
                   <Box
                     onClick={handleHamburger}
-                    borderBottom="1px solid #0d7477"
+                    borderBottom="1px solid #48eaef"
                     m={0}
                     py="16px"
                   >
