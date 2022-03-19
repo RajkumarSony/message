@@ -5,7 +5,11 @@ import {
   Icon,
   Button,
   Text,
-  background,
+  Slider,
+  SliderTrack,
+  SliderFilledTrack,
+  SliderThumb,
+  SliderMark,
 } from "@chakra-ui/react";
 import { MdSend, MdMic, MdStop, MdOutlineEmojiEmotions } from "react-icons/md";
 import { TiAttachmentOutline } from "react-icons/ti";
@@ -27,6 +31,8 @@ export default function Messanger(props) {
   const [y, setY] = useState("-100%");
   const [recording, Setrecording] = useState(false);
   const inputFocus = useRef();
+  const [playerVal, setPlayerVal] = useState(0)
+  const [pAudio, setpAudio] = useState(false)
   const handelChange = (event) => {
     setVal(event.target.value);
     if (event.target.value === "") {
@@ -56,8 +62,17 @@ export default function Messanger(props) {
         .getMp3()
         .then(([buffer, blob]) => {
           Setrecording(false);
+      
           console.log("Stopped");
-          console.log(blob);
+          // console.log(blob);
+          const player = new Audio(URL.createObjectURL(blob));
+          setpAudio(true)
+          player.play();
+          player.ontimeupdate=()=>{
+           setPlayerVal((player.currentTime / player.duration) * 100)
+           console.log((player.currentTime / player.duration) * 100)
+           console.log(playerVal)
+          }
         })
         .catch((err) => {
           Setrecording(false);
@@ -370,10 +385,11 @@ export default function Messanger(props) {
           d="flex"
           borderRadius={40}
           alignItems="center"
+          justifyContent="center"
           overflowY="hidden"
           w="100%"
         >
-          <Textarea
+          {!pAudio? <Textarea
             onChange={handelChange}
             onKeyDown={handleKeyDown}
             isDisabled={props.uid ? false : true}
@@ -392,7 +408,12 @@ export default function Messanger(props) {
               },
               height: "10px",
             }}
-          />
+          />:<Slider  value={playerVal} aria-label='slider-ex-2' w="90%" colorScheme='pink' defaultValue={0}>
+          <SliderTrack>
+            <SliderFilledTrack />
+          </SliderTrack>
+          <SliderThumb />
+        </Slider>}
         </Box>
         <Button
           type={micIcon ? "button" : "submit"}
