@@ -1,15 +1,22 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Box, Textarea, Icon, Button,Text, background } from "@chakra-ui/react";
-import { MdSend, MdMic, MdOutlineEmojiEmotions } from "react-icons/md";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import {
+  Box,
+  Textarea,
+  Icon,
+  Button,
+  Text,
+  background,
+} from "@chakra-ui/react";
+import { MdSend, MdMic, MdStop, MdOutlineEmojiEmotions } from "react-icons/md";
 import { TiAttachmentOutline } from "react-icons/ti";
 
 import { auth, db } from "../../FirebaseConfig";
 import axios from "axios";
 import { onValue, ref, get } from "firebase/database";
-import {getSealdSDKInstance} from "../../SealedInit";
-import {BiLockAlt} from "react-icons/bi"
-import Picker from 'emoji-picker-react';
-
+import { getSealdSDKInstance } from "../../SealedInit";
+import { BiLockAlt } from "react-icons/bi";
+import Picker from "emoji-picker-react";
+import MicRecorder from "mic-recorder-to-mp3";
 export default function Messanger(props) {
   const [chosenEmoji, setChosenEmoji] = useState(null);
   const [showPicker, setShowPicker] = useState(false);
@@ -18,7 +25,8 @@ export default function Messanger(props) {
   const [loading, setLoading] = useState(false);
   const [Val, setVal] = useState("");
   const [y, setY] = useState("-100%");
-  const inputFocus=useRef()
+  const [recording, Setrecording] = useState(false);
+  const inputFocus = useRef();
   const handelChange = (event) => {
     setVal(event.target.value);
     if (event.target.value === "") {
@@ -27,17 +35,44 @@ export default function Messanger(props) {
       setMicIcon(false);
     }
   };
+
+  const recorder = useMemo(() => new MicRecorder({ bitRate: 128 }), []);
   const handleMic = () => {
-    console.log(Val);
+    console.log(recording);
+
+    if (!recording) {
+      recorder
+        .start()
+        .then(() => {
+          Setrecording(true);
+        })
+        .catch((err) => {
+          Setrecording(false);
+          console.log(err);
+        });
+    } else {
+      recorder
+        .stop()
+        .getMp3()
+        .then(([buffer, blob]) => {
+          Setrecording(false);
+          console.log("Stopped");
+          console.log(blob);
+        })
+        .catch((err) => {
+          Setrecording(false);
+          console.log(err);
+        });
+    }
   };
+
   const handleSubmit = () => {
     if (Val !== "") {
-      inputFocus.current?.focus()
+      inputFocus.current?.focus();
       setLoading(true);
       // SOlve this Error of not updation
-      get(ref(db, `${auth.currentUser.uid}/chats/${props.uid}/sessionId`)).then(
-        (data) => {
-         
+      get(ref(db, `${auth.currentUser.uid}/chats/${props.uid}/sessionId`))
+        .then((data) => {
           console.log(data.val());
           if (data.val()) {
             getSealdSDKInstance()
@@ -102,10 +137,10 @@ export default function Messanger(props) {
                 });
               });
           }
-        }
-      ).catch(err=>{
-        console.log(err)
-      });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
 
       setVal("");
       setMicIcon(true);
@@ -122,23 +157,21 @@ export default function Messanger(props) {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-  const handleEmoji=()=>{
-    inputFocus.current.focus()
-    setShowPicker(!showPicker)
-    if(y==="-100%"){
-      setY("55px")
-
-    }else{
-      setY("-100%")
+  const handleEmoji = () => {
+    inputFocus.current.focus();
+    setShowPicker(!showPicker);
+    if (y === "-100%") {
+      setY("55px");
+    } else {
+      setY("-100%");
     }
-  }
+  };
   const onEmojiClick = (event, emojiObject) => {
-    inputFocus.current.focus()
+    inputFocus.current.focus();
     setChosenEmoji(emojiObject);
-    console.log(emojiObject.emoji)
-    setVal(Val+emojiObject.emoji)
-    setMicIcon(false)
-    
+    console.log(emojiObject.emoji);
+    setVal(Val + emojiObject.emoji);
+    setMicIcon(false);
   };
   useEffect(() => {
     scrollToBottom();
@@ -158,16 +191,20 @@ export default function Messanger(props) {
         get(
           ref(db, `${auth.currentUser.uid}/chats/${props.uid}/sessionId`)
         ).then(async (sessionId) => {
-          const session = await getSealdSDKInstance().retrieveEncryptionSession({sessionId: sessionId.val()});
+          const session = await getSealdSDKInstance().retrieveEncryptionSession(
+            { sessionId: sessionId.val() }
+          );
 
           datax.forEach((contact) => {
-            session.decryptMessage(contact.val().message).then(decryptMessage=>{
-              x.push({message:decryptMessage,send:contact.val().send})
-              count++;
-              if (count === datax.size) {
-                setData(x);
-              }
-            })            
+            session
+              .decryptMessage(contact.val().message)
+              .then((decryptMessage) => {
+                x.push({ message: decryptMessage, send: contact.val().send });
+                count++;
+                if (count === datax.size) {
+                  setData(x);
+                }
+              });
           });
         });
       }
@@ -178,7 +215,6 @@ export default function Messanger(props) {
     <Box h="100%" flexDirection="column" d="flex">
       <Box
         overflowY="auto"
-       
         css={{
           "&::-webkit-scrollbar": {
             width: "4px",
@@ -195,26 +231,36 @@ export default function Messanger(props) {
         backgroundColor="#bceef7"
         h="100%"
       >
-        <Box minH={8} h="fit-content" m={5} mb="10px" d="flex" justifyContent="center">
-                <Box
-                  borderRadius={5}
-                  color="white"
-                  d="felx"
-
-                  justifyContent="center"
-                  alignItems="center"
-                  backgroundColor="yellow.500"
-                  flexDirection="row"
-                  p={2}
-                  minW={6}
-                  minH={8} 
-                  h="fit-content"
-                  w="fit-content"
-                  textAlign="center"
-                >
-                  <Text><Icon color="white" as={BiLockAlt}/> Messages are end-to-end encrypted. No one outside of this chat, not even We , can read or listen to them </Text>
-                </Box>
-              </Box>
+        <Box
+          minH={8}
+          h="fit-content"
+          m={5}
+          mb="10px"
+          d="flex"
+          justifyContent="center"
+        >
+          <Box
+            borderRadius={5}
+            color="white"
+            d="felx"
+            justifyContent="center"
+            alignItems="center"
+            backgroundColor="yellow.500"
+            flexDirection="row"
+            p={2}
+            minW={6}
+            minH={8}
+            h="fit-content"
+            w="fit-content"
+            textAlign="center"
+          >
+            <Text>
+              <Icon color="white" as={BiLockAlt} /> Messages are end-to-end
+              encrypted. No one outside of this chat, not even We , can read or
+              listen to them{" "}
+            </Text>
+          </Box>
+        </Box>
         {data ? (
           data.map((mes, index) => {
             return (
@@ -241,8 +287,6 @@ export default function Messanger(props) {
                   maxW="70%"
                 >
                   <p>{mes.message}</p>
-                  
-               
                 </Box>
               </Box>
             );
@@ -250,7 +294,14 @@ export default function Messanger(props) {
         ) : (
           <>
             <Box h="100%" d="flex" alignItems="center" justifyContent="center">
-              <Box minH={8} h="fit-content" m={5} mb={40} d="flex" justifyContent="center">
+              <Box
+                minH={8}
+                h="fit-content"
+                m={5}
+                mb={40}
+                d="flex"
+                justifyContent="center"
+              >
                 <Box
                   borderRadius={5}
                   color="white"
@@ -272,9 +323,22 @@ export default function Messanger(props) {
         )}
         <Box ref={messagesEndRef}></Box>
       </Box>
-      {showPicker&&<Box   w={{ md: "60%", sm: "100%", lg: "70%" }} position="absolute" h="200px" bottom={y} transition="all 0.8s ease-in-out">
-        <Picker disableSearchBar={true} preload={true} pickerStyle={{height:"100%",width:"100%"}} onEmojiClick={onEmojiClick} />
-        </Box>}
+      {showPicker && (
+        <Box
+          w={{ md: "60%", sm: "100%", lg: "70%" }}
+          position="absolute"
+          h="200px"
+          bottom={y}
+          transition="all 0.8s ease-in-out"
+        >
+          <Picker
+            disableSearchBar={true}
+            preload={true}
+            pickerStyle={{ height: "100%", width: "100%" }}
+            onEmojiClick={onEmojiClick}
+          />
+        </Box>
+      )}
       <Box
         borderLeft="1px solid gray"
         backgroundColor="white"
@@ -285,12 +349,11 @@ export default function Messanger(props) {
       >
         <Icon
           w={8}
-          cursor='pointer'
+          cursor="pointer"
           h={8}
           color="rgba(150,150,150,1)"
           as={TiAttachmentOutline}
-          _hover={{color:"green"}}
-       
+          _hover={{ color: "green" }}
         />
         <Icon
           w={8}
@@ -299,11 +362,9 @@ export default function Messanger(props) {
           onClick={handleEmoji}
           cursor="pointer"
           as={MdOutlineEmojiEmotions}
-          _hover={{color:"yellow"}}
-           
-     
+          _hover={{ color: "yellow" }}
         />
- 
+
         <Box
           h={10}
           d="flex"
@@ -344,7 +405,7 @@ export default function Messanger(props) {
             color="rgba(18,140,126,1)"
             w={8}
             h={8}
-            as={micIcon ? MdMic : MdSend}
+            as={micIcon ? (recording ? MdStop : MdMic) : MdSend}
           />
         </Button>
       </Box>
