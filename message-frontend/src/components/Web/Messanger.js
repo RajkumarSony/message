@@ -11,7 +11,7 @@ import {
   SliderThumb,
   SliderMark,
 } from "@chakra-ui/react";
-import { MdSend, MdMic, MdStop, MdOutlineEmojiEmotions } from "react-icons/md";
+import { MdSend, MdMic, MdStop, MdOutlineEmojiEmotions,MdOutlineCancel } from "react-icons/md";
 import { TiAttachmentOutline } from "react-icons/ti";
 
 import { auth, db } from "../../FirebaseConfig";
@@ -43,6 +43,7 @@ export default function Messanger(props) {
   };
 
   const recorder = useMemo(() => new MicRecorder({ bitRate: 128 }), []);
+  const player = useMemo(()=>new Audio(),[]);
   const handleMic = () => {
     console.log(recording);
 
@@ -65,7 +66,8 @@ export default function Messanger(props) {
       
           console.log("Stopped");
           // console.log(blob);
-          const player = new Audio(URL.createObjectURL(blob));
+          player.src = URL.createObjectURL(blob);
+          
           setpAudio(true)
           player.play();
           player.ontimeupdate=()=>{
@@ -81,6 +83,10 @@ export default function Messanger(props) {
     }
   };
 
+  const DiscardAudio =()=>{
+    setpAudio(false)
+      URL.revokeObjectURL(player.src)
+  }
   const handleSubmit = () => {
     if (Val !== "") {
       inputFocus.current?.focus();
@@ -159,6 +165,9 @@ export default function Messanger(props) {
 
       setVal("");
       setMicIcon(true);
+    } else if (pAudio){
+      setpAudio(false)
+      URL.revokeObjectURL(player.src)
     }
   };
 
@@ -408,25 +417,37 @@ export default function Messanger(props) {
               },
               height: "10px",
             }}
-          />:<Slider  value={playerVal} aria-label='slider-ex-2' w="90%" colorScheme='pink' defaultValue={0}>
+          />:
+          <>
+          <Icon as={MdOutlineCancel} onClick={DiscardAudio} mr="0.7rem" w={6}
+            h={7} cursor="pointer" _hover={{color:"red.600"}} color="red.300"/>
+          <Slider  value={playerVal} onChange={(v)=>{
+            setPlayerVal(v)
+            player.currentTime=player.duration*(+v/100)
+            if(player.paused){
+              player.play()
+            }
+          }} aria-label='slider-ex-2' w={{sm:"70%",xl:"88%",md:"83%"}} colorScheme='pink' defaultValue={0}>
           <SliderTrack>
             <SliderFilledTrack />
           </SliderTrack>
           <SliderThumb />
-        </Slider>}
+        </Slider>
+        </>
+        }
         </Box>
         <Button
-          type={micIcon ? "button" : "submit"}
+          type={micIcon ? (pAudio? "submit": "button") : "submit"}
           isLoading={loading}
           isDisabled={props.uid ? false : true}
-          onClick={micIcon ? handleMic : handleSubmit}
+          onClick={micIcon ? (pAudio? handleSubmit:handleMic) : handleSubmit}
           variant="ghost"
         >
           <Icon
             color="rgba(18,140,126,1)"
             w={8}
             h={8}
-            as={micIcon ? (recording ? MdStop : MdMic) : MdSend}
+            as={micIcon ? (recording ? MdStop : (pAudio? MdSend:MdMic)) : MdSend}
           />
         </Button>
       </Box>
