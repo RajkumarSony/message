@@ -9,20 +9,28 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
-  SliderMark,
+
 } from "@chakra-ui/react";
-import { MdSend, MdMic, MdStop, MdOutlineEmojiEmotions,MdOutlineCancel } from "react-icons/md";
+import {
+  MdSend,
+  MdMic,
+  MdStop,
+  MdOutlineEmojiEmotions,
+  MdOutlineCancel,
+} from "react-icons/md";
 import { TiAttachmentOutline } from "react-icons/ti";
 
-import { auth, db } from "../../FirebaseConfig";
+import { auth, db, storage } from "../../FirebaseConfig";
 import axios from "axios";
 import { onValue, ref, get } from "firebase/database";
+import {  ref as str, uploadBytes } from "firebase/storage";
 import { getSealdSDKInstance } from "../../SealedInit";
 import { BiLockAlt } from "react-icons/bi";
 import Picker from "emoji-picker-react";
 import MicRecorder from "mic-recorder-to-mp3";
+import AudioPlay  from "./AudioPlay";
+import Message from "./Message";
 export default function Messanger(props) {
-  const [chosenEmoji, setChosenEmoji] = useState(null);
   const [showPicker, setShowPicker] = useState(false);
   const [micIcon, setMicIcon] = useState(true);
   const [data, setData] = useState();
@@ -31,8 +39,11 @@ export default function Messanger(props) {
   const [y, setY] = useState("-100%");
   const [recording, Setrecording] = useState(false);
   const inputFocus = useRef();
-  const [playerVal, setPlayerVal] = useState(0)
-  const [pAudio, setpAudio] = useState(false)
+  const [playerVal, setPlayerVal] = useState(0);
+  const [pAudio, setpAudio] = useState(false);
+  const [audioBlob, setAudioBlob] = useState(null);
+  const recorder = useMemo(() => new MicRecorder({ bitRate: 128 }), []);
+  const player = useMemo(()=> new Audio(),[]) ;
   const handelChange = (event) => {
     setVal(event.target.value);
     if (event.target.value === "") {
@@ -42,8 +53,7 @@ export default function Messanger(props) {
     }
   };
 
-  const recorder = useMemo(() => new MicRecorder({ bitRate: 128 }), []);
-  const player = useMemo(()=>new Audio(),[]);
+  
   const handleMic = () => {
     console.log(recording);
 
@@ -63,18 +73,18 @@ export default function Messanger(props) {
         .getMp3()
         .then(([buffer, blob]) => {
           Setrecording(false);
-      
+
           console.log("Stopped");
           // console.log(blob);
           player.src = URL.createObjectURL(blob);
-          
-          setpAudio(true)
+          setAudioBlob(blob);
+          setpAudio(true);
           player.play();
-          player.ontimeupdate=()=>{
-           setPlayerVal((player.currentTime / player.duration) * 100)
-           console.log((player.currentTime / player.duration) * 100)
-           console.log(playerVal)
-          }
+          player.ontimeupdate = () => {
+            setPlayerVal((player.currentTime / player.duration) * 100);
+            // console.log((player.currentTime / player.duration) * 100);
+            // console.log(playerVal);
+          };
         })
         .catch((err) => {
           Setrecording(false);
@@ -83,79 +93,159 @@ export default function Messanger(props) {
     }
   };
 
-  const DiscardAudio =()=>{
-    setpAudio(false)
-      URL.revokeObjectURL(player.src)
-  }
+  const DiscardAudio = () => {
+    setpAudio(false);
+    URL.revokeObjectURL(player.src);
+    setAudioBlob(null);
+  };
   const handleSubmit = () => {
-    if (Val !== "") {
+    if (Val !== "" || pAudio) {
+      
       inputFocus.current?.focus();
       setLoading(true);
       // SOlve this Error of not updation
       get(ref(db, `${auth.currentUser.uid}/chats/${props.uid}/sessionId`))
         .then((data) => {
-          console.log(data.val());
           if (data.val()) {
             getSealdSDKInstance()
               .retrieveEncryptionSession({ sessionId: data.val() })
               .then((session) => {
-                session.encryptMessage(Val).then((encryptMessage) => {
-                  axios
-                    .post(
-                      "/sendmessage",
-                      {
-                        message: encryptMessage,
-                        Recipetuid: props.uid,
-                        uid: auth.currentUser.uid,
-                      },
-                      {
-                        headers: {
-                          authorization: auth.currentUser.accessToken,
-                          "Content-Type": "application/json",
+                if (Val !== "") {
+                  session.encryptMessage(Val).then((encryptMessage) => {
+                    axios
+                      .post(
+                        "/sendmessage",
+                        {
+                          message: encryptMessage,
+                          Recipetuid: props.uid,
+                          uid: auth.currentUser.uid,
                         },
-                      }
-                    )
-                    .then((res) => {
-                      if (res.status === 201) {
+                        {
+                          headers: {
+                            authorization: auth.currentUser.accessToken,
+                            "Content-Type": "application/json",
+                          },
+                        }
+                      )
+                      .then((res) => {
+                        if (res.status === 201) {
+                          setLoading(false);
+                        }
+                      })
+                      .catch((error) => {
                         setLoading(false);
-                      }
-                    })
-                    .catch((error) => {
-                      setLoading(false);
+                      });
+                  });
+                } else if (pAudio) {
+                  session
+                    .encryptFile(audioBlob, "file.mp3")
+                    .then((encryptedBlob) => {
+                      // console.log("clear",audioBlob)
+                      // console.log("enc",encryptedBlob)
+                      const audioPath = `Audio/${
+                        auth.currentUser.uid
+                      }/send/${Date.now()}.mp3`;
+                      const audioStr = str(storage, audioPath);
+                      uploadBytes(audioStr, encryptedBlob,{
+                        contentType:"audio/mp3"
+                      })
+                        .then((snapshot) => {
+                          console.log("uploaded ......");
+                          axios.post(
+                            "/sendmessage",
+                            {
+                              url: `${audioPath}`,
+                              Recipetuid: props.uid,
+                              uid: auth.currentUser.uid,
+                            },
+                            {
+                              headers: {
+                                authorization: auth.currentUser.accessToken,
+                                "Content-Type": "application/json",
+                              },
+                            }
+                          );
+                          setAudioBlob(null);
+                          setpAudio(false);
+                          URL.revokeObjectURL(player.src)
+                          setLoading(false);
+                        })
+                        .catch((err) => {
+                          console.log(err);
+                          setLoading(false);
+                        });
                     });
-                });
+                }
               });
           } else {
             getSealdSDKInstance()
               .createEncryptionSession({ userIds: [props.uid] })
               .then((session) => {
-                console.log(session.sessionId);
-                session.encryptMessage(Val).then((encryptMessage) => {
-                  axios
-                    .post(
-                      "/sendmessage",
-                      {
-                        message: encryptMessage,
-                        Recipetuid: props.uid,
-                        uid: auth.currentUser.uid,
-                        sessionId: session.sessionId,
-                      },
-                      {
-                        headers: {
-                          authorization: auth.currentUser.accessToken,
-                          "Content-Type": "application/json",
+              
+                if (Val !== "") {
+                  session.encryptMessage(Val).then((encryptMessage) => {
+                    axios
+                      .post(
+                        "/sendmessage",
+                        {
+                          message: encryptMessage,
+                          Recipetuid: props.uid,
+                          uid: auth.currentUser.uid,
+                          sessionId: session.sessionId,
                         },
-                      }
-                    )
-                    .then((res) => {
-                      if (res.status === 201) {
+                        {
+                          headers: {
+                            authorization: auth.currentUser.accessToken,
+                            "Content-Type": "application/json",
+                          },
+                        }
+                      )
+                      .then((res) => {
+                        if (res.status === 201) {
+                          setLoading(false);
+                        }
+                      })
+                      .catch((error) => {
                         setLoading(false);
-                      }
-                    })
-                    .catch((error) => {
-                      setLoading(false);
+                      });
+                  });
+                } else if (pAudio) {
+                  session
+                    .encryptFile(audioBlob, "file.mp3")
+                    .then((encryptedBlob) => {
+                      const audioPath = `Audio/${
+                        auth.currentUser.uid
+                      }/send/${Date.now()}.mp3`;
+                      const audioStr = str(storage, audioPath);
+                      uploadBytes(audioStr, encryptedBlob)
+                        .then((snapshot) => {
+                          console.log("uploaded ......");
+                          axios.post(
+                            "/sendmessage",
+                            {
+                              url: `${audioPath}`,
+                              Recipetuid: props.uid,
+                              uid: auth.currentUser.uid,
+                              sessionId: session.sessionId,
+                            },
+                            {
+                              headers: {
+                                authorization: auth.currentUser.accessToken,
+                                "Content-Type": "application/json",
+                              },
+                            }
+                          );
+                          setAudioBlob(null);
+                          setpAudio(false);
+                          URL.revokeObjectURL(player.src);
+                          setLoading(false);
+                        })
+                        .catch((err) => {
+                          console.log(err);
+                          setLoading(false);
+                        });
                     });
-                });
+                }
               });
           }
         })
@@ -165,10 +255,13 @@ export default function Messanger(props) {
 
       setVal("");
       setMicIcon(true);
-    } else if (pAudio){
-      setpAudio(false)
-      URL.revokeObjectURL(player.src)
     }
+    // else if (pAudio){
+    //   setLoading(true);
+
+    //   setpAudio(false)
+    //   URL.revokeObjectURL(player.src)
+    // }
   };
 
   const handleKeyDown = (event) => {
@@ -192,13 +285,14 @@ export default function Messanger(props) {
   };
   const onEmojiClick = (event, emojiObject) => {
     inputFocus.current.focus();
-    setChosenEmoji(emojiObject);
-    console.log(emojiObject.emoji);
+   
+    
     setVal(Val + emojiObject.emoji);
     setMicIcon(false);
   };
   useEffect(() => {
     scrollToBottom();
+    
   }, [data]);
 
   useEffect(() => {
@@ -220,15 +314,32 @@ export default function Messanger(props) {
           );
 
           datax.forEach((contact) => {
-            session
-              .decryptMessage(contact.val().message)
-              .then((decryptMessage) => {
-                x.push({ message: decryptMessage, send: contact.val().send });
-                count++;
-                if (count === datax.size) {
-                  setData(x);
-                }
+            if (contact.val().type !== "audio" || !contact.val().type) {
+              x.push({
+                message: contact.val().message||"Deleted Message",
+                send: contact.val().send,
+                type: contact.val().type || "text",
+                session:session
               });
+              count++;
+              if (count === datax.size) {
+                setData(x);
+                
+              }
+             
+            } else if (contact.val().type === "audio") {
+              x.push({
+                url:contact.val().url || "noURL",
+                send:contact.val().send,
+                type:contact.val().type,
+                session:session
+              })
+              count++;
+              if (count === datax.size) {
+                setData(x);
+              }
+              
+            }
           });
         });
       }
@@ -287,8 +398,12 @@ export default function Messanger(props) {
         </Box>
         {data ? (
           data.map((mes, index) => {
+           
             return (
-              <Box
+              <>
+              
+               
+                <Box
                 minH={8}
                 key={index}
                 m={5}
@@ -296,6 +411,7 @@ export default function Messanger(props) {
                 justifyContent={mes.send ? "flex-end" : "flex-start"}
                 h="fit-content"
               >
+               
                 <Box
                   borderRadius={5}
                   d="felx"
@@ -309,10 +425,13 @@ export default function Messanger(props) {
                   w="fit-content"
                   h="fit-content"
                   maxW="70%"
-                >
-                  <p>{mes.message}</p>
+                  whiteSpace="pre-line"
+                > {mes.type === "text"? (
+                  <Message {...mes}/>
+                  ):<AudioPlay url={mes.url} Session={mes.session} send={mes.send} type={mes.type} key={index}/>}
                 </Box>
               </Box>
+              </>
             );
           })
         ) : (
@@ -398,56 +517,75 @@ export default function Messanger(props) {
           overflowY="hidden"
           w="100%"
         >
-          {!pAudio? <Textarea
-            onChange={handelChange}
-            onKeyDown={handleKeyDown}
-            isDisabled={props.uid ? false : true}
-            backgroundColor="rgba(100,100,100,0.3)"
-            resize="none"
-            placeholder="Type Message"
-            color="black"
-            pt={6}
-            style={{ border: "1px solid white", width: "100%" }}
-            align="center"
-            value={Val}
-            ref={inputFocus}
-            css={{
-              "&::-webkit-scrollbar": {
-                display: "none",
-              },
-              height: "10px",
-            }}
-          />:
-          <>
-          <Icon as={MdOutlineCancel} onClick={DiscardAudio} mr="0.7rem" w={6}
-            h={7} cursor="pointer" _hover={{color:"red.600"}} color="red.300"/>
-          <Slider  value={playerVal} onChange={(v)=>{
-            setPlayerVal(v)
-            player.currentTime=player.duration*(+v/100)
-            if(player.paused){
-              player.play()
-            }
-          }} aria-label='slider-ex-2' w={{sm:"70%",xl:"88%",md:"83%"}} colorScheme='pink' defaultValue={0}>
-          <SliderTrack>
-            <SliderFilledTrack />
-          </SliderTrack>
-          <SliderThumb />
-        </Slider>
-        </>
-        }
+          {!pAudio ? (
+            <Textarea
+              onChange={handelChange}
+              onKeyDown={handleKeyDown}
+              isDisabled={props.uid ? false : true}
+              backgroundColor="rgba(100,100,100,0.3)"
+              resize="none"
+              placeholder="Type Message"
+              color="black"
+              pt={6}
+              style={{ border: "1px solid white", width: "100%" }}
+              align="center"
+              value={Val}
+              ref={inputFocus}
+              css={{
+                "&::-webkit-scrollbar": {
+                  display: "none",
+                },
+                height: "10px",
+              }}
+            />
+          ) : (
+            <>
+              <Icon
+                as={MdOutlineCancel}
+                onClick={DiscardAudio}
+                mr="0.7rem"
+                w={6}
+                h={7}
+                cursor="pointer"
+                _hover={{ color: "red.600" }}
+                color="red.300"
+              />
+              <Slider
+                value={playerVal}
+                onChange={(v) => {
+                  setPlayerVal(v);
+                  player.currentTime = player.duration * (+v / 100);
+                  if (player.paused) {
+                    player.play();
+                  }
+                }}
+                aria-label="slider-ex-2"
+                w={{ sm: "70%", xl: "88%", md: "83%" }}
+                colorScheme="pink"
+                defaultValue={0}
+              >
+                <SliderTrack>
+                  <SliderFilledTrack />
+                </SliderTrack>
+                <SliderThumb />
+              </Slider>
+            </>
+          )}
         </Box>
         <Button
-          type={micIcon ? (pAudio? "submit": "button") : "submit"}
+          type={micIcon ? (pAudio ? "submit" : "button") : "submit"}
           isLoading={loading}
           isDisabled={props.uid ? false : true}
-          onClick={micIcon ? (pAudio? handleSubmit:handleMic) : handleSubmit}
+          onClick={micIcon ? (pAudio ? handleSubmit : handleMic) : handleSubmit}
           variant="ghost"
         >
           <Icon
             color="rgba(18,140,126,1)"
             w={8}
             h={8}
-            as={micIcon ? (recording ? MdStop : (pAudio? MdSend:MdMic)) : MdSend}
+            as={
+              micIcon ? (recording ? MdStop : pAudio ? MdSend : MdMic) : MdSend
+            }
           />
         </Button>
       </Box>

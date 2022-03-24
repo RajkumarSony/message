@@ -3,42 +3,60 @@ import { db, auth } from "../../FirebaseConfig";
 import { ref, onValue, limitToLast, query } from "firebase/database";
 import Contact from "./Contact";
 
-import { Box, Text} from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import SkeletonContact from "./SkeletonContact";
-import {getSealdSDKInstance,retrieveIdentityFromLocalStorage} from "../../SealedInit";
+import {
+  getSealdSDKInstance,
+  retrieveIdentityFromLocalStorage,
+} from "../../SealedInit";
 import Cookies from "js-cookie";
 
 export default function RecentMsg(props) {
   const [data, setData] = useState();
   const [hasData, setHasData] = useState(true);
   useEffect(() => {
-    async function recentMsg(){
-      await  retrieveIdentityFromLocalStorage({databaseKey:Cookies.get("databaseKey"),sessionID:Cookies.get("sessionId")})
+    async function recentMsg() {
+      await retrieveIdentityFromLocalStorage({
+        databaseKey: Cookies.get("databaseKey"),
+        sessionID: Cookies.get("sessionId"),
+      });
       onValue(ref(db, `${auth.currentUser.uid}/chats/`), (datax) => {
         const x = [];
         let itemsProcessed = 0;
-  
+
         if (datax.hasChildren()) {
           datax.forEach((data) => {
             onValue(
               ref(db, `${data.key}/PersonalInfo`),
               (snapshot) => {
-                
-  
                 onValue(
                   query(
-                    ref(db, `${auth.currentUser.uid}/chats/${data.key}/messages`),
+                    ref(
+                      db,
+                      `${auth.currentUser.uid}/chats/${data.key}/messages`
+                    ),
                     limitToLast(1)
                   ),
                   (mesg) => {
-                    mesg.forEach(async(mesg) => {
-                    
-                  const session=await getSealdSDKInstance().retrieveEncryptionSession({encryptedMessage:mesg.val().message})
-                  const decryptMessage= await session.decryptMessage(mesg.val().message)
-                      x.push({
-                    ...snapshot.val(),
-                        message: decryptMessage,
-                      });
+                    mesg.forEach(async (mesg) => {
+                      if (mesg.val().type !== "audio") {
+                        const session =
+                          await getSealdSDKInstance().retrieveEncryptionSession(
+                            { encryptedMessage: mesg.val().message }
+                          );
+                        const decryptMessage = await session.decryptMessage(
+                          mesg.val().message
+                        );
+                        x.push({
+                          ...snapshot.val(),
+                          message: decryptMessage,
+                        });
+                      } else if (mesg.val().type === "audio") {
+                        x.push({
+                          ...snapshot.val(),
+                          message: "🔊 Audio Message",
+                        });
+                      }
                       itemsProcessed++;
                       if (itemsProcessed === datax.size) {
                         setData(x);
@@ -60,7 +78,7 @@ export default function RecentMsg(props) {
         }
       });
     }
-    recentMsg()
+    recentMsg();
   }, []);
 
   return (
@@ -87,16 +105,15 @@ export default function RecentMsg(props) {
         <Box>
           {hasData ? (
             <Box>
-
-              <SkeletonContact/>
-              <SkeletonContact/>
-              <SkeletonContact/>
-              <SkeletonContact/>
-              <SkeletonContact/>
-              <SkeletonContact/>
-              <SkeletonContact/>
-              <SkeletonContact/>
-              <SkeletonContact/>
+              <SkeletonContact />
+              <SkeletonContact />
+              <SkeletonContact />
+              <SkeletonContact />
+              <SkeletonContact />
+              <SkeletonContact />
+              <SkeletonContact />
+              <SkeletonContact />
+              <SkeletonContact />
             </Box>
           ) : (
             <Text

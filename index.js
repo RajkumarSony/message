@@ -234,36 +234,67 @@ app.post("/sendmessage", (req, res) => {
             sessionId: req.body.sessionId,
           }); // save sesion id for Reciver
         }
-        refSend.push().set(
-          {
-            message: req.body.message,
-            send: true,
-          }, //Save messag for sender
-          (error) => {
-            if (!error) {
-              // Check for error
-              refRecive.push().set(
-                {
-                  message: req.body.message,
-                  send: false,
-                }, //Save messag for Reciver
-                (error) => {
-                  if (!error) {
-                    //Check for error
-                    res.status(201);
-                    res.send("done");
-                  } else {
-                    res.status(500);
-                    res.send("Internel Server error message cannot be send");
+        if (req.body.message) {
+          refSend.push().set(
+            {
+              message: req.body.message,
+              send: true,
+              type: "text",
+            }, //Save messag for sender
+            (error) => {
+              if (!error) {
+                // Check for error
+                refRecive.push().set(
+                  {
+                    message: req.body.message,
+                    send: false,
+                    type: "text",
+                  }, //Save messag for Reciver
+                  (error) => {
+                    if (!error) {
+                      //Check for error
+                      res.status(201);
+                      res.send("done");
+                    } else {
+                      res.status(500);
+                      res.send("Internel Server error message cannot be send");
+                    }
                   }
+                );
+              } else {
+                res.status(500);
+                res.send("Internel Server error message cannot be send");
+              }
+            }
+          );
+        } else if (req.body.url) {
+          refSend.push().set({
+            url: req.body.url,
+            send: true,
+            type: "audio",
+          },(error)=>{
+            if(!error){
+              refRecive.push().set({
+                url:req.body.url,
+                send:false,
+                type:"audio"
+              },     (error) => {
+                if (!error) {
+                  //Check for error
+                  res.status(201);
+                  res.send("done");
+                } else {
+                  res.status(500);
+                  res.send("Internel Server error message cannot be send");
                 }
-              );
-            } else {
+              })
+            }else {
               res.status(500);
               res.send("Internel Server error message cannot be send");
             }
           }
-        );
+          );
+        }
       } else {
         res.status(403);
         res.send("Unatorize");
@@ -275,7 +306,14 @@ app.post("/sendmessage", (req, res) => {
       res.send("Internal Server Error");
     });
 });
+// app.get("/audioMessage",(res,req)=>{
+//   getAuth()
+//     .verifyIdToken(req.headers.authorization).then((decodeToken)=>{
+//       if(req.body.uid===decodeToken){
 
+//       }
+//     })
+// })
 app.post("/notification", (req, res) => {
   getAuth()
     .verifyIdToken(req.headers.authorization)
@@ -288,9 +326,9 @@ app.post("/notification", (req, res) => {
           if (!err) {
             res.status(201);
             res.send("done");
-          }else{
-            res.status(406)
-            res.send("Not Saved")
+          } else {
+            res.status(406);
+            res.send("Not Saved");
           }
         }
       );
