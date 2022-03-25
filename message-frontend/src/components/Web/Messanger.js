@@ -9,7 +9,7 @@ import {
   SliderTrack,
   SliderFilledTrack,
   SliderThumb,
-
+  Spinner,
 } from "@chakra-ui/react";
 import {
   MdSend,
@@ -23,12 +23,12 @@ import { TiAttachmentOutline } from "react-icons/ti";
 import { auth, db, storage } from "../../FirebaseConfig";
 import axios from "axios";
 import { onValue, ref, get } from "firebase/database";
-import {  ref as str, uploadBytes } from "firebase/storage";
+import { ref as str, uploadBytes } from "firebase/storage";
 import { getSealdSDKInstance } from "../../SealedInit";
 import { BiLockAlt } from "react-icons/bi";
 import Picker from "emoji-picker-react";
 import MicRecorder from "mic-recorder-to-mp3";
-import AudioPlay  from "./AudioPlay";
+import AudioPlay from "./AudioPlay";
 import Message from "./Message";
 export default function Messanger(props) {
   const [showPicker, setShowPicker] = useState(false);
@@ -42,8 +42,9 @@ export default function Messanger(props) {
   const [playerVal, setPlayerVal] = useState(0);
   const [pAudio, setpAudio] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
+  const [mesLoad, setmesLoad] = useState(true);
   const recorder = useMemo(() => new MicRecorder({ bitRate: 128 }), []);
-  const player = useMemo(()=> new Audio(),[]) ;
+  const player = useMemo(() => new Audio(), []);
   const handelChange = (event) => {
     setVal(event.target.value);
     if (event.target.value === "") {
@@ -53,7 +54,6 @@ export default function Messanger(props) {
     }
   };
 
-  
   const handleMic = () => {
     console.log(recording);
 
@@ -100,7 +100,6 @@ export default function Messanger(props) {
   };
   const handleSubmit = () => {
     if (Val !== "" || pAudio) {
-      
       inputFocus.current?.focus();
       setLoading(true);
       // SOlve this Error of not updation
@@ -146,8 +145,8 @@ export default function Messanger(props) {
                         auth.currentUser.uid
                       }/send/${Date.now()}.mp3`;
                       const audioStr = str(storage, audioPath);
-                      uploadBytes(audioStr, encryptedBlob,{
-                        contentType:"audio/mp3"
+                      uploadBytes(audioStr, encryptedBlob, {
+                        contentType: "audio/mp3",
                       })
                         .then((snapshot) => {
                           console.log("uploaded ......");
@@ -167,7 +166,7 @@ export default function Messanger(props) {
                           );
                           setAudioBlob(null);
                           setpAudio(false);
-                          URL.revokeObjectURL(player.src)
+                          URL.revokeObjectURL(player.src);
                           setLoading(false);
                         })
                         .catch((err) => {
@@ -181,7 +180,6 @@ export default function Messanger(props) {
             getSealdSDKInstance()
               .createEncryptionSession({ userIds: [props.uid] })
               .then((session) => {
-              
                 if (Val !== "") {
                   session.encryptMessage(Val).then((encryptMessage) => {
                     axios
@@ -256,12 +254,6 @@ export default function Messanger(props) {
       setVal("");
       setMicIcon(true);
     }
-    // else if (pAudio){
-    //   setLoading(true);
-
-    //   setpAudio(false)
-    //   URL.revokeObjectURL(player.src)
-    // }
   };
 
   const handleKeyDown = (event) => {
@@ -285,14 +277,12 @@ export default function Messanger(props) {
   };
   const onEmojiClick = (event, emojiObject) => {
     inputFocus.current.focus();
-   
-    
+
     setVal(Val + emojiObject.emoji);
     setMicIcon(false);
   };
   useEffect(() => {
     scrollToBottom();
-    
   }, [data]);
 
   useEffect(() => {
@@ -316,36 +306,37 @@ export default function Messanger(props) {
           datax.forEach((contact) => {
             if (contact.val().type !== "audio" || !contact.val().type) {
               x.push({
-                message: contact.val().message||"Deleted Message",
+                message: contact.val().message || "Deleted Message",
                 send: contact.val().send,
                 type: contact.val().type || "text",
-                session:session
+                session: session,
               });
               count++;
               if (count === datax.size) {
                 setData(x);
-                
+              
               }
-             
             } else if (contact.val().type === "audio") {
               x.push({
-                url:contact.val().url || "noURL",
-                send:contact.val().send,
-                type:contact.val().type,
-                session:session
-              })
+                url: contact.val().url || "noURL",
+                send: contact.val().send,
+                type: contact.val().type,
+                session: session,
+              });
               count++;
               if (count === datax.size) {
                 setData(x);
+               
               }
-              
             }
           });
         });
-      }
+      } 
     });
   }, [props.uid]);
-
+  useEffect(() => {
+    console.log(mesLoad);
+  }, [mesLoad]);
   return (
     <Box h="100%" flexDirection="column" d="flex">
       <Box
@@ -398,39 +389,45 @@ export default function Messanger(props) {
         </Box>
         {data ? (
           data.map((mes, index) => {
-           
             return (
               <>
-              
-               
                 <Box
-                minH={8}
-                key={index}
-                m={5}
-                d="flex"
-                justifyContent={mes.send ? "flex-end" : "flex-start"}
-                h="fit-content"
-              >
-               
-                <Box
-                  borderRadius={5}
-                  d="felx"
-                  justifyContent="center"
-                  alignItems="center"
-                  backgroundColor={mes.send ? "#f0d1d1" : "#a2d7fc"}
-                  flexDirection="row"
-                  p={2}
-                  minW={6}
-                  minH={5}
-                  w="fit-content"
+                  minH={8}
+                  key={index}
+                  m={5}
+                  d="flex"
+                  justifyContent={mes.send ? "flex-end" : "flex-start"}
                   h="fit-content"
-                  maxW="70%"
-                  whiteSpace="pre-line"
-                > {mes.type === "text"? (
-                  <Message {...mes}/>
-                  ):<AudioPlay url={mes.url} Session={mes.session} send={mes.send} type={mes.type} key={index}/>}
+                >
+                  <Box
+                    borderRadius={5}
+                    d="felx"
+                    justifyContent="center"
+                    alignItems="center"
+                    backgroundColor={mes.send ? "#f0d1d1" : "#a2d7fc"}
+                    flexDirection="row"
+                    p={2}
+                    minW={6}
+                    minH={5}
+                    w="fit-content"
+                    h="fit-content"
+                    maxW="70%"
+                    whiteSpace="pre-line"
+                  >
+                    {" "}
+                    {mes.type === "text" ? (
+                      <Message {...mes} />
+                    ) : (
+                      <AudioPlay
+                        url={mes.url}
+                        Session={mes.session}
+                        send={mes.send}
+                        type={mes.type}
+                        key={index}
+                      />
+                    )}
+                  </Box>
                 </Box>
-              </Box>
               </>
             );
           })
@@ -451,14 +448,18 @@ export default function Messanger(props) {
                   d="felx"
                   justifyContent="center"
                   alignItems="center"
-                  backgroundColor="red.500"
+                  backgroundColor={mesLoad ? "transparent" : "red.500"}
                   flexDirection="row"
                   p={2}
                   minW={6}
                   w="fit-content"
                   textAlign="center"
                 >
-                  <Text>No Messages Start Chating Now</Text>
+                  {mesLoad ? (
+                    <Spinner size="xl" color="red.500" />
+                  ) : (
+                    <Text>No Messages Start Chating Now</Text>
+                  )}
                 </Box>
               </Box>
             </Box>
