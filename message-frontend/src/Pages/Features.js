@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Text,useColorMode } from "@chakra-ui/react";
 import Card from "../components/features/Card";
 import { BsFillChatSquareTextFill } from "react-icons/bs";
 import { FcMultipleDevices } from "react-icons/fc";
@@ -70,8 +70,9 @@ MessageHub is a Web-app so you can use it on any Devise with Internet Connection
   )
 }
 export default function Features() {
+  const {colorMode}=useColorMode()
   return (
-    <Box backgroundColor="#1ee398" minW='100%' minH="100%">
+    <Box backgroundColor={colorMode==="light"?"#1ee398":"#19263a"} minW='100%' minH="100%">
       <Box d="flex" w="100%" justifyContent="center">
         <Text
           mt="20px"

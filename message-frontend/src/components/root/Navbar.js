@@ -1,16 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link as reachLink, Outlet } from "react-router-dom";
-import { Box, Image, Button, Icon, Link, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  Image,
+  Button,
+  Icon,
+  Link,
+  Stack,
+  useColorMode,
+} from "@chakra-ui/react";
 import messageHubLogo from "../../assets/icons/iconwhite.png";
 import messageHubLogoSmall from "../../assets/icons/iconmessage.png";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../FirebaseConfig";
 import { AiOutlineLogin, AiOutlineLogout } from "react-icons/ai";
-import { MdClose, MdOutlineMenu } from "react-icons/md";
+import {
+  MdClose,
+  MdOutlineMenu,
+  MdDarkMode,
+  MdLightMode,
+} from "react-icons/md";
 import axios from "axios";
 import { useReactPWAInstall } from "react-pwa-install";
 import logo from "../../assets/icons/mdpi.png";
 function Navbar(props) {
+  const { colorMode, toggleColorMode } = useColorMode();
+
   const navigate = useNavigate();
   const [isHome, SetisHome] = useState(true);
   const { pwaInstall, supported, isInstalled } = useReactPWAInstall();
@@ -106,12 +121,13 @@ function Navbar(props) {
         pb={{ sm: "61px", md: "0" }}
         d="flex"
         flexDirection="row"
-        backgroundColor="#05c2c8"
+        backgroundColor={colorMode === "light"?"#05c2c8":"#19263a"}
         // maxW="100%"
         minW="100%"
         justifyContent="center"
         alignItems="center"
         zIndex={1}
+        borderBottom={{md:colorMode==="light"?"1px solid #05c2c8 ":"1px solid #0e2e5e"}}
       >
         <Box
           d="flex"
@@ -178,9 +194,17 @@ function Navbar(props) {
                 FEATURES
               </Link>
 
-              {supported() && !isInstalled() &&<Button colorScheme="transparent" onClick={handleInstall} fontWeight="500" type="link" variant="ghost">
-                DOWNLOAD
-              </Button>}
+              {supported() && !isInstalled() && (
+                <Button
+                  colorScheme="transparent"
+                  onClick={handleInstall}
+                  fontWeight="500"
+                  type="link"
+                  variant="ghost"
+                >
+                  DOWNLOAD
+                </Button>
+              )}
 
               <Link as={reachLink} to="/security">
                 SECURITY
@@ -190,7 +214,18 @@ function Navbar(props) {
                 HELP CENTER
               </Link>
             </Box>
-
+            <Button
+              d={{ sm: "none", md: "inline-block" }}
+              colorScheme="transparent"
+              variant="ghost"
+              onClick={toggleColorMode}
+            >
+              <Icon
+                style={{ padding: "0 4px", fontSize: "28", fontWeight: "bold" }}
+                color={colorMode === "light" ? "#718096" : "#E2E8F0"}
+                as={colorMode === "light" ? MdDarkMode : MdLightMode}
+              />
+            </Button>
             <Button
               d={{ sm: "none", md: "inline-block" }}
               colorScheme="transparent"
@@ -202,6 +237,7 @@ function Navbar(props) {
                 as={user ? AiOutlineLogout : AiOutlineLogin}
               />
             </Button>
+
             <Box
               fontSize={25}
               fontWeight={500}
@@ -232,7 +268,7 @@ function Navbar(props) {
                 right={smNav ? "0" : "-100%"}
                 zIndex={3}
                 boxSizing="border-box"
-                backgroundColor="#05c2c8"
+                backgroundColor={colorMode === "light"?"#05c2c8":"#19263a"}
                 h="100%"
                 top="0"
                 w="100%"
@@ -323,6 +359,23 @@ function Navbar(props) {
                       HELP CENTER
                     </Link>
                   </Box>
+                  <Box m={0} py="16px" borderBottom="1px solid #48eaef">
+                    <Box
+                  
+                      variant="ghost"
+                      onClick={toggleColorMode}
+                    >
+                      <Icon
+                        style={{
+                          padding: "0 4px",
+                          fontSize: "28",
+                          fontWeight: "bold",
+                        }}
+                        color={colorMode === "light" ? "#718096" : "#E2E8F0"}
+                        as={colorMode === "light" ? MdDarkMode : MdLightMode}
+                      />
+                    </Box>
+                  </Box>
                   <Box m={0} py="16px">
                     <Box onClick={user ? smLogOut : smLogin} variant="ghost">
                       <Icon
@@ -353,7 +406,7 @@ function Navbar(props) {
             width: "14px",
           },
           "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "#05c2c8",
+            backgroundColor: colorMode==="light"?"#05c2c8":"#0e2e5e",
             borderRadius: "34px",
           },
         }}

@@ -9,8 +9,13 @@ const breakpoints = createBreakpoints({
   "2xl":"1200",
   "3xl": "1536px",
 });
+const colorConfig = {
+  initialColorMode: 'system',
+  useSystemColorMode: false,
+}
 const theme = extendTheme({
   breakpoints,
+  colorConfig,
   fonts: {
     body:"roboto"
   },

@@ -1,4 +1,4 @@
-import React from "react";
+import React , {useState} from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/root/Navbar";
 import { ChakraProvider } from "@chakra-ui/react";
@@ -16,7 +16,7 @@ import "./style.css";
 import ReactPWAInstallProvider from "react-pwa-install";
 
 function App() {
-
+const [mode, setMode] = useState("light")
 
   return (
     // wraph the app in ChkraProvider to use Chakra element inside it
