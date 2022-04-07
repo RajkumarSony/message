@@ -6,9 +6,12 @@ import Contact from "./Contact";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { AiOutlinePlusSquare, AiOutlineCloseSquare } from "react-icons/ai";
 import SkeletonContact from "./SkeletonContact";
+import {useThemeConfig} from "../../ThemeConfig"
 export default function ContactList(props) {
   const [data, setData] = useState();
   const [hasData, setHasData] = useState(true);
+  const config = useThemeConfig();
+
   useEffect(() => {
     onValue(
       query(ref(db, `${auth.currentUser.uid}/contacts`), orderByChild("name")),
@@ -47,7 +50,8 @@ export default function ContactList(props) {
         pb={{ md: "5px" }}
         d="flex"
         alignItems="center"
-        backgroundColor="#4ab0b0"
+        backgroundColor={config.navBg}
+        borderBottom={config.borderRn}
         justifyContent="space-between"
         h={{ md: "7vh", sm: "9vh", lg: "8vh" }}
       >

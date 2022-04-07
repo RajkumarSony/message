@@ -23,9 +23,11 @@ import {
 import axios from "axios";
 import { useReactPWAInstall } from "react-pwa-install";
 import logo from "../../assets/icons/mdpi.png";
+import { useThemeConfig } from "../../ThemeConfig";
+
 function Navbar(props) {
   const { colorMode, toggleColorMode } = useColorMode();
-
+const config = useThemeConfig();
   const navigate = useNavigate();
   const [isHome, SetisHome] = useState(true);
   const { pwaInstall, supported, isInstalled } = useReactPWAInstall();
@@ -121,13 +123,13 @@ function Navbar(props) {
         pb={{ sm: "61px", md: "0" }}
         d="flex"
         flexDirection="row"
-        backgroundColor={colorMode === "light"?"#05c2c8":"#19263a"}
+        backgroundColor={config.navBg}
         // maxW="100%"
         minW="100%"
         justifyContent="center"
         alignItems="center"
         zIndex={1}
-        borderBottom={{md:colorMode==="light"?"1px solid #05c2c8 ":"1px solid #0e2e5e"}}
+        borderBottom={{md:config.border}}
       >
         <Box
           d="flex"
@@ -222,7 +224,7 @@ function Navbar(props) {
             >
               <Icon
                 style={{ padding: "0 4px", fontSize: "28", fontWeight: "bold" }}
-                color={colorMode === "light" ? "#718096" : "#E2E8F0"}
+                color={config.IconColor}
                 as={colorMode === "light" ? MdDarkMode : MdLightMode}
               />
             </Button>
@@ -268,7 +270,7 @@ function Navbar(props) {
                 right={smNav ? "0" : "-100%"}
                 zIndex={3}
                 boxSizing="border-box"
-                backgroundColor={colorMode === "light"?"#05c2c8":"#19263a"}
+                backgroundColor={ config.navBg}
                 h="100%"
                 top="0"
                 w="100%"
@@ -371,7 +373,7 @@ function Navbar(props) {
                           fontSize: "28",
                           fontWeight: "bold",
                         }}
-                        color={colorMode === "light" ? "#718096" : "#E2E8F0"}
+                        color={config.IconColor}
                         as={colorMode === "light" ? MdDarkMode : MdLightMode}
                       />
                     </Box>
@@ -406,7 +408,7 @@ function Navbar(props) {
             width: "14px",
           },
           "&::-webkit-scrollbar-thumb": {
-            backgroundColor: colorMode==="light"?"#05c2c8":"#0e2e5e",
+            backgroundColor: config.border,
             borderRadius: "34px",
           },
         }}

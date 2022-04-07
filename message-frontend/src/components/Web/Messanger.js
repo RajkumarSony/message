@@ -30,7 +30,10 @@ import Picker from "emoji-picker-react";
 import MicRecorder from "mic-recorder-to-mp3";
 import AudioPlay from "./AudioPlay";
 import Message from "./Message";
+import { useThemeConfig } from "../../ThemeConfig";
+
 export default function Messanger(props) {
+  const config = useThemeConfig();
   const [showPicker, setShowPicker] = useState(false);
   const [micIcon, setMicIcon] = useState(true);
   const [data, setData] = useState();
@@ -354,7 +357,7 @@ export default function Messanger(props) {
             borderRadius: "34px",
           },
         }}
-        backgroundColor="#bceef7"
+        backgroundColor={config.mesBg}
         h="100%"
       >
         <Box
@@ -404,7 +407,7 @@ export default function Messanger(props) {
                     d="felx"
                     justifyContent="center"
                     alignItems="center"
-                    backgroundColor={mes.send ? "#f0d1d1" : "#a2d7fc"}
+                    backgroundColor={mes.send ? config.chatL : config.chatR}
                     flexDirection="row"
                     p={2}
                     minW={6}
@@ -485,7 +488,7 @@ export default function Messanger(props) {
       )}
       <Box
         borderLeft="1px solid gray"
-        backgroundColor="white"
+        backgroundColor={config.inputBg}
         alignItems="center"
         h="60px"
         d="flex"

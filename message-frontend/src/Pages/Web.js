@@ -4,7 +4,7 @@ import Messanger from "../components/Web/Messanger";
 import ContactNav from "../components/Web/ContactNav";
 import AddContact from "../components/Web/AddContact";
 import MessageNav from "../components/Web/MessageNav";
-import { Box ,Text,Icon} from "@chakra-ui/react";
+import { Box ,Text,useColorMode} from "@chakra-ui/react";
 // import {BiNotification,BiNotificationOff} from "react-icons/bi"
 import { Navigate } from "react-router-dom";
 import { auth, db,messaging } from "../FirebaseConfig";
@@ -14,8 +14,10 @@ import UpdateProfile from "../components/Web/UpdateProfile";
 import { onValue, ref } from "firebase/database";
 import { getToken ,onMessage} from "firebase/messaging";
 import axios from "axios";
+import { useThemeConfig } from "../ThemeConfig";
 
 export default function Web() {
+  const config=useThemeConfig();
   const [Mnav, setMnav] = useState({
     src: "",
     name: "",
@@ -145,7 +147,7 @@ export default function Web() {
           overflow="hidden"
           w={{ md: "40%", sm: width, lg: "30%" }}
         >
-          <Box w="100%" h={{ md: "7vh", sm: "9vh", lg: "8vh" }}>
+          <Box w="100%" h={{ md: "7vh", sm: "9vh", lg: "8vh" }} borderBottom={config.border}>
             <ContactNav
               profile={updatePopupProfile}
               contactList={updatepopupContactList}
@@ -170,7 +172,7 @@ export default function Web() {
                   display: "none",
                 },
               }}
-              backgroundColor="#d8c9e3"
+              backgroundColor={config.contactBg}
             >
               <RecentMsg
                 setMnav={updatesetMnav}
@@ -208,7 +210,7 @@ export default function Web() {
                 display: "none",
               },
             }}
-            backgroundColor="#d8c9e3"
+            backgroundColor={config.contactBg}
           >
             <ContactList
               setMnav={updatesetMnav}
