@@ -136,11 +136,12 @@ useEffect(()=>{
         w="100%"
         colorScheme="pink"
         defaultValue={0}
+        
       >
         <SliderTrack>
           <SliderFilledTrack />
         </SliderTrack>
-        <SliderThumb />
+        <SliderThumb zIndex="0"/>
       </Slider>
       <Text fontSize="9px">
       {downloaded? time+"/"+duration : "" }

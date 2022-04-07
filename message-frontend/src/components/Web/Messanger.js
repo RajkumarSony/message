@@ -26,7 +26,7 @@ import { onValue, ref, get } from "firebase/database";
 import { ref as str, uploadBytes } from "firebase/storage";
 import { getSealdSDKInstance } from "../../SealedInit";
 import { BiLockAlt } from "react-icons/bi";
-import Picker from "emoji-picker-react";
+import 'emoji-picker-element'
 import MicRecorder from "mic-recorder-to-mp3";
 import AudioPlay from "./AudioPlay";
 import Message from "./Message";
@@ -42,6 +42,7 @@ export default function Messanger(props) {
   const [y, setY] = useState("-100%");
   const [recording, Setrecording] = useState(false);
   const inputFocus = useRef();
+  const Picker = useRef(null);
   const [playerVal, setPlayerVal] = useState(0);
   const [pAudio, setpAudio] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
@@ -278,15 +279,18 @@ export default function Messanger(props) {
       setY("-100%");
     }
   };
-  const onEmojiClick = (event, emojiObject) => {
-    inputFocus.current.focus();
 
-    setVal(Val + emojiObject.emoji);
-    setMicIcon(false);
-  };
   useEffect(() => {
     scrollToBottom();
   }, [data]);
+useEffect(() => {
+ Picker.current?.addEventListener('emoji-click',(e)=>{
+  inputFocus.current.focus();
+      setVal(Val + e.detail.unicode);
+      setMicIcon(false);
+ })
+
+}, [Picker,showPicker,Val])
 
   useEffect(() => {
     // Solve error message not showing decryption problem
@@ -474,16 +478,11 @@ export default function Messanger(props) {
         <Box
           w={{ md: "60%", sm: "100%", lg: "70%" }}
           position="absolute"
-          h="200px"
+          h="300px"
           bottom={y}
           transition="all 0.8s ease-in-out"
         >
-          <Picker
-            disableSearchBar={true}
-            preload={true}
-            pickerStyle={{ height: "100%", width: "100%" }}
-            onEmojiClick={onEmojiClick}
-          />
+          <emoji-picker ref={Picker} class={config.emoPic}  style={{height:"100%", width:"100%",zIndex:"100"}}></emoji-picker>
         </Box>
       )}
       <Box
@@ -529,7 +528,7 @@ export default function Messanger(props) {
               backgroundColor="rgba(100,100,100,0.3)"
               resize="none"
               placeholder="Type Message"
-              color="black"
+             
               pt={6}
               style={{ border: "1px solid white", width: "100%" }}
               align="center"

@@ -1,1 +1,0 @@
-{"version":3,"sources":["webpack://src/style.css"],"names":[],"mappings":"AACA,yCACI,KACI,iBACJ,CACJ","file":"main.68131f3a.chunk.css","sourcesContent":["\r\n@media only screen and (min-width: 768px) {\r\n    body{\r\n        overflow-y:hidden\r\n    }\r\n}"]}

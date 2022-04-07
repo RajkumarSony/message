@@ -14,11 +14,12 @@ import {
     Text,
     Icon
   } from "@chakra-ui/react";
+import { useThemeConfig } from "../../ThemeConfig";
 
 export default function AddContact(props) {
     const [email, setEmail] = useState();
     const [loading, setLoading] = useState(false);
- 
+ const config  = useThemeConfig();
   const handleEmail = (event) => {
     setEmail(event.target.value);
     props.setError({
@@ -65,9 +66,9 @@ export default function AddContact(props) {
       });
   };
   return (
-    <Flex direction="column" alignItems="flex-end" mt="5px" h="100%" overflowY="bolck"  >
+    <Flex bg={config.contactBg} direction="column" alignItems="flex-end" mt="5px" h="100%" overflowY="bolck"  >
          <Icon
-          color="black"
+          color={config.IconColor}
           cursor="pointer"
           mr={3}
           onClick={() => {

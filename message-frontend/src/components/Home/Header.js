@@ -1,5 +1,5 @@
 import React from "react";
-import { Image, Box, Text, Stack, Link, Icon,useColorMode } from "@chakra-ui/react";
+import { Image, Box, Text, Stack, Link, Icon } from "@chakra-ui/react";
 import Phone from "../../assets/Img/Phone.png";
 
 import { Link as reachLink } from "react-router-dom";
@@ -8,8 +8,9 @@ import { MdMonitor } from "react-icons/md";
 import { IoIosArrowForward } from "react-icons/io";
 import { useReactPWAInstall } from "react-pwa-install";
 import logo from "../../assets/icons/mdpi.png";
+import { useThemeConfig } from "../../ThemeConfig";
 export default function Header() {
-  const {colorMode}=useColorMode();
+  const config=useThemeConfig();
   const { pwaInstall, supported, isInstalled } = useReactPWAInstall();
   const handleClick = () => {
     pwaInstall({
@@ -28,9 +29,9 @@ export default function Header() {
       <Box color={{ md: "black" }}>
         <Box
           pb={{ md: "56px", sm: "0px" }}
-          color={{ sm: "#fff", md: colorMode==="light"?"#1c1e21":"white" }}
+          color={{ sm: "#fff", md: config.hColormd}}
           // backgroundColor={colorMode === "light"?"#05c2c8":"#19263a"}
-          backgroundColor={{ sm: colorMode === "light"?"#05c2c8":"#19263a", md: colorMode==="light"? "white":"#19263a" }}
+          backgroundColor={{ sm: config.navBg, md: config.hHeadermd }}
           pt={"56px"}
           textAlign={{ md: "left", sm: "center" }}
           h="fit-content"

@@ -1,11 +1,11 @@
 import { Box, Avatar, Icon, Text, useColorMode,Button } from "@chakra-ui/react";
-import { config } from "dotenv";
+import "../../style.css"
 import React from "react";
 import { AiTwotoneSetting } from "react-icons/ai";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { MdDarkMode, MdLightMode } from "react-icons/md";
 import { useThemeConfig } from "../../ThemeConfig";
-// import {useNavigate} from "react-router-dom"
+
 export default function MessageNav(props) {
   // const history=useNavigate()
   const { colorMode, toggleColorMode } = useColorMode();
@@ -38,7 +38,7 @@ export default function MessageNav(props) {
           as={IoMdArrowRoundBack}
         />
         <Avatar name={props.name} maxH="100%" src={props.src} mr={2} />
-        <Text color="white" fontSize="xl">
+        <Text color="white" fontSize={{md:"xl",sm:"lg"}}>
           {props.name}
         </Text>
       </Box>
