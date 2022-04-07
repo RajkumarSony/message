@@ -1,9 +1,11 @@
 import React from 'react'
 import {Box,SkeletonCircle, SkeletonText } from "@chakra-ui/react"
+import { useThemeConfig } from '../../ThemeConfig'
 
 export default function SkeletonContact() {
+  const config = useThemeConfig();
     return (
-        <Box h="80px" backgroundColor="#d8c9e3" cursor="pointer" d="flex">
+        <Box h="80px" backgroundColor={config.contactBg} cursor="pointer" d="flex">
         <SkeletonCircle  my={3} mx={2} startColor="#a59a9a"  endColor="#83d8d8"  cursor="pointer" size="16" />
         <Box
           mt={4}

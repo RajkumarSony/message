@@ -245,7 +245,7 @@ export default function Web() {
           zIndex="1"
           w={{ md: "60%", sm: xwidth, lg: "70%" }}
           color="white"
-          backgroundColor="#bceef7"
+          backgroundColor={config.mesBg}
           d={{md:!uid?"flex":"none",sm:"none"}}
           justifyContent="center"
           alignItems="center"
