@@ -4,7 +4,7 @@ import Messanger from "../components/Web/Messanger";
 import ContactNav from "../components/Web/ContactNav";
 import AddContact from "../components/Web/AddContact";
 import MessageNav from "../components/Web/MessageNav";
-import { Box, Text, Spinner } from "@chakra-ui/react";
+import { Box, Text, Button, Icon, useColorMode } from "@chakra-ui/react";
 // import {BiNotification,BiNotificationOff} from "react-icons/bi"
 import { Navigate } from "react-router-dom";
 import { auth, db, messaging } from "../FirebaseConfig";
@@ -30,6 +30,7 @@ export default function Web() {
   const [url, setUrl] = useState();
   const [popupProfile, setPopupProfile] = useState(false);
   // const [notification, Setnotification] = useState(false)
+  const {toggleColorMode}=useColorMode();
   const [error, setError] = useState({
     error: false,
     code: null,
@@ -37,6 +38,7 @@ export default function Web() {
   });
 
   const [uid, setUid] = useState(null);
+
   const updatePopup = () => {
     setPopup(!popupContact);
     setPopupProfile(false);
@@ -268,6 +270,7 @@ export default function Web() {
             justifyContent="center"
             alignItems="center"
           >
+            <Button variant="ghost" onClick={toggleColorMode} position="absolute" top={4} right={4}><Icon color={config.IconColor} as={config.Icon}/></Button>
             <Text textAlign="center" fontSize={26} fontWeight={600}>
               Select Contact to Send Message
             </Text>
