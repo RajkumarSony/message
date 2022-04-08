@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/root/Navbar";
 import { ChakraProvider } from "@chakra-ui/react";
 import Home from "./Pages/Home";
-import Web from "./Pages/Web";
+import WebMid from "./Pages/webMid";
 import Features from "./Pages/Features";
 import HelpCenter from "./Pages/HelpCenter";
 import Security from "./Pages/security";
@@ -40,7 +40,7 @@ function App() {
               <Route path="*" element={<NotFound />} />
             </Route>
             {/* Outside the "/" route so no navbar visible on this page or any other page outside the "/" route */}
-            <Route path="/web" element={<Web />} />
+            <Route path="/web" element={<WebMid />} />
           </Routes>
         </Router>
       </ReactPWAInstallProvider>

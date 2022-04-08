@@ -26,7 +26,7 @@ import logo from "../../assets/icons/mdpi.png";
 import { useThemeConfig } from "../../ThemeConfig";
 
 function Navbar(props) {
-  const { colorMode, toggleColorMode } = useColorMode();
+  const { toggleColorMode } = useColorMode();
 const config = useThemeConfig();
   const navigate = useNavigate();
   const [isHome, SetisHome] = useState(true);
@@ -225,7 +225,7 @@ const config = useThemeConfig();
               <Icon
                 style={{ padding: "0 4px", fontSize: "28", fontWeight: "bold" }}
                 color={config.IconColor}
-                as={colorMode === "light" ? MdDarkMode : MdLightMode}
+                as={config.Icon}
               />
             </Button>
             <Button
@@ -374,7 +374,7 @@ const config = useThemeConfig();
                           fontWeight: "bold",
                         }}
                         color={config.IconColor}
-                        as={colorMode === "light" ? MdDarkMode : MdLightMode}
+                        as={config.Icon}
                       />
                     </Box>
                   </Box>

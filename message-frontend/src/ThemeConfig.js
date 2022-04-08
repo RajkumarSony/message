@@ -1,4 +1,5 @@
 import { useColorMode } from "@chakra-ui/react";
+import { MdDarkMode, MdLightMode } from "react-icons/md";
 
 function useThemeConfig() {
   const { colorMode } = useColorMode();
@@ -15,7 +16,8 @@ function useThemeConfig() {
     chatR:colorMode==="light"?"#a2d7fc":"#455ba2",
     inputBg:colorMode==="light"?"white":"#02122a",
     hColormd:colorMode==="light"?"#1c1e21":"white",
-    emoPic:colorMode==="light"?"light":"dark" 
+    emoPic:colorMode==="light"?"light":"dark" ,
+    Icon:colorMode==="light"? MdDarkMode  : MdLightMode,
 
   };
   return config;

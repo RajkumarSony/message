@@ -3,7 +3,7 @@ import "../../style.css"
 import React from "react";
 import { AiTwotoneSetting } from "react-icons/ai";
 import { IoMdArrowRoundBack } from "react-icons/io";
-import { MdDarkMode, MdLightMode } from "react-icons/md";
+
 import { useThemeConfig } from "../../ThemeConfig";
 
 export default function MessageNav(props) {
@@ -52,7 +52,7 @@ export default function MessageNav(props) {
           <Icon
             style={{ padding: "0 4px", fontSize: "28", fontWeight: "bold" }}
             color={config.IconColor}
-            as={colorMode === "light" ? MdDarkMode : MdLightMode}
+            as={config.Icon}
           />
         </Button>
         <Icon color={config.IconColor} mr={3} fontSize={28} as={AiTwotoneSetting} />
