@@ -41,7 +41,7 @@ function App() {
           size="small"
           onClick={updateServiceWorker}
         >
-          {"refresh"}
+          {"update"}
         </Button>
       </Fragment>
     );
@@ -54,7 +54,7 @@ function App() {
 
     if (newVersion) {
       //show snackbar with refresh button
-      enqueueSnackbar("A new version was released", {
+      enqueueSnackbar("A new version is Avalible", {
         persist: true,
         variant: "success",
         action: refreshAction(),
