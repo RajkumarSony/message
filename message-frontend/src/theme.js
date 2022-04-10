@@ -9,7 +9,7 @@ const breakpoints = createBreakpoints({
   "2xl":"1200",
   "3xl": "1536px",
 });
-const colorConfig = {
+export const colorConfig = {
   initialColorMode: 'system',
   useSystemColorMode: false,
 }
