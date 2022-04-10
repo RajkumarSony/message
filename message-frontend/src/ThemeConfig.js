@@ -5,6 +5,8 @@ function useThemeConfig() {
   const { colorMode } = useColorMode();
   const config = {
     navBg: colorMode === "light" ? "#05c2c8" : "#19263a",
+    scrollTrack: colorMode === "light" ? "white" : "#19263a",
+    scrollTrackThumb: colorMode === "light" ? "#05c2c8" : "#295599",
     hHeadermd:colorMode==="light"? "white":"#19263a",
     contactBg: colorMode === "light" ? "#d8c9e3" : "#19263a",
     IconColor: colorMode === "light" ? "#718096" : "#E2E8F0",

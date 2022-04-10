@@ -133,7 +133,7 @@ const config = useThemeConfig();
           d="flex"
           pl={{ md: "1.2rem", sm: "0.5rem" }}
           pr={{ md: "2rem", sm: "0.5rem" }}
-          maxW={{ md: "1050px", sm: "100%" }}
+          maxW={{ md: "1050px", sm: "100%",lg:"80vw", }}
           flexDirection="row"
           color="white"
           lineHeight="26px"
@@ -404,9 +404,10 @@ const config = useThemeConfig();
           },
           "&::-webkit-scrollbar-track": {
             width: "14px",
+            backgroundColor:config.scrollTrack,
           },
           "&::-webkit-scrollbar-thumb": {
-            backgroundColor: config.border,
+            backgroundColor: config.scrollTrackThumb,
             borderRadius: "34px",
           },
         }}
