@@ -17,7 +17,6 @@ import { Navigate, useNavigate, Link as reachLink } from "react-router-dom";
 import { retrieveIdentity } from "../SealedInit";
 import Cookies from "js-cookie";
 import axios from "axios";
-import { load } from "dotenv";
 export default function SimpleCard() {
   const navigate = useNavigate();
   const [email, setEmail] = useState(null); // Manage Email State input from user

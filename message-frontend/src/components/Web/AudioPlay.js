@@ -24,7 +24,7 @@ const convertHMS = (value) => {
   if (seconds < 10) {
     seconds = "0" + seconds;
   }
-  return ( hours==0? "":hours+ ":" ) + minutes+ ":"  + seconds; // Return is HH : MM : SS
+  return ( hours===0? "":hours+ ":" ) + minutes+ ":"  + seconds; // Return is HH : MM : SS
 };
 
 
@@ -87,11 +87,11 @@ export default function AudioPlay(props) {
 
     };
    
-  }, []);
+  }, [player]);
 useEffect(()=>{
   setDuration(convertHMS(player.duration))
-})
-  useEffect(() => {}, []);
+},[player.src,player.duration])
+
 
   return (
     <Box

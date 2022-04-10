@@ -17,8 +17,6 @@ import { AiOutlineLogin, AiOutlineLogout } from "react-icons/ai";
 import {
   MdClose,
   MdOutlineMenu,
-  MdDarkMode,
-  MdLightMode,
 } from "react-icons/md";
 import axios from "axios";
 import { useReactPWAInstall } from "react-pwa-install";

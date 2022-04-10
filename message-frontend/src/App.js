@@ -22,34 +22,36 @@ function App() {
   const [waitingWorker, setWaitingWorker] = useState({});
   const { enqueueSnackbar} = useSnackbar();
 
-  const onServiceWorkerUpdate = (registration) => {
-    setWaitingWorker(registration && registration.waiting);
-    setNewVersion(true);
-  };
 
-  const updateServiceWorker = () => {
-    waitingWorker && waitingWorker.postMessage({ type: "SKIP_WAITING" });
-    setNewVersion(false);
-    window.location.reload();
-  };
-  const refreshAction = (key) => {
-    //render the snackbar button
-    return (
-      <Fragment>
-        <Button
-          className="snackbar-button"
-          size="small"
-          onClick={updateServiceWorker}
-        >
-          {"update"}
-        </Button>
-      </Fragment>
-    );
-  };
+
 
   useEffect(() => {
-   
-      serviceWorker.register({ onUpdate: onServiceWorkerUpdate });
+    const onServiceWorkerUpdate = (registration) => {
+      setWaitingWorker(registration && registration.waiting);
+      setNewVersion(true);
+    };
+  
+    const updateServiceWorker = () => {
+      waitingWorker && waitingWorker.postMessage({ type: "SKIP_WAITING" });
+      setNewVersion(false);
+      window.location.reload();
+    };
+    serviceWorker.register({ onUpdate: onServiceWorkerUpdate });
+    const refreshAction = (key) => {
+      //render the snackbar button
+      return (
+        <Fragment>
+          <Button
+            className="snackbar-button"
+            size="small"
+            onClick={updateServiceWorker}
+          >
+            {"update"}
+          </Button>
+        </Fragment>
+      );
+    };
+    
     
 
     if (newVersion) {
@@ -60,7 +62,7 @@ function App() {
         action: refreshAction(),
       });
     }
-  }, [newVersion]);
+  }, [newVersion,enqueueSnackbar,waitingWorker]);
 
   return (
     // wraph the app in ChkraProvider to use Chakra element inside it

@@ -6,7 +6,6 @@ import AddContact from "../components/Web/AddContact";
 import MessageNav from "../components/Web/MessageNav";
 import { Box, Text, Button, Icon, useColorMode } from "@chakra-ui/react";
 // import {BiNotification,BiNotificationOff} from "react-icons/bi"
-import { Navigate } from "react-router-dom";
 import { auth, db, messaging } from "../FirebaseConfig";
 
 import RecentMsg from "../components/Web/RecentMsg";

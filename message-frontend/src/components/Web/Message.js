@@ -12,7 +12,7 @@ export default function Message(props) {
     }else{
       setMessage(props.message)
     }
-  }, []);
+  }, [props.message,session]);
 
   return (
     <Text>

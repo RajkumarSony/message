@@ -8,7 +8,7 @@ import { useThemeConfig } from "../../ThemeConfig";
 
 export default function MessageNav(props) {
   // const history=useNavigate()
-  const { colorMode, toggleColorMode } = useColorMode();
+  const { toggleColorMode } = useColorMode();
   const handleBack = () => {
     props.updateWidth();
   };
