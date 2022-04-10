@@ -117,7 +117,7 @@ const config = useThemeConfig();
       <Box
         position={{ md: "sticky", sm: "relative" }}
         boxSizing="content-box"
-        h={{ md: "74px", lg: "91px", sm: "61px" }}
+        h={{ "3xl":"8vh", sm: "10vh" }}
         pb={{ sm: "61px", md: "0" }}
         d="flex"
         flexDirection="row"
@@ -411,7 +411,7 @@ const config = useThemeConfig();
             borderRadius: "34px",
           },
         }}
-        h={{ md: "83vh" }}
+        h={{ sm: "90vh","3xl":"92vh" }}
       >
         <Outlet context={[isHome, SetisHome]} />
       </Box>
