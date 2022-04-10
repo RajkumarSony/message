@@ -298,9 +298,14 @@ useEffect(() => {
       db,
       `${auth.currentUser.uid}/chats/${props.uid}/messages`
     );
-
+    setmesLoad(true)
+    setData(false)
     onValue(contactsRef, (datax) => {
+      console.log(datax)
+      
       if (datax.hasChildren()) {
+    
+      
         let x = [];
         let count = 0;
         get(
@@ -321,6 +326,7 @@ useEffect(() => {
               count++;
               if (count === datax.size) {
                 setData(x);
+                
               
               }
             } else if (contact.val().type === "audio") {
@@ -333,17 +339,19 @@ useEffect(() => {
               count++;
               if (count === datax.size) {
                 setData(x);
+              
+                
                
               }
             }
           });
         });
-      } 
+      } else{
+        setmesLoad(false)
+      }
     });
   }, [props.uid]);
-  useEffect(() => {
-    console.log(mesLoad);
-  }, [mesLoad]);
+
   return (
     <Box h="100%" flexDirection="column" d="flex">
       <Box
@@ -395,7 +403,7 @@ useEffect(() => {
           </Box>
         </Box>
         {data ? (
-          data.map((mes, index) => {
+          data?.map((mes, index) => {
             return (
               <>
                 <Box
@@ -403,7 +411,7 @@ useEffect(() => {
                   key={index}
                   m={5}
                   d="flex"
-                  justifyContent={mes.send ? "flex-end" : "flex-start"}
+                  justifyContent={mes.send ? "flex-end" :mes.send===undefined? "center": "flex-start"}
                   h="fit-content"
                 >
                   <Box
@@ -411,7 +419,7 @@ useEffect(() => {
                     d="felx"
                     justifyContent="center"
                     alignItems="center"
-                    backgroundColor={mes.send ? config.chatL : config.chatR}
+                    backgroundColor={mes.send ? config.chatL :mes.send===undefined? "transparent": config.chatR}
                     flexDirection="row"
                     p={2}
                     minW={6}

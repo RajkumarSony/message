@@ -25,6 +25,7 @@ export default function RecentMsg(props) {
         let itemsProcessed = 0;
 
         if (datax.hasChildren()) {
+          setHasData(true)
           datax.forEach((data) => {
             onValue(
               ref(db, `${data.key}/PersonalInfo`),
@@ -79,7 +80,7 @@ export default function RecentMsg(props) {
       });
     }
     recentMsg();
-  }, []);
+  }, [hasData]);
 
   return (
     <Box>

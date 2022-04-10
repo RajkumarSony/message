@@ -4,9 +4,14 @@ export default function Message(props) {
   const [message, setMessage] = useState(null);
   const session = props.session;
   useEffect(() => {
-    session.decryptMessage(props.message).then((decryptMessage) => {
-      setMessage(decryptMessage);
-    });
+    if(session){
+
+      session.decryptMessage(props.message).then((decryptMessage) => {
+        setMessage(decryptMessage);
+      });
+    }else{
+      setMessage(props.message)
+    }
   }, []);
 
   return (
