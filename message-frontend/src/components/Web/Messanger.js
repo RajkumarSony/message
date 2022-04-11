@@ -22,7 +22,7 @@ import { TiAttachmentOutline } from "react-icons/ti";
 
 import { auth, db, storage } from "../../FirebaseConfig";
 import axios from "axios";
-import { onValue, ref, get } from "firebase/database";
+import { onValue, ref, get,off } from "firebase/database";
 import { ref as str, uploadBytes } from "firebase/storage";
 import { getSealdSDKInstance } from "../../SealedInit";
 import { BiLockAlt } from "react-icons/bi";
@@ -292,6 +292,8 @@ useEffect(() => {
 
 }, [Picker,showPicker,Val])
 
+
+
   useEffect(() => {
     // Solve error message not showing decryption problem
     const contactsRef = ref(
@@ -350,6 +352,9 @@ useEffect(() => {
         setmesLoad(false)
       }
     });
+    return ()=>{
+off(contactsRef)
+    }
   }, [props.uid]);
 
   return (
