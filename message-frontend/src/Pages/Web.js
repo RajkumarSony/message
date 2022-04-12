@@ -183,6 +183,7 @@ export default function Web() {
                 d={!popupContact && !popupProfile ? "block" : "none"}
                 h="100%"
                 overflowY="scroll"
+
                 w="100%"
                 transition="display 1s fade"
                 zIndex={-1}
@@ -192,6 +193,7 @@ export default function Web() {
                   },
                 }}
                 backgroundColor={config.contactBg}
+                overscrollBehaviorY="contain"
               >
                 <RecentMsg
                   setMnav={updatesetMnav}
@@ -222,6 +224,7 @@ export default function Web() {
               left={popupContactList}
               h="100%"
               overflowY="scroll"
+              overscrollBehaviorY="contain"
               w={{ md: "40%", sm: width, lg: "30%" }}
               transition="left 0.45s ease-in-out"
               css={{

@@ -361,6 +361,7 @@ off(contactsRef)
     <Box h="100%" flexDirection="column" d="flex">
       <Box
         overflowY="auto"
+        overscrollBehaviorY="contain"
         css={{
           "&::-webkit-scrollbar": {
             width: "4px",
