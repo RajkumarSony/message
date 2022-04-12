@@ -358,9 +358,9 @@ off(contactsRef)
   }, [props.uid]);
 
   return (
-    <Box h="100%" flexDirection="column" d="flex">
+    <Box h="100%" flexDirection="column"  overscrollBehaviorY="contain" d="flex">
       <Box
-        overflowY="auto"
+        overflowY="scroll"
         overscrollBehaviorY="contain"
         css={{
           "&::-webkit-scrollbar": {
