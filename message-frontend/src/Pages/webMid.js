@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Web from "./Web";
-import { Box, Progress, Text, Link,Button, Icon, useColorMode } from "@chakra-ui/react";
+import { Box, Progress, Text, Link, Button, Icon } from "@chakra-ui/react";
 import { Link as reachLink } from "react-router-dom";
 import { auth } from "../FirebaseConfig";
 import { onAuthStateChanged } from "firebase/auth";
 import { useThemeConfig } from "../ThemeConfig";
 export default function WebMid() {
-  const config = useThemeConfig();
+  const { config, toggleColor } = useThemeConfig();
   const [authd, setAuthd] = useState(null);
   const [reDirect, setReDirect] = useState(false);
-  const {toggleColorMode} = useColorMode();
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -35,7 +34,17 @@ export default function WebMid() {
 
   return (
     <>
-    {reDirect && <Button onClick={toggleColorMode} variant="ghost" position="absolute" right={4} top={4}><Icon color={config.IconColor} as={config.Icon}/></Button> }
+      {reDirect && (
+        <Button
+          onClick={toggleColor}
+          variant="ghost"
+          position="absolute"
+          right={4}
+          top={4}
+        >
+          <Icon color={config.IconColor} as={config.Icon} />
+        </Button>
+      )}
       {authd ? (
         <Web />
       ) : (
@@ -47,9 +56,6 @@ export default function WebMid() {
           justifyContent="center"
           alignItems="center"
         >
-
-
-
           {reDirect ? (
             <>
               <Text textAlign="center" w="80vw">
@@ -76,8 +82,6 @@ export default function WebMid() {
           ) : (
             <Progress size="xs" borderRadius="10%" w="80vw" isIndeterminate />
           )}
-
-
         </Box>
       )}
     </>
