@@ -1,31 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link as reachLink, Outlet } from "react-router-dom";
-import {
-  Box,
-  Image,
-  Button,
-  Icon,
-  Link,
-  Stack,
-  useColorMode,
-} from "@chakra-ui/react";
+import { Box, Image, Button, Icon, Link, Stack } from "@chakra-ui/react";
 import messageHubLogo from "../../assets/icons/iconwhite.png";
 import messageHubLogoSmall from "../../assets/icons/iconmessage.png";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { auth } from "../../FirebaseConfig";
 import { AiOutlineLogin, AiOutlineLogout } from "react-icons/ai";
-import {
-  MdClose,
-  MdOutlineMenu,
-} from "react-icons/md";
+import { MdClose, MdOutlineMenu } from "react-icons/md";
 import axios from "axios";
 import { useReactPWAInstall } from "react-pwa-install";
 import logo from "../../assets/icons/mdpi.png";
 import { useThemeConfig } from "../../ThemeConfig";
 
 function Navbar(props) {
-  const { toggleColorMode } = useColorMode();
-const config = useThemeConfig();
+  const { config, toggleColor } = useThemeConfig();
   const navigate = useNavigate();
   const [isHome, SetisHome] = useState(true);
   const { pwaInstall, supported, isInstalled } = useReactPWAInstall();
@@ -117,7 +105,7 @@ const config = useThemeConfig();
       <Box
         position={{ md: "sticky", sm: "relative" }}
         boxSizing="content-box"
-        h={{ "3xl":"8vh", sm: "10vh" }}
+        h={{ "3xl": "8vh", sm: "10vh" }}
         pb={{ sm: "61px", md: "0" }}
         d="flex"
         flexDirection="row"
@@ -127,13 +115,13 @@ const config = useThemeConfig();
         justifyContent="center"
         alignItems="center"
         zIndex={1}
-        borderBottom={{md:config.border}}
+        borderBottom={{ md: config.border }}
       >
         <Box
           d="flex"
           pl={{ md: "1.2rem", sm: "0.5rem" }}
           pr={{ md: "2rem", sm: "0.5rem" }}
-          maxW={{ md: "1050px", sm: "100%",lg:"80vw", }}
+          maxW={{ md: "1050px", sm: "100%", lg: "80vw" }}
           flexDirection="row"
           color="white"
           lineHeight="26px"
@@ -218,7 +206,7 @@ const config = useThemeConfig();
               d={{ sm: "none", md: "inline-block" }}
               colorScheme="transparent"
               variant="ghost"
-              onClick={toggleColorMode}
+              onClick={toggleColor}
             >
               <Icon
                 style={{ padding: "0 4px", fontSize: "28", fontWeight: "bold" }}
@@ -268,7 +256,7 @@ const config = useThemeConfig();
                 right={smNav ? "0" : "-100%"}
                 zIndex={3}
                 boxSizing="border-box"
-                backgroundColor={ config.navBg}
+                backgroundColor={config.navBg}
                 h="100%"
                 top="0"
                 w="100%"
@@ -360,11 +348,7 @@ const config = useThemeConfig();
                     </Link>
                   </Box>
                   <Box m={0} py="16px" borderBottom="1px solid #48eaef">
-                    <Box
-                  
-                      variant="ghost"
-                      onClick={toggleColorMode}
-                    >
+                    <Box variant="ghost" onClick={toggleColor}>
                       <Icon
                         style={{
                           padding: "0 4px",
@@ -397,21 +381,22 @@ const config = useThemeConfig();
         {/* </Flex> */}
       </Box>
       <Box
-        overflowY={{ md: "auto" }}
+        overflowY="auto"
+        overscrollBehaviorY="contain"
         css={{
           "&::-webkit-scrollbar": {
             width: "10px",
           },
           "&::-webkit-scrollbar-track": {
             width: "14px",
-            backgroundColor:config.scrollTrack,
+            backgroundColor: config.scrollTrack,
           },
           "&::-webkit-scrollbar-thumb": {
             backgroundColor: config.scrollTrackThumb,
             borderRadius: "34px",
           },
         }}
-        h={{ sm: "90vh","3xl":"92vh" }}
+        h={{ sm: "90vh", "3xl": "92vh" }}
       >
         <Outlet context={[isHome, SetisHome]} />
       </Box>

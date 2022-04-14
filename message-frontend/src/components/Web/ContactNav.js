@@ -1,11 +1,11 @@
 import React from "react";
 import { BiMessageRoundedAdd } from "react-icons/bi";
-import { AiOutlineHome} from "react-icons/ai";
-import { Box, Avatar, Icon ,Link} from "@chakra-ui/react";
-import {Link as reachLink} from "react-router-dom"
+import { AiOutlineHome } from "react-icons/ai";
+import { Box, Avatar, Icon, Link } from "@chakra-ui/react";
+import { Link as reachLink } from "react-router-dom";
 import { useThemeConfig } from "../../ThemeConfig";
 export default function ContactNav(props) {
-  const config = useThemeConfig();
+  const { config } = useThemeConfig();
 
   return (
     <Box
@@ -30,12 +30,16 @@ export default function ContactNav(props) {
         />
       </Box>
       <Box d="flex" alignItems="center" justifyContent="space-around" mr={3}>
-        <Link d="flex" alignItems="center" justifyContent="center" fontSize={28} as={reachLink} mr={3} to="/">
-          <Icon
-            color={config.IconColor}
-            as={AiOutlineHome}
-            cursor="pointer"
-          />
+        <Link
+          d="flex"
+          alignItems="center"
+          justifyContent="center"
+          fontSize={28}
+          as={reachLink}
+          mr={3}
+          to="/"
+        >
+          <Icon color={config.IconColor} as={AiOutlineHome} cursor="pointer" />
         </Link>
         <Icon
           color={config.IconColor}

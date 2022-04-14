@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Avatar, Text } from "@chakra-ui/react";
 import { useThemeConfig } from "../../ThemeConfig";
 export default function Contact(props) {
-  const config = useThemeConfig();
+  const { config } = useThemeConfig();
   return (
     <Box
       h="80px"
@@ -27,8 +27,7 @@ export default function Contact(props) {
         h="80%"
         justifyContent={props.message ? "normal" : "center"}
         style={{
-          borderBottom:
-            config.ContactBorder
+          borderBottom: config.ContactBorder,
         }}
       >
         <Box>
