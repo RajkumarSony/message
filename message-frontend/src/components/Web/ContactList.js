@@ -6,11 +6,11 @@ import Contact from "./Contact";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { AiOutlinePlusSquare, AiOutlineCloseSquare } from "react-icons/ai";
 import SkeletonContact from "./SkeletonContact";
-import {useThemeConfig} from "../../ThemeConfig"
+import { useThemeConfig } from "../../ThemeConfig";
 export default function ContactList(props) {
   const [data, setData] = useState();
   const [hasData, setHasData] = useState(true);
-  const config = useThemeConfig();
+  const { config } = useThemeConfig();
 
   useEffect(() => {
     onValue(
@@ -20,21 +20,24 @@ export default function ContactList(props) {
         if (datax.hasChildren()) {
           let count = 0;
           datax.forEach((data) => {
-            onValue(ref(db,`${data.val().uid}/PersonalInfo`),(snap)=>{
-              x.push({
-                name:snap.val().name,
-              
-                uid:snap.val().uid,
-                photoURL:snap.val().photoURL,
+            onValue(
+              ref(db, `${data.val().uid}/PersonalInfo`),
+              (snap) => {
+                x.push({
+                  name: snap.val().name,
 
-              })
-              count++;
-              if (count === datax.size) {
-                setData(x);
+                  uid: snap.val().uid,
+                  photoURL: snap.val().photoURL,
+                });
+                count++;
+                if (count === datax.size) {
+                  setData(x);
+                }
+              },
+              {
+                onlyOnce: true,
               }
-            },{
-              onlyOnce:true
-            });
+            );
           });
         } else {
           setHasData(false);
@@ -107,18 +110,17 @@ export default function ContactList(props) {
           alignItems="center"
         >
           {hasData ? (
-                  <Box>
-
-                  <SkeletonContact/>
-                  <SkeletonContact/>
-                  <SkeletonContact/>
-                  <SkeletonContact/>
-                  <SkeletonContact/>
-                  <SkeletonContact/>
-                  <SkeletonContact/>
-                  <SkeletonContact/>
-                  <SkeletonContact/>
-                </Box>
+            <Box>
+              <SkeletonContact />
+              <SkeletonContact />
+              <SkeletonContact />
+              <SkeletonContact />
+              <SkeletonContact />
+              <SkeletonContact />
+              <SkeletonContact />
+              <SkeletonContact />
+              <SkeletonContact />
+            </Box>
           ) : (
             <Text
               textAlign="center"

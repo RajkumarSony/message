@@ -1,6 +1,5 @@
 import React from "react";
 import { Image, Box, Text, Stack, Link, Icon } from "@chakra-ui/react";
-import Phone from "../../assets/Img/Phone.png";
 
 import { Link as reachLink } from "react-router-dom";
 import { AiFillAndroid, AiFillApple } from "react-icons/ai";
@@ -10,7 +9,7 @@ import { useReactPWAInstall } from "react-pwa-install";
 import logo from "../../assets/icons/mdpi.png";
 import { useThemeConfig } from "../../ThemeConfig";
 export default function Header() {
-  const config=useThemeConfig();
+  const { config } = useThemeConfig();
   const { pwaInstall, supported, isInstalled } = useReactPWAInstall();
   const handleClick = () => {
     pwaInstall({
@@ -29,7 +28,7 @@ export default function Header() {
       <Box color={{ md: "black" }}>
         <Box
           pb={{ md: "56px", sm: "0px" }}
-          color={{ sm: "#fff", md: config.hColormd}}
+          color={{ sm: "#fff", md: config.hColormd }}
           // backgroundColor={colorMode === "light"?"#05c2c8":"#19263a"}
           backgroundColor={{ sm: config.navBg, md: config.hHeadermd }}
           pt={"56px"}
@@ -105,57 +104,59 @@ export default function Header() {
                         DOWNLOAD NOW
                       </Link>
                     )}
-                    {supported()&& !isInstalled()&& <Stack
-                      d={{ sm: "none", md: "flex" }}
-                      color={{ md: "#1CB39B" }}
-                      fontSize={{ md: "18px" }}
-                      lineHeight={{ md: "26px" }}
-                    >
-                      <Box pb={{ md: "1rem" }} m={0}>
-                        {" "}
-                        <Link
-                          onClick={handleClick}
-                          d="inline-flex"
-                          as={reachLink}
-                          alignItems="center"
-                          justifyContent="center"
-                          flexDirection="row"
-                          to=""
-                        >
-                          <Icon mr="1rem" as={AiFillAndroid} /> Android{" "}
-                          <Icon mx="0.5rem" as={IoIosArrowForward} />{" "}
-                        </Link>
-                      </Box>
-                      <Box pb={{ md: "1rem" }} m={0}>
-                        <Link
-                          onClick={handleClick}
-                          d="inline-flex"
-                          as={reachLink}
-                          alignItems="center"
-                          flexDirection="row"
-                          to=""
-                        >
-                          <Icon mr="1rem" as={AiFillApple} />
-                          iPhone
-                          <Icon mx="0.5rem" as={IoIosArrowForward} />{" "}
-                        </Link>
-                      </Box>
-                      <Box pb={{ md: "1rem" }} m={0}>
-                        <Link
-                          onClick={handleClick}
-                          d="inline-flex"
-                          alignItems="center"
-                          justifyContent="center"
-                          flexDirection="row"
-                          as={reachLink}
-                          to=""
-                        >
-                          <Icon mr="1rem" as={MdMonitor} />
-                          Mac or Windows PC{" "}
-                          <Icon mx="0.5rem" as={IoIosArrowForward} />{" "}
-                        </Link>
-                      </Box>
-                    </Stack>}
+                    {supported() && !isInstalled() && (
+                      <Stack
+                        d={{ sm: "none", md: "flex" }}
+                        color={{ md: "#1CB39B" }}
+                        fontSize={{ md: "18px" }}
+                        lineHeight={{ md: "26px" }}
+                      >
+                        <Box pb={{ md: "1rem" }} m={0}>
+                          {" "}
+                          <Link
+                            onClick={handleClick}
+                            d="inline-flex"
+                            as={reachLink}
+                            alignItems="center"
+                            justifyContent="center"
+                            flexDirection="row"
+                            to=""
+                          >
+                            <Icon mr="1rem" as={AiFillAndroid} /> Android{" "}
+                            <Icon mx="0.5rem" as={IoIosArrowForward} />{" "}
+                          </Link>
+                        </Box>
+                        <Box pb={{ md: "1rem" }} m={0}>
+                          <Link
+                            onClick={handleClick}
+                            d="inline-flex"
+                            as={reachLink}
+                            alignItems="center"
+                            flexDirection="row"
+                            to=""
+                          >
+                            <Icon mr="1rem" as={AiFillApple} />
+                            iPhone
+                            <Icon mx="0.5rem" as={IoIosArrowForward} />{" "}
+                          </Link>
+                        </Box>
+                        <Box pb={{ md: "1rem" }} m={0}>
+                          <Link
+                            onClick={handleClick}
+                            d="inline-flex"
+                            alignItems="center"
+                            justifyContent="center"
+                            flexDirection="row"
+                            as={reachLink}
+                            to=""
+                          >
+                            <Icon mr="1rem" as={MdMonitor} />
+                            Mac or Windows PC{" "}
+                            <Icon mx="0.5rem" as={IoIosArrowForward} />{" "}
+                          </Link>
+                        </Box>
+                      </Stack>
+                    )}
                   </Box>
                 </Box>
               </Box>
@@ -169,13 +170,13 @@ export default function Header() {
                   <Image
                     d={{ md: "block", sm: "none" }}
                     maxW="100%"
-                    src={Phone}
+                    src={config.imgIphone}
                     alt="Phone Image"
                   />
                   <Image
                     d={{ md: "none" }}
                     maxW="100%"
-                    src={Phone}
+                    src={config.imgIphone}
                     alt="Phone Image"
                   />
                 </Box>

@@ -1,25 +1,25 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { auth } from "../../FirebaseConfig";
-import {AiOutlineCloseSquare} from "react-icons/ai"
+import { AiOutlineCloseSquare } from "react-icons/ai";
 import {
-    Flex,
-    Box,
-    FormControl,
-    FormLabel,
-    Input,
-    Stack,
-    Button,
-    Heading,
-    Text,
-    Icon
-  } from "@chakra-ui/react";
+  Flex,
+  Box,
+  FormControl,
+  FormLabel,
+  Input,
+  Stack,
+  Button,
+  Heading,
+  Text,
+  Icon,
+} from "@chakra-ui/react";
 import { useThemeConfig } from "../../ThemeConfig";
 
 export default function AddContact(props) {
-    const [email, setEmail] = useState();
-    const [loading, setLoading] = useState(false);
- const config  = useThemeConfig();
+  const [email, setEmail] = useState();
+  const [loading, setLoading] = useState(false);
+  const { config } = useThemeConfig();
   const handleEmail = (event) => {
     setEmail(event.target.value);
     props.setError({
@@ -66,18 +66,24 @@ export default function AddContact(props) {
       });
   };
   return (
-    <Flex bg={config.contactBg} direction="column" alignItems="flex-end" mt="5px" h="100%" overflowY="bolck"  >
-         <Icon
-          color={config.IconColor}
-          cursor="pointer"
-          mr={3}
-          onClick={() => {
-          
-            props.updatePopup();
-          }}
-          fontSize={28}
-          as={AiOutlineCloseSquare}
-        />
+    <Flex
+      bg={config.contactBg}
+      direction="column"
+      alignItems="flex-end"
+      mt="5px"
+      h="100%"
+      overflowY="bolck"
+    >
+      <Icon
+        color={config.IconColor}
+        cursor="pointer"
+        mr={3}
+        onClick={() => {
+          props.updatePopup();
+        }}
+        fontSize={28}
+        as={AiOutlineCloseSquare}
+      />
       <Stack spacing={8} mx={"auto"} maxW={"lg"} px={6}>
         <Stack align={"center"}>
           <Heading fontSize={"4xl"}>Add Contact</Heading>

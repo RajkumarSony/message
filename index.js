@@ -13,7 +13,7 @@ const app = express();
 const { getDatabase } = require("firebase-admin/database");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
-const port = process.env.PORT || 8081;
+const port = process.env.PORT || 8080;
 const randomBytes = promisify(crypto.randomBytes);
 
 // Firebase service account configurations.
@@ -268,31 +268,36 @@ app.post("/sendmessage", (req, res) => {
             }
           );
         } else if (req.body.url) {
-          refSend.push().set({
-            url: req.body.url,
-            send: true,
-            type: "audio",
-          },(error)=>{
-            if(!error){
-              refRecive.push().set({
-                url:req.body.url,
-                send:false,
-                type:"audio"
-              },     (error) => {
-                if (!error) {
-                  //Check for error
-                  res.status(201);
-                  res.send("done");
-                } else {
-                  res.status(500);
-                  res.send("Internel Server error message cannot be send");
-                }
-              })
-            }else {
-              res.status(500);
-              res.send("Internel Server error message cannot be send");
+          refSend.push().set(
+            {
+              url: req.body.url,
+              send: true,
+              type: "audio",
+            },
+            (error) => {
+              if (!error) {
+                refRecive.push().set(
+                  {
+                    url: req.body.url,
+                    send: false,
+                    type: "audio",
+                  },
+                  (error) => {
+                    if (!error) {
+                      //Check for error
+                      res.status(201);
+                      res.send("done");
+                    } else {
+                      res.status(500);
+                      res.send("Internel Server error message cannot be send");
+                    }
+                  }
+                );
+              } else {
+                res.status(500);
+                res.send("Internel Server error message cannot be send");
+              }
             }
-          }
           );
         }
       } else {

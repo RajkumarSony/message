@@ -1,36 +1,38 @@
-import React, { useState, Fragment,useEffect } from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/root/Navbar";
-import { ChakraProvider,Button } from "@chakra-ui/react";
+import { Button, useColorMode } from "@chakra-ui/react";
 import Home from "./Pages/Home";
 import WebMid from "./Pages/webMid";
 import Features from "./Pages/Features";
 import HelpCenter from "./Pages/HelpCenter";
 import Security from "./Pages/security";
 import NotFound from "./Pages/NotFound";
-import theme from "./theme";
 import "@fontsource/roboto";
 import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import "./style.css";
 import ReactPWAInstallProvider from "react-pwa-install";
 import * as serviceWorker from "./serviceWorkerRegistration";
-import { useSnackbar } from 'notistack';
+import { useSnackbar } from "notistack";
 
 function App() {
+  const { colorMode } = useColorMode();
   const [newVersion, setNewVersion] = useState(false);
   const [waitingWorker, setWaitingWorker] = useState({});
-  const { enqueueSnackbar} = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
-
-
+  useEffect(() => {
+    let bar = document.getElementById("statusbar");
+    bar.content = colorMode === "light" ? "#05c2c8" : "#19263a";
+  }, [colorMode]);
 
   useEffect(() => {
     const onServiceWorkerUpdate = (registration) => {
       setWaitingWorker(registration && registration.waiting);
       setNewVersion(true);
     };
-  
+
     const updateServiceWorker = () => {
       waitingWorker && waitingWorker.postMessage({ type: "SKIP_WAITING" });
       setNewVersion(false);
@@ -51,8 +53,6 @@ function App() {
         </Fragment>
       );
     };
-    
-    
 
     if (newVersion) {
       //show snackbar with refresh button
@@ -62,11 +62,11 @@ function App() {
         action: refreshAction(),
       });
     }
-  }, [newVersion,enqueueSnackbar,waitingWorker]);
+  }, [newVersion, enqueueSnackbar, waitingWorker]);
 
   return (
     // wraph the app in ChkraProvider to use Chakra element inside it
-    <ChakraProvider theme={theme}>
+    <>
       {/* ReactPWAInstallProvider to use custom app install */}
       <ReactPWAInstallProvider>
         <Router>
@@ -91,7 +91,7 @@ function App() {
           </Routes>
         </Router>
       </ReactPWAInstallProvider>
-    </ChakraProvider>
+    </>
   );
 }
 
