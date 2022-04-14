@@ -22,18 +22,18 @@ import { TiAttachmentOutline } from "react-icons/ti";
 
 import { auth, db, storage } from "../../FirebaseConfig";
 import axios from "axios";
-import { onValue, ref, get,off } from "firebase/database";
+import { onValue, ref, get, off } from "firebase/database";
 import { ref as str, uploadBytes } from "firebase/storage";
 import { getSealdSDKInstance } from "../../SealedInit";
 import { BiLockAlt } from "react-icons/bi";
-import 'emoji-picker-element'
+import "emoji-picker-element";
 import MicRecorder from "mic-recorder-to-mp3";
 import AudioPlay from "./AudioPlay";
 import Message from "./Message";
 import { useThemeConfig } from "../../ThemeConfig";
 
 export default function Messanger(props) {
-  const config = useThemeConfig();
+  const { config } = useThemeConfig();
   const [showPicker, setShowPicker] = useState(false);
   const [micIcon, setMicIcon] = useState(true);
   const [data, setData] = useState();
@@ -283,16 +283,13 @@ export default function Messanger(props) {
   useEffect(() => {
     scrollToBottom();
   }, [data]);
-useEffect(() => {
- Picker.current?.addEventListener('emoji-click',(e)=>{
-  inputFocus.current.focus();
+  useEffect(() => {
+    Picker.current?.addEventListener("emoji-click", (e) => {
+      inputFocus.current.focus();
       setVal(Val + e.detail.unicode);
       setMicIcon(false);
- })
-
-}, [Picker,showPicker,Val])
-
-
+    });
+  }, [Picker, showPicker, Val]);
 
   useEffect(() => {
     // Solve error message not showing decryption problem
@@ -300,14 +297,12 @@ useEffect(() => {
       db,
       `${auth.currentUser.uid}/chats/${props.uid}/messages`
     );
-    setmesLoad(true)
-    setData(false)
+    setmesLoad(true);
+    setData(false);
     onValue(contactsRef, (datax) => {
-      console.log(datax)
-      
+      console.log(datax);
+
       if (datax.hasChildren()) {
-    
-      
         let x = [];
         let count = 0;
         get(
@@ -328,8 +323,6 @@ useEffect(() => {
               count++;
               if (count === datax.size) {
                 setData(x);
-                
-              
               }
             } else if (contact.val().type === "audio") {
               x.push({
@@ -341,24 +334,21 @@ useEffect(() => {
               count++;
               if (count === datax.size) {
                 setData(x);
-              
-                
-               
               }
             }
           });
         });
-      } else{
-        setmesLoad(false)
+      } else {
+        setmesLoad(false);
       }
     });
-    return ()=>{
-off(contactsRef)
-    }
+    return () => {
+      off(contactsRef);
+    };
   }, [props.uid]);
 
   return (
-    <Box h="100%" flexDirection="column"  overscrollBehaviorY="contain" d="flex">
+    <Box h="100%" flexDirection="column" overscrollBehaviorY="contain" d="flex">
       <Box
         overflowY="scroll"
         overscrollBehaviorY="contain"
@@ -417,7 +407,13 @@ off(contactsRef)
                   key={index}
                   m={5}
                   d="flex"
-                  justifyContent={mes.send ? "flex-end" :mes.send===undefined? "center": "flex-start"}
+                  justifyContent={
+                    mes.send
+                      ? "flex-end"
+                      : mes.send === undefined
+                      ? "center"
+                      : "flex-start"
+                  }
                   h="fit-content"
                 >
                   <Box
@@ -425,7 +421,13 @@ off(contactsRef)
                     d="felx"
                     justifyContent="center"
                     alignItems="center"
-                    backgroundColor={mes.send ? config.chatL :mes.send===undefined? "transparent": config.chatR}
+                    backgroundColor={
+                      mes.send
+                        ? config.chatL
+                        : mes.send === undefined
+                        ? "transparent"
+                        : config.chatR
+                    }
                     flexDirection="row"
                     p={2}
                     minW={6}
@@ -496,7 +498,11 @@ off(contactsRef)
           bottom={y}
           transition="all 0.8s ease-in-out"
         >
-          <emoji-picker ref={Picker} class={config.emoPic}  style={{height:"100%", width:"100%",zIndex:"100"}}></emoji-picker>
+          <emoji-picker
+            ref={Picker}
+            class={config.emoPic}
+            style={{ height: "100%", width: "100%", zIndex: "100" }}
+          ></emoji-picker>
         </Box>
       )}
       <Box
@@ -542,7 +548,6 @@ off(contactsRef)
               backgroundColor="rgba(100,100,100,0.3)"
               resize="none"
               placeholder="Type Message"
-             
               pt={6}
               style={{ border: "1px solid white", width: "100%" }}
               align="center"
