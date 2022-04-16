@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/static/css/main.39a0c21f.chunk.css",
+    "main.css": "/static/css/main.20fe9748.chunk.css",
     "main.js": "/static/js/main.e4f50b58.chunk.js",
     "main.js.map": "/static/js/main.e4f50b58.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.8d85b2c8.js",
@@ -14,7 +14,7 @@
     "service-worker.js": "/service-worker.js",
     "service-worker.js.map": "/service-worker.js.map",
     "static/css/2.d0df8735.chunk.css.map": "/static/css/2.d0df8735.chunk.css.map",
-    "static/css/main.39a0c21f.chunk.css.map": "/static/css/main.39a0c21f.chunk.css.map",
+    "static/css/main.20fe9748.chunk.css.map": "/static/css/main.20fe9748.chunk.css.map",
     "static/js/2.a8fca366.chunk.js.LICENSE.txt": "/static/js/2.a8fca366.chunk.js.LICENSE.txt",
     "static/media/androidDark.aaf5890c.png": "/static/media/androidDark.aaf5890c.png",
     "static/media/androidLight.a0681680.png": "/static/media/androidLight.a0681680.png",
@@ -27,7 +27,7 @@
     "static/js/runtime-main.8d85b2c8.js",
     "static/css/2.d0df8735.chunk.css",
     "static/js/2.a8fca366.chunk.js",
-    "static/css/main.39a0c21f.chunk.css",
+    "static/css/main.20fe9748.chunk.css",
     "static/js/main.e4f50b58.chunk.js"
   ]
 }

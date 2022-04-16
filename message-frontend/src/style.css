@@ -1,13 +1,10 @@
-
-@media only screen and (min-width: 768px) {
-    body{
-        overflow-y:hidden
-    }
+body {
+  overflow-y: hidden;
 }
 
-emoji-picker.dark{
-    --background: #2c313d;
+emoji-picker.dark {
+  --background: #2c313d;
 }
-emoji-picker.light{
-    --background:#f7ebeb;
+emoji-picker.light {
+  --background: #f7ebeb;
 }
