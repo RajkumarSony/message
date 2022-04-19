@@ -47,6 +47,7 @@ export default function Messanger(props) {
   const [pAudio, setpAudio] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
   const [mesLoad, setmesLoad] = useState(true);
+  const [refresh, setRefresh] = useState(false);
   const recorder = useMemo(() => new MicRecorder({ bitRate: 128 }), []);
   const player = useMemo(() => new Audio(), []);
   const handelChange = (event) => {
@@ -133,6 +134,9 @@ export default function Messanger(props) {
                       .then((res) => {
                         if (res.status === 201) {
                           setLoading(false);
+                          if (refresh) {
+                            setRefresh(false);
+                          }
                         }
                       })
                       .catch((error) => {
@@ -340,12 +344,13 @@ export default function Messanger(props) {
         });
       } else {
         setmesLoad(false);
+        setRefresh(true);
       }
     });
     return () => {
       off(contactsRef);
     };
-  }, [props.uid]);
+  }, [props.uid, refresh]);
 
   return (
     <Box h="100%" flexDirection="column" overscrollBehaviorY="contain" d="flex">
@@ -421,13 +426,7 @@ export default function Messanger(props) {
                     d="felx"
                     justifyContent="center"
                     alignItems="center"
-                    backgroundColor={
-                      mes.send
-                        ? config.chatL
-                        : mes.send === undefined
-                        ? "transparent"
-                        : config.chatR
-                    }
+                    backgroundColor={mes.send ? config.chatL : config.chatR}
                     flexDirection="row"
                     p={2}
                     minW={6}
