@@ -1,27 +1,23 @@
-import SealdSDK from "@seald-io/sdk-web";
+import SealdSDK from "@seald-io/sdk";
 
-import SealdSDKPluginSSKSPassword from "@seald-io/sdk-plugin-ssks-password";
+import SealdSDKPluginSSKS2MR from "@seald-io/sdk-plugin-ssks-2mr";
 import Cookies from "js-cookie"; // Read Cookies uing Cookies.get("cookieName")
-
 let sealdSDKInstance = null;
-/**
- * @param {string} databaseKey -database Key generated on the server is random key generated and send by the server
- * @param {string} sessionID - This is Unique id used by server to identify Conntected session uniquely server assing every session a unique id
- */
+
 const instantiateSealdSDK = async ({ databaseKey, sessionID }) => {
+  console.log(databaseKey, sessionID);
+
+  console.log(process.env.REACT_APP_seald_apiURL);
+  console.log(process.env.REACT_APP_ssks_key_storage_url);
   sealdSDKInstance = SealdSDK({
     appId: Cookies.get("appId"),
-    databaseKey, //Generated on the Server 
-    databasePath: `seald-seacure-message-hub-${sessionID}`, 
-    plugins: [SealdSDKPluginSSKSPassword()],
+    databaseKey: databaseKey, //Generated on the Server
+    databasePath: `seald-seacure-message-hub-${sessionID}`,
+    plugins: [SealdSDKPluginSSKS2MR()],
   });
   await sealdSDKInstance.initialize(); // Initialize the SealdSdk
 };
-// Retrive app
-/**
- * @param {string} databaseKey -database Key generated on the server is random key generated and send by the server
- * @param {string} sessionID - This is Unique id used by server to identify Conntected session uniquely server assing every session a unique id
- */
+
 export const retrieveIdentityFromLocalStorage = async ({
   databaseKey,
   sessionID,
@@ -32,37 +28,74 @@ export const retrieveIdentityFromLocalStorage = async ({
     throw new Error("Not registered");
   }
 };
-/**
- * @param {string} databaseKey -database Key generated on the server is random key generated and send by the server
- * @param {string} sessionID - This is Unique id used by server to identify Conntected session uniquely server assing every session a unique id
- * @param {string} userId - This is a string assigned to user to idetify them uniquely.
- * @param {string} userLicenseToken - This is unique LicenseToken generated on server unique to every userId generated using userid and appID, validationKey & validationKeyId. 
- * @param {string} password - This is a alpha-numeric string choosen by the user 
- */
+
 export const createIdentity = async ({
   userId,
-  password,
   userLicenseToken,
   databaseKey,
   sessionID,
+  jwt,
 }) => {
   await instantiateSealdSDK({ databaseKey, sessionID });
   await sealdSDKInstance.initiateIdentity({ userId, userLicenseToken });
-  await sealdSDKInstance.ssksPassword.saveIdentity({ userId, password });
+  // await sealdSDKInstance.ssksPassword.saveIdentity({ userId, password });
 };
-/**
- * @param {string} databaseKey -database Key generated on the server is random key generated and send by the server
- * @param {string} sessionID - This is Unique id used by server to identify Conntected session uniquely server assing every session a unique id
- * @param {string} userId - This is a string assigned to user to idetify them uniquely.
- * @param {string} password - This is a alpha-numeric string choosen by the user 
- */
-export const retrieveIdentity = async ({
+
+export const saveIdentity = async ({
   userId,
-  password,
+  twoManRuleKey,
+  emailAddress,
+  twoManRuleSessionId,
+  challenge = false,
   databaseKey,
   sessionID,
 }) => {
   await instantiateSealdSDK({ databaseKey, sessionID });
-  await sealdSDKInstance.ssksPassword.retrieveIdentity({ userId, password });
+  console.log(twoManRuleSessionId);
+  if (!challenge) {
+    await sealdSDKInstance.ssks2MR.saveIdentity({
+      authFactor: {
+        type: "EM",
+        value: emailAddress,
+      },
+      twoManRuleKey,
+      userId,
+      sessionId: twoManRuleSessionId,
+    });
+  } else {
+    await sealdSDKInstance.ssks2MR.saveIdentity({
+      challenge,
+      authFactor: {
+        type: "EM",
+        value: emailAddress,
+      },
+      twoManRuleKey,
+      userId,
+      sessionId: twoManRuleSessionId,
+    });
+  }
 };
+
+export const retrieveIdentity = async ({
+  userId,
+  databaseKey,
+  sessionID,
+  emailAddress,
+  twoManRuleKey,
+  twoManRuleSessionId,
+  challenge,
+}) => {
+  await instantiateSealdSDK({ databaseKey, sessionID });
+  await sealdSDKInstance.ssks2MR.retrieveIdentity({
+    challenge,
+    authFactor: {
+      type: "EM",
+      value: emailAddress,
+    },
+    twoManRuleKey,
+    userId,
+    sessionId: twoManRuleSessionId,
+  });
+};
+
 export const getSealdSDKInstance = () => sealdSDKInstance;
