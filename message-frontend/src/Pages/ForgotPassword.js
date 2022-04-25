@@ -99,7 +99,7 @@ export default function ForgotPassword() {
                     type="email"
                   />
                 </FormControl>
-                <Stack spacing={10}>
+                <Stack mt={10}>
                   <Button
                     isLoading={loading}
                     loadingText="Checking Info..."

@@ -22,8 +22,9 @@ import { auth } from "../FirebaseConfig";
 import axios from "axios";
 import { createIdentity, saveIdentity } from "../SealedInit";
 import Cookies from "js-cookie";
-
+import { useThemeConfig } from "../ThemeConfig";
 export default function SignupCard() {
+  const { config } = useThemeConfig();
   const [showPassword, setShowPassword] = useState(false);
   const [challenge, setChallenge] = useState(null);
   const [email, setEmail] = useState(null);
@@ -240,19 +241,28 @@ export default function SignupCard() {
                   <Box>
                     <FormControl id="firstName" isRequired>
                       <FormLabel>First Name</FormLabel>
-                      <Input onChange={handleFname} type="text" />
+                      <Input
+                        borderColor={config.inBorder}
+                        onChange={handleFname}
+                        type="text"
+                      />
                     </FormControl>
                   </Box>
                   <Box>
                     <FormControl id="lastName">
                       <FormLabel>Last Name</FormLabel>
-                      <Input onChange={handleLname} type="text" />
+                      <Input
+                        borderColor={config.inBorder}
+                        onChange={handleLname}
+                        type="text"
+                      />
                     </FormControl>
                   </Box>
                 </HStack>
                 <FormControl id="email" isRequired>
                   <FormLabel>Email address</FormLabel>
                   <Input
+                    borderColor={config.inBorder}
                     autoComplete="username"
                     onChange={handleEmail}
                     type="email"
@@ -262,6 +272,7 @@ export default function SignupCard() {
                   <FormLabel>Password</FormLabel>
                   <InputGroup>
                     <Input
+                      borderColor={config.inBorder}
                       onChange={handlePassword}
                       autoComplete="current-password"
                       type={showPassword ? "text" : "password"}
@@ -300,6 +311,7 @@ export default function SignupCard() {
               {authenticate && (
                 <>
                   <Input
+                    borderColor={config.inBorder}
                     onChange={(e) => {
                       setChallenge(e.target.value);
                     }}

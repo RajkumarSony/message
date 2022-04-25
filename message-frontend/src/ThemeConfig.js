@@ -22,6 +22,7 @@ function useThemeConfig() {
     contactBg: colorMode === "light" ? "#d8c9e3" : "#19263a",
     IconColor: colorMode === "light" ? "#718096" : "#E2E8F0",
     border: colorMode === "light" ? "1px solid #05c2c8 " : "1px solid #0e2e5e",
+    inBorder: colorMode === "light" ? "black" : "white",
     borderRn: colorMode === "light" ? "1px solid #70ccf6" : "1px solid #0e2e5e",
     ContactBorder:
       colorMode === "light"

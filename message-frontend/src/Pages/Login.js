@@ -17,6 +17,7 @@ import { useNavigate, Link as reachLink } from "react-router-dom";
 import { retrieveIdentity } from "../SealedInit";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { useThemeConfig } from "../ThemeConfig";
 export default function SimpleCard() {
   const navigate = useNavigate();
   const [email, setEmail] = useState(null); // Manage Email State input from user
@@ -27,7 +28,8 @@ export default function SimpleCard() {
   const [authenticate, setAuthenticate] = useState(false);
   const [atwoManRuleKey, setTwoManRuleKey] = useState();
   const [atwoManRuleSessionId, setTwoManRuleSessionId] = useState();
-
+  const [otpLoading, setOtpLoading] = useState(false);
+  const { config } = useThemeConfig();
   const [error, Seterror] = useState({
     code: null,
     error: false,
@@ -75,6 +77,11 @@ export default function SimpleCard() {
                 setTwoManRuleSessionId(twoManRuleSessionId);
                 setTwoManRuleKey(twoManRuleKey);
                 setPassRetrival(passRetrival);
+                Seterror({
+                  code: "otp_sent",
+                  error: false,
+                  message: "OTP sent check your mail",
+                });
               } else {
                 await retrieveIdentity({
                   userId: auth.currentUser.uid,
@@ -134,6 +141,7 @@ export default function SimpleCard() {
     }
   };
   const submitChallenge = async () => {
+    setOtpLoading(true);
     console.log(auth.currentUser.email);
     try {
       await retrieveIdentity({
@@ -146,6 +154,7 @@ export default function SimpleCard() {
         sessionID: Cookies.get("sessionId"),
         password: passRetrival ? password : false,
       });
+      setOtpLoading(false);
       navigate("/");
       localStorage.setItem("login", true);
     } catch {
@@ -166,6 +175,7 @@ export default function SimpleCard() {
             localStorage.setItem("login", false);
             setAuthenticate(false);
             Setloading(false);
+            setOtpLoading(false);
             Seterror({
               code: "Invalid OTP",
               error: true,
@@ -217,7 +227,9 @@ export default function SimpleCard() {
               alignItems="center"
               justifyContent={"center"}
               borderRadius={10}
-              backgroundColor="rgba(232, 39, 39, 0.5)"
+              backgroundColor={
+                error.error ? "rgba(232, 39, 39, 0.5)" : "#4BB543"
+              }
               align={"center"}
               color="white"
               transition="opacity 0.5s ease-in-out"
@@ -229,6 +241,7 @@ export default function SimpleCard() {
               <FormControl id="email">
                 <FormLabel>Email address</FormLabel>
                 <Input
+                  borderColor={config.inBorder}
                   disabled={authenticate}
                   onChange={handleEmail}
                   autoComplete="username"
@@ -238,6 +251,7 @@ export default function SimpleCard() {
               <FormControl id="password">
                 <FormLabel>Password</FormLabel>
                 <Input
+                  borderColor={config.inBorder}
                   onChange={handlePassword}
                   autoComplete="current-password"
                   type="password"
@@ -273,12 +287,24 @@ export default function SimpleCard() {
             {authenticate && (
               <>
                 <Input
+                  borderColor={config.inBorder}
                   onChange={(e) => {
                     setChallenge(e.target.value);
+                    Seterror({
+                      code: null,
+                      error: false,
+                      message: null,
+                    });
                   }}
                   placeholder="enter challenge send in your email"
                 />
-                <Button onClick={submitChallenge}>Submit</Button>
+                <Button
+                  isLoading={otpLoading}
+                  loadingText="Validating"
+                  onClick={submitChallenge}
+                >
+                  Submit
+                </Button>
               </>
             )}
             <Stack pt={6}>

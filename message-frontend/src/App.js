@@ -16,6 +16,7 @@ import ReactPWAInstallProvider from "react-pwa-install";
 import * as serviceWorker from "./serviceWorkerRegistration";
 import { useSnackbar } from "notistack";
 import ForgotPassword from "./Pages/ForgotPassword";
+import Reset from "./Pages/Reset";
 
 function App() {
   const { colorMode } = useColorMode();
@@ -96,6 +97,7 @@ function App() {
                 <Route path="login" element={<Login />} />
                 <Route path="signup" element={<Signup />} />
                 <Route path="resetpswd" element={<ForgotPassword />} />
+                <Route path="setnewpasswd" element={<Reset />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Route>
