@@ -72,7 +72,7 @@ export default function AddContact(props) {
       alignItems="flex-end"
       mt="5px"
       h="100%"
-      overflowY="bolck"
+      overflowY="block"
     >
       <Icon
         color={config.IconColor}

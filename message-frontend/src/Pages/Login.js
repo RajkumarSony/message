@@ -11,9 +11,9 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../FirebaseConfig";
-import { Navigate, useNavigate, Link as reachLink } from "react-router-dom";
+import { useNavigate, Link as reachLink } from "react-router-dom";
 import { retrieveIdentity } from "../SealedInit";
 import Cookies from "js-cookie";
 import axios from "axios";
@@ -69,8 +69,7 @@ export default function SimpleCard() {
                 mustAuthenticate,
                 passRetrival,
               } = res.data;
-              console.log(mustAuthenticate);
-              console.log(auth.currentUser.email);
+              Setloading(false);
               if (mustAuthenticate) {
                 setAuthenticate(true);
                 setTwoManRuleSessionId(twoManRuleSessionId);
@@ -136,18 +135,45 @@ export default function SimpleCard() {
   };
   const submitChallenge = async () => {
     console.log(auth.currentUser.email);
-    await retrieveIdentity({
-      challenge: challenge,
-      userId: auth.currentUser.uid,
-      twoManRuleKey: atwoManRuleKey,
-      emailAddress: auth.currentUser.email,
-      twoManRuleSessionId: atwoManRuleSessionId,
-      databaseKey: Cookies.get("databaseKey"),
-      sessionID: Cookies.get("sessionId"),
-      password: passRetrival ? password : false,
-    });
-    navigate("/");
-    localStorage.setItem("login", true);
+    try {
+      await retrieveIdentity({
+        challenge: challenge,
+        userId: auth.currentUser.uid,
+        twoManRuleKey: atwoManRuleKey,
+        emailAddress: auth.currentUser.email,
+        twoManRuleSessionId: atwoManRuleSessionId,
+        databaseKey: Cookies.get("databaseKey"),
+        sessionID: Cookies.get("sessionId"),
+        password: passRetrival ? password : false,
+      });
+      navigate("/");
+      localStorage.setItem("login", true);
+    } catch {
+      signOut(auth).then(() => {
+        // Request to clear databaekey and session id and destroy the session after logout
+        axios
+          .post(
+            "/session/logout",
+            { reqest: "logout" },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          )
+          .then((res) => {
+            localStorage.removeItem("user");
+            localStorage.setItem("login", false);
+            setAuthenticate(false);
+            Setloading(false);
+            Seterror({
+              code: "Invalid OTP",
+              error: true,
+              message: "Invalid OTP login again",
+            });
+          });
+      });
+    }
   };
   // Email handler update email state on change of email field in form
   const handleEmail = (event) => {
@@ -203,6 +229,7 @@ export default function SimpleCard() {
               <FormControl id="email">
                 <FormLabel>Email address</FormLabel>
                 <Input
+                  disabled={authenticate}
                   onChange={handleEmail}
                   autoComplete="username"
                   type="email"
@@ -214,6 +241,7 @@ export default function SimpleCard() {
                   onChange={handlePassword}
                   autoComplete="current-password"
                   type="password"
+                  disabled={authenticate}
                 />
               </FormControl>
               <Stack spacing={10}>
@@ -223,9 +251,12 @@ export default function SimpleCard() {
                   justify={"space-between"}
                 >
                   {/* <p>New user?</p> <Link m={0} to="/auth/signup" as={reachLink}>Sign Up</Link> */}
-                  <Link color={"blue.400"}>Forgot password?</Link>
+                  <Link as={reachLink} to="/auth/resetpswd" color={"blue.400"}>
+                    Forgot password?
+                  </Link>
                 </Stack>
                 <Button
+                  disabled={authenticate}
                   loadingText="Checking Info..."
                   isLoading={loading}
                   type="submit"

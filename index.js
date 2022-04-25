@@ -180,7 +180,7 @@ app.post("/session/login", async (req, res) => {
                 type: "EM",
                 value: Decodetoken.email, // email address of the user
               },
-              fake_otp: bol,
+
               template: "<html><body>Challenge: $$CHALLENGE$$</body></html>", // email template to use
             }),
           }
