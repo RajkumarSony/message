@@ -165,6 +165,7 @@ app.post("/session/login", async (req, res) => {
         const bol = Decodetoken.email.split("@")[1] === "localhost.com";
         const sendChallengeResult = await fetch(
           `${process.env.ssks_key_storage_url}tmr/back/challenge_send/`,
+
           {
             method: "POST",
             credentials: "omit",
@@ -185,6 +186,7 @@ app.post("/session/login", async (req, res) => {
             }),
           }
         );
+        console.log(Decodetoken.email);
         if (!sendChallengeResult.ok) {
           const responseText = await sendChallengeResult.text();
           throw new Error(
