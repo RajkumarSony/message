@@ -15,6 +15,8 @@ import "./style.css";
 import ReactPWAInstallProvider from "react-pwa-install";
 import * as serviceWorker from "./serviceWorkerRegistration";
 import { useSnackbar } from "notistack";
+import ForgotPassword from "./Pages/ForgotPassword";
+import Reset from "./Pages/Reset";
 
 function App() {
   const { colorMode } = useColorMode();
@@ -46,6 +48,17 @@ function App() {
           <Button
             className="snackbar-button"
             size="small"
+            variant="outline"
+            backgroundColor="#43a047"
+            color="white"
+            _hover={{
+              backgroundColor: "#43a047",
+              color: "white",
+            }}
+            _active={{
+              backgroundColor: "#43a047",
+              color: "white",
+            }}
             onClick={updateServiceWorker}
           >
             {"update"}
@@ -83,6 +96,8 @@ function App() {
                 {/* Sub Routes of auth */}
                 <Route path="login" element={<Login />} />
                 <Route path="signup" element={<Signup />} />
+                <Route path="resetpswd" element={<ForgotPassword />} />
+                <Route path="setnewpasswd" element={<Reset />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Route>

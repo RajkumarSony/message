@@ -20,45 +20,89 @@ import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../FirebaseConfig";
 import axios from "axios";
-import {createIdentity} from "../SealedInit";
-import Cookies from 'js-cookie';
-
+import { createIdentity, saveIdentity } from "../SealedInit";
+import Cookies from "js-cookie";
+import { useThemeConfig } from "../ThemeConfig";
 export default function SignupCard() {
+  const { config } = useThemeConfig();
   const [showPassword, setShowPassword] = useState(false);
+  const [challenge, setChallenge] = useState(null);
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [fname, setFname] = useState(null);
   const [lname, setLname] = useState(null);
-  const [loading,Setloading]=useState(false)
+  const [loading, Setloading] = useState(false);
   const [error, Seterror] = useState({
     code: null,
     error: false,
     message: null,
   });
+  const [authenticate, setAuthenticate] = useState(false);
+  const [atwoManRuleKey, setTwoManRuleKey] = useState();
+  const [atwoManRuleSessionId, setTwoManRuleSessionId] = useState();
   const navigate = useNavigate();
-  const register=()=>{
-    axios.post(
-      "/register",
-      {
-        uid:auth.currentUser.uid,
-        name:auth.currentUser.displayName
-  
-      },
-      {
-        headers: {
-          Authorization: auth.currentUser.accessToken,
-          'Content-Type': 'application/json'
+  const register = () => {
+    axios
+      .post(
+        "/register",
+        {
+          uid: auth.currentUser.uid,
+          name: auth.currentUser.displayName,
         },
-      }
-    ).then(async (res)=>{
-     const  token=res.data
-      const databaseKey=Cookies.get("databaseKey")
-      const sessionID= Cookies.get("sessionId")
-      await createIdentity({userId:auth.currentUser.uid,password:password,userLicenseToken:token,databaseKey:databaseKey,sessionID:sessionID})
-    })
-  }
+        {
+          headers: {
+            Authorization: auth.currentUser.accessToken,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then(async (res) => {
+        const { token, twoManRuleSessionId, twoManRuleKey, mustAuthenticate } =
+          res.data;
+
+        const databaseKey = Cookies.get("databaseKey");
+        const sessionID = Cookies.get("sessionId");
+        await createIdentity({
+          userId: auth.currentUser.uid,
+          userLicenseToken: token,
+          databaseKey: databaseKey,
+          sessionID: sessionID,
+          jwt: auth.currentUser.accessToken,
+        });
+        if (mustAuthenticate) {
+          setAuthenticate(true);
+          setTwoManRuleSessionId(twoManRuleSessionId);
+          setTwoManRuleKey(twoManRuleKey);
+        } else {
+          await saveIdentity({
+            userId: auth.currentUser.uid,
+            twoManRuleKey: twoManRuleKey,
+            emailAddress: auth.currentUser.email,
+            twoManRuleSessionId: twoManRuleSessionId,
+            databaseKey: databaseKey,
+            sessionID: sessionID,
+          });
+          navigate("/");
+          localStorage.setItem("login", true);
+        }
+      });
+  };
+  const submitChallenge = async () => {
+    await saveIdentity({
+      challenge: challenge,
+      userId: auth.currentUser.uid,
+      twoManRuleKey: atwoManRuleKey,
+      emailAddress: auth.currentUser.email,
+      twoManRuleSessionId: atwoManRuleSessionId,
+      databaseKey: Cookies.get("databaseKey"),
+      sessionID: Cookies.get("sessionId"),
+    });
+    localStorage.setItem("login", true);
+
+    navigate("/");
+  };
   const signup = (event) => {
-    Setloading(true)
+    Setloading(true);
     event.preventDefault();
     console.log(email);
     if (
@@ -72,30 +116,22 @@ export default function SignupCard() {
       console.log(fname);
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          
           if (lname === null || lname === "") {
             updateProfile(auth.currentUser, {
               displayName: `${fname}`,
             }).then(() => {
-              
-              register()
+              register();
             });
-            
           } else {
             updateProfile(auth.currentUser, {
               displayName: `${fname} ${lname}`,
             }).then(() => {
-              register()
-              
+              register();
             });
           }
-        
-          
-          navigate("/");
-         
         })
         .catch((error) => {
-          Setloading(false)
+          Setloading(false);
           if (error.code === "auth/email-already-in-use") {
             Seterror({
               code: error.code,
@@ -123,7 +159,7 @@ export default function SignupCard() {
         error: true,
         message: "fill required filds marked with *",
       });
-      Setloading(false)
+      Setloading(false);
       console.log(email);
     }
   };
@@ -205,19 +241,28 @@ export default function SignupCard() {
                   <Box>
                     <FormControl id="firstName" isRequired>
                       <FormLabel>First Name</FormLabel>
-                      <Input onChange={handleFname} type="text" />
+                      <Input
+                        borderColor={config.inBorder}
+                        onChange={handleFname}
+                        type="text"
+                      />
                     </FormControl>
                   </Box>
                   <Box>
                     <FormControl id="lastName">
                       <FormLabel>Last Name</FormLabel>
-                      <Input onChange={handleLname} type="text" />
+                      <Input
+                        borderColor={config.inBorder}
+                        onChange={handleLname}
+                        type="text"
+                      />
                     </FormControl>
                   </Box>
                 </HStack>
                 <FormControl id="email" isRequired>
                   <FormLabel>Email address</FormLabel>
                   <Input
+                    borderColor={config.inBorder}
                     autoComplete="username"
                     onChange={handleEmail}
                     type="email"
@@ -227,6 +272,7 @@ export default function SignupCard() {
                   <FormLabel>Password</FormLabel>
                   <InputGroup>
                     <Input
+                      borderColor={config.inBorder}
                       onChange={handlePassword}
                       autoComplete="current-password"
                       type={showPassword ? "text" : "password"}
@@ -248,7 +294,7 @@ export default function SignupCard() {
                 <Stack spacing={10} pt={2}>
                   <Button
                     loadingText="Creating Account..."
-                 isLoading={loading}
+                    isLoading={loading}
                     type="submit"
                     size="lg"
                     bg={"blue.400"}
@@ -261,6 +307,19 @@ export default function SignupCard() {
                   </Button>
                 </Stack>
               </form>
+
+              {authenticate && (
+                <>
+                  <Input
+                    borderColor={config.inBorder}
+                    onChange={(e) => {
+                      setChallenge(e.target.value);
+                    }}
+                    placeholder="enter challenge send in your email"
+                  />
+                  <Button onClick={submitChallenge}>Submit</Button>
+                </>
+              )}
               <Stack pt={3}>
                 <Text pt={3} align={"center"}>
                   Already a user?{" "}

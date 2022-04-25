@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { db, auth } from "../../FirebaseConfig";
 import { ref, onValue, limitToLast, query } from "firebase/database";
+import { signOut } from "firebase/auth";
 import Contact from "./Contact";
-
+import axios from "axios";
 import { Box, Text } from "@chakra-ui/react";
 import SkeletonContact from "./SkeletonContact";
+import { useNavigate } from "react-router-dom";
+
 import {
   getSealdSDKInstance,
   retrieveIdentityFromLocalStorage,
@@ -12,14 +15,36 @@ import {
 import Cookies from "js-cookie";
 
 export default function RecentMsg(props) {
+  const navigate = useNavigate();
   const [data, setData] = useState();
   const [hasData, setHasData] = useState(true);
   useEffect(() => {
     async function recentMsg() {
-      await retrieveIdentityFromLocalStorage({
-        databaseKey: Cookies.get("databaseKey"),
-        sessionID: Cookies.get("sessionId"),
-      });
+      try {
+        await retrieveIdentityFromLocalStorage({
+          databaseKey: Cookies.get("databaseKey"),
+          sessionID: Cookies.get("sessionId"),
+        });
+      } catch {
+        signOut(auth).then(() => {
+          // Request to clear databaekey and session id and destroy the session after logout
+          axios
+            .post(
+              "/session/logout",
+              { reqest: "logout" },
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            )
+            .then((res) => {
+              console.log(res);
+              localStorage.removeItem("user");
+              navigate("/auth/login");
+            });
+        });
+      }
       onValue(ref(db, `${auth.currentUser.uid}/chats/`), (datax) => {
         const x = [];
         let itemsProcessed = 0;

@@ -13,6 +13,7 @@ const app = express();
 const { getDatabase } = require("firebase-admin/database");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const fetch = require("node-fetch");
 const port = process.env.PORT || 8080;
 const randomBytes = promisify(crypto.randomBytes);
 
@@ -78,8 +79,59 @@ app.post("/register", (req, res) => {
           res.cookie("appId", process.env.seald_appId, {
             maxAge: new Date(23423432323232),
           });
-          res.status(201);
-          res.send(token);
+          const sendChallengeResult = await fetch(
+            `${process.env.ssks_key_storage_url}tmr/back/challenge_send/`,
+            {
+              method: "POST",
+              credentials: "omit",
+              headers: {
+                "Content-Type": "application/json",
+                "X-SEALD-APPID": process.env.seald_appId,
+                "X-SEALD-APIKEY": process.env.ssks_key_storage_api,
+              },
+              body: JSON.stringify({
+                create_user: true, // boolean determined above
+                user_id: Decodetoken.uid, // unique identifier for the user in this app
+                auth_factor: {
+                  type: "EM",
+                  value: Decodetoken.email, // email address of the user
+                },
+                template: "<html><body>Challenge: $$CHALLENGE$$</body></html>", // email template to use
+              }),
+            }
+          );
+          if (!sendChallengeResult.ok) {
+            const responseText = await sendChallengeResult.text();
+            throw new Error(
+              `Error in SSKS createUser: ${sendChallengeResult.status} ${responseText}`
+            );
+          }
+          // retrieval of the session id which will be used by the user
+          const {
+            session_id: twoManRuleSessionId,
+            must_authenticate: mustAuthenticate,
+          } = await sendChallengeResult.json();
+          // if there is no `twoManRuleKey` stored yet, we generate a new one
+
+          const twoManRuleKey = (await randomBytes(64)).toString("base64");
+          const storeTwoManRuleKey = db.ref(`${Decodetoken.uid}/securityKey`);
+          storeTwoManRuleKey.update(
+            {
+              ssks2mrKey: twoManRuleKey,
+            },
+            (err) => {
+              if (!err) {
+                res.status(201).json({
+                  token: token,
+                  twoManRuleSessionId,
+                  twoManRuleKey: twoManRuleKey,
+                  mustAuthenticate,
+                });
+              }
+            }
+          );
+
+          // response to the user
         });
       } else {
         req.status(401);
@@ -93,7 +145,7 @@ app.post("/register", (req, res) => {
 });
 
 // Listen for Post reqest made on "/session/login"  called every time after successfull login of the User .
-app.post("/session/login", (req, res) => {
+app.post("/session/login", async (req, res) => {
   getAuth()
     .verifyIdToken(req.headers.authorization) // Verfiy the user using JWT .
     .then(async (Decodetoken) => {
@@ -110,8 +162,68 @@ app.post("/session/login", (req, res) => {
         res.cookie("appId", process.env.seald_appId, {
           maxAge: new Date(23423432323232),
         }); // set AppId
-        res.status(201);
-        res.send("LogIn");
+        const bol = Decodetoken.email.split("@")[1] === "localhost.com";
+        const sendChallengeResult = await fetch(
+          `${process.env.ssks_key_storage_url}tmr/back/challenge_send/`,
+          {
+            method: "POST",
+            credentials: "omit",
+            headers: {
+              "Content-Type": "application/json",
+              "X-SEALD-APPID": process.env.seald_appId,
+              "X-SEALD-APIKEY": process.env.ssks_key_storage_api,
+            },
+            body: JSON.stringify({
+              create_user: true, // boolean determined above
+              user_id: Decodetoken.uid, // unique identifier for the user in this app
+              auth_factor: {
+                type: "EM",
+                value: Decodetoken.email, // email address of the user
+              },
+
+              template: "<html><body>Challenge: $$CHALLENGE$$</body></html>", // email template to use
+            }),
+          }
+        );
+        if (!sendChallengeResult.ok) {
+          const responseText = await sendChallengeResult.text();
+          throw new Error(
+            `Error in SSKS createUser: ${sendChallengeResult.status} ${responseText}`
+          );
+        }
+        // retrieval of the session id which will be used by the user
+        const {
+          session_id: twoManRuleSessionId,
+          must_authenticate: mustAuthenticate,
+        } = await sendChallengeResult.json();
+        // if there is no `twoManRuleKey` stored yet, we generate a new one
+        const storeTwoManRuleKey = db.ref(`${Decodetoken.uid}/securityKey`);
+        storeTwoManRuleKey.once("value", async (data) => {
+          console.log(data.hasChildren());
+          if (data.hasChildren()) {
+            res.status(200).json({
+              twoManRuleSessionId,
+              twoManRuleKey: data.val().ssks2mrKey,
+              mustAuthenticate,
+              passRetrival: false,
+            });
+          } else {
+            const twoManRuleKey = (await randomBytes(64)).toString("base64");
+            storeTwoManRuleKey.update(
+              {
+                ssks2mrkey: twoManRuleKey,
+              },
+              (e) => {
+                res.status(200).json({
+                  twoManRuleSessionId,
+                  twoManRuleKey: twoManRuleKey,
+                  mustAuthenticate,
+                  passRetrival: true,
+                });
+              }
+            );
+          }
+        });
       }
     });
 });
@@ -155,7 +267,6 @@ app.post("/addcontact", (req, res) => {
                 uid: user.uid,
               });
 
-              console.log("Contact Added to the server ");
               res.status(201);
               res.send("Contact Added to the server ");
             } else {
