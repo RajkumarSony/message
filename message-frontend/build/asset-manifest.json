@@ -5,6 +5,7 @@
     "main.js.map": "/static/js/main.3233752c.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.d70ed9a6.js",
     "runtime-main.js.map": "/static/js/runtime-main.d70ed9a6.js.map",
+  
     "static/css/2.d0df8735.chunk.css": "/static/css/2.d0df8735.chunk.css",
     "static/js/2.101e2033.chunk.js": "/static/js/2.101e2033.chunk.js",
     "static/js/2.101e2033.chunk.js.map": "/static/js/2.101e2033.chunk.js.map",
@@ -28,6 +29,8 @@
     "static/css/2.d0df8735.chunk.css",
     "static/js/2.101e2033.chunk.js",
     "static/css/main.20fe9748.chunk.css",
+
     "static/js/main.3233752c.chunk.js"
+
   ]
 }
