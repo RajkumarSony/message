@@ -22,7 +22,6 @@ import { auth } from "../FirebaseConfig";
 import axios from "axios";
 import { createIdentity, saveIdentity } from "../SealedInit";
 import Cookies from "js-cookie";
-import { async } from "@firebase/util";
 
 export default function SignupCard() {
   const [showPassword, setShowPassword] = useState(false);
@@ -83,6 +82,7 @@ export default function SignupCard() {
             sessionID: sessionID,
           });
           navigate("/");
+          localStorage.setItem("login", true);
         }
       });
   };
@@ -96,6 +96,8 @@ export default function SignupCard() {
       databaseKey: Cookies.get("databaseKey"),
       sessionID: Cookies.get("sessionId"),
     });
+    localStorage.setItem("login", true);
+
     navigate("/");
   };
   const signup = (event) => {

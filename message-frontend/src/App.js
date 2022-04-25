@@ -46,6 +46,17 @@ function App() {
           <Button
             className="snackbar-button"
             size="small"
+            variant="outline"
+            backgroundColor="#43a047"
+            color="white"
+            _hover={{
+              backgroundColor: "#43a047",
+              color: "white",
+            }}
+            _active={{
+              backgroundColor: "#43a047",
+              color: "white",
+            }}
             onClick={updateServiceWorker}
           >
             {"update"}

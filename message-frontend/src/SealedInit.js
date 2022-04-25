@@ -1,6 +1,8 @@
 import SealdSDK from "@seald-io/sdk";
 
 import SealdSDKPluginSSKS2MR from "@seald-io/sdk-plugin-ssks-2mr";
+import SealdSDKPluginSSKSPassword from "@seald-io/sdk-plugin-ssks-password";
+
 import Cookies from "js-cookie"; // Read Cookies uing Cookies.get("cookieName")
 let sealdSDKInstance = null;
 
@@ -13,7 +15,7 @@ const instantiateSealdSDK = async ({ databaseKey, sessionID }) => {
     appId: Cookies.get("appId"),
     databaseKey: databaseKey, //Generated on the Server
     databasePath: `seald-seacure-message-hub-${sessionID}`,
-    plugins: [SealdSDKPluginSSKS2MR()],
+    plugins: [SealdSDKPluginSSKS2MR(), SealdSDKPluginSSKSPassword()],
   });
   await sealdSDKInstance.initialize(); // Initialize the SealdSdk
 };
@@ -83,19 +85,38 @@ export const retrieveIdentity = async ({
   emailAddress,
   twoManRuleKey,
   twoManRuleSessionId,
-  challenge,
+  challenge = null,
+  password = false,
 }) => {
+  console.log(emailAddress);
   await instantiateSealdSDK({ databaseKey, sessionID });
-  await sealdSDKInstance.ssks2MR.retrieveIdentity({
-    challenge,
-    authFactor: {
-      type: "EM",
-      value: emailAddress,
-    },
-    twoManRuleKey,
-    userId,
-    sessionId: twoManRuleSessionId,
-  });
+  if (!password) {
+    await sealdSDKInstance.ssks2MR.retrieveIdentity({
+      challenge,
+      authFactor: {
+        type: "EM",
+        value: emailAddress,
+      },
+      twoManRuleKey,
+      userId,
+      sessionId: twoManRuleSessionId,
+    });
+  } else {
+    await sealdSDKInstance.ssksPassword.retrieveIdentity({ userId, password });
+    const { identity: mySubIdentity } =
+      await sealdSDKInstance.createSubIdentity();
+
+    await sealdSDKInstance.ssks2MR.saveIdentity({
+      authFactor: {
+        type: "EM",
+        value: emailAddress,
+      },
+      twoManRuleKey,
+      userId,
+      sessionId: twoManRuleSessionId,
+      identity: mySubIdentity,
+    });
+  }
 };
 
 export const getSealdSDKInstance = () => sealdSDKInstance;

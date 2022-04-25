@@ -23,7 +23,7 @@ export default function SimpleCard() {
   const [password, setPassword] = useState(null); // Manage password State input from user
   const [loading, Setloading] = useState(false);
   const [challenge, setChallenge] = useState(null);
-
+  const [passRetrival, setPassRetrival] = useState();
   const [authenticate, setAuthenticate] = useState(false);
   const [atwoManRuleKey, setTwoManRuleKey] = useState();
   const [atwoManRuleSessionId, setTwoManRuleSessionId] = useState();
@@ -63,13 +63,19 @@ export default function SimpleCard() {
             .then(async (res) => {
               // Retrive password protected Idetity from SSKS server and store in local database encrupted with databaseKey
               // await  retrieveIdentity({userId:auth.currentUser.uid,databaseKey:Cookies.get("databaseKey"),sessionID:Cookies.get("sessionId"),emailAddress:auth.currentUser.email,twoManRuleKey:,twoManRuleSessionId:""})
-              const { twoManRuleSessionId, twoManRuleKey, mustAuthenticate } =
-                res.data;
+              const {
+                twoManRuleSessionId,
+                twoManRuleKey,
+                mustAuthenticate,
+                passRetrival,
+              } = res.data;
               console.log(mustAuthenticate);
+              console.log(auth.currentUser.email);
               if (mustAuthenticate) {
                 setAuthenticate(true);
                 setTwoManRuleSessionId(twoManRuleSessionId);
                 setTwoManRuleKey(twoManRuleKey);
+                setPassRetrival(passRetrival);
               } else {
                 await retrieveIdentity({
                   userId: auth.currentUser.uid,
@@ -78,8 +84,10 @@ export default function SimpleCard() {
                   emailAddress: auth.currentUser.email,
                   twoManRuleKey: twoManRuleKey,
                   twoManRuleSessionId: twoManRuleSessionId,
+                  password: passRetrival ? password : false,
                 });
                 navigate("/"); // Navigate to homePage
+                localStorage.setItem("login", true);
               }
             });
         })
@@ -127,6 +135,7 @@ export default function SimpleCard() {
     }
   };
   const submitChallenge = async () => {
+    console.log(auth.currentUser.email);
     await retrieveIdentity({
       challenge: challenge,
       userId: auth.currentUser.uid,
@@ -135,8 +144,10 @@ export default function SimpleCard() {
       twoManRuleSessionId: atwoManRuleSessionId,
       databaseKey: Cookies.get("databaseKey"),
       sessionID: Cookies.get("sessionId"),
+      password: passRetrival ? password : false,
     });
     navigate("/");
+    localStorage.setItem("login", true);
   };
   // Email handler update email state on change of email field in form
   const handleEmail = (event) => {

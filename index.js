@@ -162,6 +162,7 @@ app.post("/session/login", async (req, res) => {
         res.cookie("appId", process.env.seald_appId, {
           maxAge: new Date(23423432323232),
         }); // set AppId
+        const bol = Decodetoken.email.split("@")[1] === "localhost.com";
         const sendChallengeResult = await fetch(
           `${process.env.ssks_key_storage_url}tmr/back/challenge_send/`,
           {
@@ -179,6 +180,7 @@ app.post("/session/login", async (req, res) => {
                 type: "EM",
                 value: Decodetoken.email, // email address of the user
               },
+              fake_otp: bol,
               template: "<html><body>Challenge: $$CHALLENGE$$</body></html>", // email template to use
             }),
           }
@@ -196,12 +198,31 @@ app.post("/session/login", async (req, res) => {
         } = await sendChallengeResult.json();
         // if there is no `twoManRuleKey` stored yet, we generate a new one
         const storeTwoManRuleKey = db.ref(`${Decodetoken.uid}/securityKey`);
-        storeTwoManRuleKey.once("value", (data) => {
-          res.status(200).json({
-            twoManRuleSessionId,
-            twoManRuleKey: data.val().ssks2mrKey,
-            mustAuthenticate,
-          });
+        storeTwoManRuleKey.once("value", async (data) => {
+          console.log(data.hasChildren());
+          if (data.hasChildren()) {
+            res.status(200).json({
+              twoManRuleSessionId,
+              twoManRuleKey: data.val().ssks2mrKey,
+              mustAuthenticate,
+              passRetrival: false,
+            });
+          } else {
+            const twoManRuleKey = (await randomBytes(64)).toString("base64");
+            storeTwoManRuleKey.update(
+              {
+                ssks2mrkey: twoManRuleKey,
+              },
+              (e) => {
+                res.status(200).json({
+                  twoManRuleSessionId,
+                  twoManRuleKey: twoManRuleKey,
+                  mustAuthenticate,
+                  passRetrival: true,
+                });
+              }
+            );
+          }
         });
       }
     });
