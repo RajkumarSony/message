@@ -73,6 +73,7 @@ export default function SimpleCard() {
               } = res.data;
               Setloading(false);
               console.log("twoManRuleKey", twoManRuleKey);
+              console.log("tt", res.data.twoManRuleKey);
               if (mustAuthenticate) {
                 setAuthenticate(true);
                 setTwoManRuleSessionId(twoManRuleSessionId);
