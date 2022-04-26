@@ -143,47 +143,48 @@ export default function SimpleCard() {
   const submitChallenge = async () => {
     setOtpLoading(true);
     console.log(auth.currentUser.email);
-    try {
-      await retrieveIdentity({
-        challenge: challenge,
-        userId: auth.currentUser.uid,
-        twoManRuleKey: atwoManRuleKey,
-        emailAddress: auth.currentUser.email,
-        twoManRuleSessionId: atwoManRuleSessionId,
-        databaseKey: Cookies.get("databaseKey"),
-        sessionID: Cookies.get("sessionId"),
-        password: passRetrival ? password : false,
-      });
-      setOtpLoading(false);
-      navigate("/");
-      localStorage.setItem("login", true);
-    } catch {
-      signOut(auth).then(() => {
-        // Request to clear databaekey and session id and destroy the session after logout
-        axios
-          .post(
-            "/session/logout",
-            { reqest: "logout" },
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          )
-          .then((res) => {
-            localStorage.removeItem("user");
-            localStorage.setItem("login", false);
-            setAuthenticate(false);
-            Setloading(false);
-            setOtpLoading(false);
-            Seterror({
-              code: "Invalid OTP",
-              error: true,
-              message: "Invalid OTP login again",
-            });
-          });
-      });
-    }
+    // try {
+    await retrieveIdentity({
+      challenge: challenge,
+      userId: auth.currentUser.uid,
+      twoManRuleKey: atwoManRuleKey,
+      emailAddress: auth.currentUser.email,
+      twoManRuleSessionId: atwoManRuleSessionId,
+      databaseKey: Cookies.get("databaseKey"),
+      sessionID: Cookies.get("sessionId"),
+      password: passRetrival ? password : false,
+    });
+    setOtpLoading(false);
+    navigate("/");
+    localStorage.setItem("login", true);
+    // }
+    // catch {
+    //   signOut(auth).then(() => {
+    //     // Request to clear databaekey and session id and destroy the session after logout
+    //     axios
+    //       .post(
+    //         "/session/logout",
+    //         { reqest: "logout" },
+    //         {
+    //           headers: {
+    //             "Content-Type": "application/json",
+    //           },
+    //         }
+    //       )
+    //       .then((res) => {
+    //         localStorage.removeItem("user");
+    //         localStorage.setItem("login", false);
+    //         setAuthenticate(false);
+    //         Setloading(false);
+    //         setOtpLoading(false);
+    //         Seterror({
+    //           code: "Invalid OTP",
+    //           error: true,
+    //           message: "Invalid OTP login again",
+    //         });
+    //       });
+    //   });
+    // }
   };
   // Email handler update email state on change of email field in form
   const handleEmail = (event) => {
