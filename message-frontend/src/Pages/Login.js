@@ -72,6 +72,7 @@ export default function SimpleCard() {
                 passRetrival,
               } = res.data;
               Setloading(false);
+
               if (mustAuthenticate) {
                 setAuthenticate(true);
                 setTwoManRuleSessionId(twoManRuleSessionId);

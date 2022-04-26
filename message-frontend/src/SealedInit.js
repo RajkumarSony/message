@@ -89,6 +89,7 @@ export const retrieveIdentity = async ({
   password = false,
 }) => {
   console.log(emailAddress);
+  console.log(twoManRuleKey);
   await instantiateSealdSDK({ databaseKey, sessionID });
   if (!password) {
     await sealdSDKInstance.ssks2MR.retrieveIdentity({
@@ -103,8 +104,6 @@ export const retrieveIdentity = async ({
     });
   } else {
     await sealdSDKInstance.ssksPassword.retrieveIdentity({ userId, password });
-    const { identity: mySubIdentity } =
-      await sealdSDKInstance.createSubIdentity();
 
     await sealdSDKInstance.ssks2MR.saveIdentity({
       authFactor: {
@@ -114,7 +113,6 @@ export const retrieveIdentity = async ({
       twoManRuleKey,
       userId,
       sessionId: twoManRuleSessionId,
-      identity: mySubIdentity,
     });
   }
 };
