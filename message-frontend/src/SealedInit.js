@@ -106,6 +106,7 @@ export const retrieveIdentity = async ({
     await sealdSDKInstance.ssksPassword.retrieveIdentity({ userId, password });
 
     await sealdSDKInstance.ssks2MR.saveIdentity({
+      challenge,
       authFactor: {
         type: "EM",
         value: emailAddress,
