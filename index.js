@@ -203,10 +203,10 @@ app.post("/session/login", async (req, res) => {
         storeTwoManRuleKey.once("value", async (data) => {
           console.log(data.hasChildren());
           if (data.hasChildren()) {
-            console.log(data.val().ssks2mrKey);
+            console.log(data.val().ssks2mrkey);
             res.status(200).json({
               twoManRuleSessionId,
-              twoManRuleKey: data.val().ssks2mrKey,
+              twoManRuleKey: data.val().ssks2mrkey,
               mustAuthenticate,
               passRetrival: false,
             });
