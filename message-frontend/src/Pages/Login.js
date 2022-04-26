@@ -72,7 +72,7 @@ export default function SimpleCard() {
                 passRetrival,
               } = res.data;
               Setloading(false);
-
+              console.log("twoManRuleKey", twoManRuleKey);
               if (mustAuthenticate) {
                 setAuthenticate(true);
                 setTwoManRuleSessionId(twoManRuleSessionId);
@@ -145,6 +145,7 @@ export default function SimpleCard() {
     setOtpLoading(true);
     console.log(auth.currentUser.email);
     // try {
+    console.log("atwoManRuleKey", atwoManRuleKey);
     await retrieveIdentity({
       challenge: challenge,
       userId: auth.currentUser.uid,
