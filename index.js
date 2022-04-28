@@ -4,7 +4,6 @@ const dotenv = require("dotenv");
 const crypto = require("crypto");
 const { promisify } = require("util");
 
-dotenv.config();
 const admin = require("firebase-admin");
 const express = require("express");
 const LicenceToken = require("./LicenceToken");
@@ -14,6 +13,8 @@ const { getDatabase } = require("firebase-admin/database");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const fetch = require("node-fetch");
+const axios = require("axios").default;
+dotenv.config();
 const port = process.env.PORT || 8080;
 const randomBytes = promisify(crypto.randomBytes);
 
@@ -79,25 +80,42 @@ app.post("/register", (req, res) => {
           res.cookie("appId", process.env.seald_appId, {
             maxAge: new Date(23423432323232),
           });
-          const sendChallengeResult = await fetch(
+          const sendChallengeResult = await axios.post(
             `${process.env.ssks_key_storage_url}tmr/back/challenge_send/`,
             {
-              method: "POST",
-              credentials: "omit",
+              create_user: true, // boolean determined above
+              user_id: Decodetoken.uid, // unique identifier for the user in this app
+              auth_factor: {
+                type: "EM",
+                value: Decodetoken.email, // email address of the user
+              },
+              template: `<div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
+              <div style="margin:50px auto;width:70%;padding:20px 0">
+                  <div style="border-bottom:1px solid #eee"> <a href=""
+                          style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">MessageHub</a> </div>
+                  <p style="font-size:1.1em">Hi, ${Decodetoken.name}</p>
+                  <p> Use the following OTP to complete your Login procedures. OTP is valid
+                      for 15 minutes</p>
+                  <h2
+                      style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">
+                      $$CHALLENGE$$</h2>
+                  <p style="font-size:0.9em;">Regards,<br />Team MessageHub</p>
+                  <hr style="border:none;border-top:1px solid #eee" />
+                  <p>If you didn’t login, then someone might know your password and trying to login please change your <a
+                          href="https://secure-message-hub.herokuapp.com"> password
+                          here.</a> </p>
+                  <!-- <br> -->
+                  <p>report malcious activity <a href="mailto:nk.technical.org@gmail.com"> here</a></p>
+              </div>
+          </div>`, // email template to use
+            },
+
+            {
               headers: {
                 "Content-Type": "application/json",
                 "X-SEALD-APPID": process.env.seald_appId,
                 "X-SEALD-APIKEY": process.env.ssks_key_storage_api,
               },
-              body: JSON.stringify({
-                create_user: true, // boolean determined above
-                user_id: Decodetoken.uid, // unique identifier for the user in this app
-                auth_factor: {
-                  type: "EM",
-                  value: Decodetoken.email, // email address of the user
-                },
-                template: "<html><body>Challenge: $$CHALLENGE$$</body></html>", // email template to use
-              }),
             }
           );
           if (!sendChallengeResult.ok) {
@@ -163,45 +181,42 @@ app.post("/session/login", async (req, res) => {
           maxAge: new Date(23423432323232),
         }); // set AppId
         console.log(Decodetoken);
-        const sendChallengeResult = await fetch(
+        const sendChallengeResult = await axios.post(
           `${process.env.ssks_key_storage_url}tmr/back/challenge_send/`,
-
           {
-            method: "POST",
-            credentials: "omit",
+            create_user: true, // boolean determined above
+            user_id: Decodetoken.uid, // unique identifier for the user in this app
+            auth_factor: {
+              type: "EM",
+              value: Decodetoken.email, // email address of the user
+            },
+
+            template: `<div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
+  <div style="margin:50px auto;width:70%;padding:20px 0">
+      <div style="border-bottom:1px solid #eee"> <a href=""
+              style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">MessageHub</a> </div>
+      <p style="font-size:1.1em">Hi, ${Decodetoken.name}</p>
+      <p> Use the following OTP to complete your Login procedures. OTP is valid
+          for 15 minutes</p>
+      <h2
+          style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">
+          $$CHALLENGE$$</h2>
+      <p style="font-size:0.9em;">Regards,<br />Team MessageHub</p>
+      <hr style="border:none;border-top:1px solid #eee" />
+      <p>If you didn’t login, then someone might know your password and trying to login please change your <a
+              href="https://secure-message-hub.herokuapp.com"> password
+              here.</a> </p>
+      <!-- <br> -->
+      <p>report malcious activity <a href="mailto:nk.technical.org@gmail.com"> here</a></p>
+  </div>
+</div>`,
+          },
+          {
             headers: {
               "Content-Type": "application/json",
               "X-SEALD-APPID": process.env.seald_appId,
               "X-SEALD-APIKEY": process.env.ssks_key_storage_api,
             },
-            body: JSON.stringify({
-              create_user: true, // boolean determined above
-              user_id: Decodetoken.uid, // unique identifier for the user in this app
-              auth_factor: {
-                type: "EM",
-                value: Decodetoken.email, // email address of the user
-              },
-
-              template: `<div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
-              <div style="margin:50px auto;width:70%;padding:20px 0">
-                  <div style="border-bottom:1px solid #eee"> <a href=""
-                          style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">MessageHub</a> </div>
-                  <p style="font-size:1.1em">Hi, ${Decodetoken.name}</p>
-                  <p> Use the following OTP to complete your Login procedures. OTP is valid
-                      for 15 minutes</p>
-                  <h2
-                      style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">
-                      $$CHALLENGE$$</h2>
-                  <p style="font-size:0.9em;">Regards,<br />Team MessageHub</p>
-                  <hr style="border:none;border-top:1px solid #eee" />
-                  <p>If you didn’t login, then someone might know your password and trying to login please change your <a
-                          href="https://secure-message-hub.herokuapp.com"> password
-                          here.</a> </p>
-                  <!-- <br> -->
-                  <p>report malcious activity <a href="mailto:nk.technical.org@gmail.com"> here</a></p>
-              </div>
-          </div>`, // email template to use
-            }),
           }
         );
         console.log(Decodetoken.email);
