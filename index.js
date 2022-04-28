@@ -162,7 +162,7 @@ app.post("/session/login", async (req, res) => {
         res.cookie("appId", process.env.seald_appId, {
           maxAge: new Date(23423432323232),
         }); // set AppId
-        const bol = Decodetoken.email.split("@")[1] === "localhost.com";
+        console.log(Decodetoken);
         const sendChallengeResult = await fetch(
           `${process.env.ssks_key_storage_url}tmr/back/challenge_send/`,
 
@@ -182,7 +182,21 @@ app.post("/session/login", async (req, res) => {
                 value: Decodetoken.email, // email address of the user
               },
 
-              template: "<html><body>Challenge: $$CHALLENGE$$</body></html>", // email template to use
+              template: `<div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
+              <div style="margin:50px auto;width:70%;padding:20px 0">
+                      <div style="border-bottom:1px solid #eee"> <a href=""
+                              style="font-size:1.4em;color: #00466a;text-decoration:none;font-weight:600">MessageHub</a> </div>
+                      <p style="font-size:1.1em">Hi,${Decodetoken.name}</p>
+                      <p> Use the following OTP to complete your Sign Up procedures. OTP is valid
+                          for 15 minutes</p>
+                      <h2
+                          style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">
+                          $$CHALLENGE$$</h2>
+                      <p style="font-size:0.9em;">Regards,<br />Team MessageHub</p>
+                      <hr style="border:none;border-top:1px solid #eee" />
+              
+                  </div>
+              </div>`, // email template to use
             }),
           }
         );
@@ -201,7 +215,6 @@ app.post("/session/login", async (req, res) => {
         // if there is no `twoManRuleKey` stored yet, we generate a new one
         const storeTwoManRuleKey = db.ref(`${Decodetoken.uid}/securityKey`);
         storeTwoManRuleKey.once("value", async (data) => {
-          console.log(data.hasChildren());
           if (data.hasChildren()) {
             console.log(data.val().ssks2mrkey);
             res.status(200).json({
