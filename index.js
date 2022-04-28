@@ -118,8 +118,8 @@ app.post("/register", (req, res) => {
               },
             }
           );
-          if (!sendChallengeResult.ok) {
-            const responseText = await sendChallengeResult.text();
+          if (sendChallengeResult.statusText !== "OK") {
+            const responseText = sendChallengeResult.statusText;
             throw new Error(
               `Error in SSKS createUser: ${sendChallengeResult.status} ${responseText}`
             );
@@ -128,7 +128,7 @@ app.post("/register", (req, res) => {
           const {
             session_id: twoManRuleSessionId,
             must_authenticate: mustAuthenticate,
-          } = await sendChallengeResult.json();
+          } = await sendChallengeResult.data;
           // if there is no `twoManRuleKey` stored yet, we generate a new one
 
           const twoManRuleKey = (await randomBytes(64)).toString("base64");
@@ -219,9 +219,9 @@ app.post("/session/login", async (req, res) => {
             },
           }
         );
-        console.log(Decodetoken.email);
-        if (!sendChallengeResult.ok) {
-          const responseText = await sendChallengeResult.text();
+
+        if (sendChallengeResult.statusText !== "OK") {
+          const responseText = sendChallengeResult.statusText;
           throw new Error(
             `Error in SSKS createUser: ${sendChallengeResult.status} ${responseText}`
           );
@@ -230,7 +230,7 @@ app.post("/session/login", async (req, res) => {
         const {
           session_id: twoManRuleSessionId,
           must_authenticate: mustAuthenticate,
-        } = await sendChallengeResult.json();
+        } = await sendChallengeResult.data;
         // if there is no `twoManRuleKey` stored yet, we generate a new one
         const storeTwoManRuleKey = db.ref(`${Decodetoken.uid}/securityKey`);
         storeTwoManRuleKey.once("value", async (data) => {
