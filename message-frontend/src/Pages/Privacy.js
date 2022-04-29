@@ -243,7 +243,7 @@ export default function Privacy() {
         participate in, and/or monitor and guide their online activity.
       </Text>
 
-      <Text my={5}>
+      <Text my={5} pb={{ sm: 12, md: 0 }}>
         message hub does not knowingly collect any Personal Identifiable
         Information from children under the age of 13. If you think that your
         child provided this kind of information on our website, we strongly
