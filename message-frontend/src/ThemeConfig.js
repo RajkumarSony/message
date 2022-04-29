@@ -15,6 +15,7 @@ function useThemeConfig() {
   };
 
   const config = {
+    colorMode: colorMode === "light" ? "Toggle Dark Mode" : "Toggle Light Mode",
     navBg: colorMode === "light" ? "#05c2c8" : "#19263a",
     scrollTrack: colorMode === "light" ? "white" : "#19263a",
     scrollTrackThumb: colorMode === "light" ? "#05c2c8" : "#295599",

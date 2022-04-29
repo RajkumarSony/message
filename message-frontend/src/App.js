@@ -5,8 +5,7 @@ import { Button, useColorMode } from "@chakra-ui/react";
 import Home from "./Pages/Home";
 import WebMid from "./Pages/webMid";
 import Features from "./Pages/Features";
-import HelpCenter from "./Pages/HelpCenter";
-import Security from "./Pages/security";
+import Privacy from "./Pages/Privacy";
 import NotFound from "./Pages/NotFound";
 import "@fontsource/roboto";
 import Login from "./Pages/Login";
@@ -90,8 +89,8 @@ function App() {
               {/* Sub Rotues of / */}
               <Route index element={<Home />} />
               <Route path={"features"} element={<Features />} />
-              <Route path="security" element={<Security />} />
-              <Route path="help-center" element={<HelpCenter />} />
+              <Route path="privacy" element={<Privacy />} />
+
               <Route path="auth">
                 {/* Sub Routes of auth */}
                 <Route path="login" element={<Login />} />

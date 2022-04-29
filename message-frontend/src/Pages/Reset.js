@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useLocation, Link as reachLink, useNavigate } from "react-router-dom";
 import { auth } from "../FirebaseConfig";
-import { confirmPasswordReset, verifyPasswordResetCode } from "firebase/auth";
+import { confirmPasswordReset } from "firebase/auth";
 import { useThemeConfig } from "../ThemeConfig";
 
 export default function Reset() {

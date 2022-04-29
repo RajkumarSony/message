@@ -20,7 +20,6 @@ import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import {
   createUserWithEmailAndPassword,
   updateProfile,
-  signOut,
   deleteUser,
 } from "firebase/auth";
 import { auth } from "../FirebaseConfig";

@@ -38,10 +38,12 @@ export default function ContactNav(props) {
           as={reachLink}
           mr={3}
           to="/"
+          title="Home"
         >
           <Icon color={config.IconColor} as={AiOutlineHome} cursor="pointer" />
         </Link>
         <Icon
+          title="Contacts"
           color={config.IconColor}
           fontSize={28}
           mr={3}

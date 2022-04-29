@@ -194,18 +194,17 @@ function Navbar(props) {
                 </Button>
               )}
 
-              <Link as={reachLink} to="/security">
-                SECURITY
+              <Link as={reachLink} to="/privacy">
+                PRIVACY POLICY
               </Link>
 
-              <Link as={reachLink} to="/help-center">
-                HELP CENTER
-              </Link>
+              <a href="mailto:nk.technical.org@gmail.com">CONTACT US</a>
             </Box>
             <Button
               d={{ sm: "none", md: "inline-block" }}
               colorScheme="transparent"
               variant="ghost"
+              title={config.colorMode}
               onClick={toggleColor}
             >
               <Icon
@@ -215,6 +214,7 @@ function Navbar(props) {
               />
             </Button>
             <Button
+              title={user ? "logout" : "login"}
               d={{ sm: "none", md: "inline-block" }}
               colorScheme="transparent"
               onClick={user ? logOut : login}
@@ -333,8 +333,8 @@ function Navbar(props) {
                     m={0}
                     py="16px"
                   >
-                    <Link as={reachLink} to="/security">
-                      SECURITY
+                    <Link as={reachLink} to="/privacy">
+                      PRIVACY POLICY
                     </Link>
                   </Box>
                   <Box
@@ -343,9 +343,7 @@ function Navbar(props) {
                     m={0}
                     py="16px"
                   >
-                    <Link as={reachLink} to="/help-center">
-                      HELP CENTER
-                    </Link>
+                    <a href="mailto:nk.technical.org@gmail.com">CONTACT US</a>
                   </Box>
                   <Box m={0} py="16px" borderBottom="1px solid #48eaef">
                     <Box variant="ghost" onClick={toggleColor}>
@@ -361,7 +359,11 @@ function Navbar(props) {
                     </Box>
                   </Box>
                   <Box m={0} py="16px">
-                    <Box onClick={user ? smLogOut : smLogin} variant="ghost">
+                    <Box
+                      title={user ? "logout" : "login"}
+                      onClick={user ? smLogOut : smLogin}
+                      variant="ghost"
+                    >
                       <Icon
                         style={{
                           padding: "0 4px",
