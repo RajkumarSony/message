@@ -17,7 +17,12 @@ import {
 import { Navigate, useNavigate, Link as reachLink } from "react-router-dom";
 import { useState } from "react";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  signOut,
+  deleteUser,
+} from "firebase/auth";
 import { auth } from "../FirebaseConfig";
 import axios from "axios";
 import { createIdentity, saveIdentity } from "../SealedInit";
@@ -37,6 +42,7 @@ export default function SignupCard() {
     error: false,
     message: null,
   });
+  const [otpLoading, setOtpLoading] = useState(false);
   const [authenticate, setAuthenticate] = useState(false);
   const [atwoManRuleKey, setTwoManRuleKey] = useState();
   const [atwoManRuleSessionId, setTwoManRuleSessionId] = useState();
@@ -85,21 +91,76 @@ export default function SignupCard() {
           navigate("/");
           localStorage.setItem("login", true);
         }
+      })
+      .catch((err) => {
+        deleteUser(auth.currentUser).then(() => {
+          // Request to clear databaekey and session id and destroy the session after logout
+          axios
+            .post(
+              "/session/logout",
+              { reqest: "logout" },
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            )
+            .then((res) => {
+              localStorage.removeItem("user");
+              localStorage.setItem("login", false);
+              setAuthenticate(false);
+              Setloading(false);
+              setOtpLoading(false);
+              Seterror({
+                code: "Invalid OTP",
+                error: true,
+                message: "Invalid OTP Sign Up again",
+              });
+            });
+        });
       });
   };
   const submitChallenge = async () => {
-    await saveIdentity({
-      challenge: challenge,
-      userId: auth.currentUser.uid,
-      twoManRuleKey: atwoManRuleKey,
-      emailAddress: auth.currentUser.email,
-      twoManRuleSessionId: atwoManRuleSessionId,
-      databaseKey: Cookies.get("databaseKey"),
-      sessionID: Cookies.get("sessionId"),
-    });
-    localStorage.setItem("login", true);
+    try {
+      await saveIdentity({
+        challenge: challenge,
+        userId: auth.currentUser.uid,
+        twoManRuleKey: atwoManRuleKey,
+        emailAddress: auth.currentUser.email,
+        twoManRuleSessionId: atwoManRuleSessionId,
+        databaseKey: Cookies.get("databaseKey"),
+        sessionID: Cookies.get("sessionId"),
+      });
+      localStorage.setItem("login", true);
 
-    navigate("/");
+      navigate("/");
+    } catch {
+      deleteUser(auth.currentUser).then(() => {
+        // Request to clear databaekey and session id and destroy the session after logout
+        axios
+          .post(
+            "/session/logout",
+            { reqest: "logout" },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          )
+          .then((res) => {
+            localStorage.removeItem("user");
+            localStorage.setItem("login", false);
+            setAuthenticate(false);
+            Setloading(false);
+            setOtpLoading(false);
+            Seterror({
+              code: "Invalid OTP",
+              error: true,
+              message: "Invalid OTP Sign Up again",
+            });
+          });
+      });
+    }
   };
   const signup = (event) => {
     Setloading(true);
@@ -317,7 +378,13 @@ export default function SignupCard() {
                     }}
                     placeholder="enter challenge send in your email"
                   />
-                  <Button onClick={submitChallenge}>Submit</Button>
+                  <Button
+                    isLoading={otpLoading}
+                    loadingText="Validating"
+                    onClick={submitChallenge}
+                  >
+                    Submit
+                  </Button>
                 </>
               )}
               <Stack pt={3}>

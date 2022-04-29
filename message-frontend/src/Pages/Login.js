@@ -96,6 +96,34 @@ export default function SimpleCard() {
                 navigate("/"); // Navigate to homePage
                 localStorage.setItem("login", true);
               }
+            })
+            .catch((err) => {
+              signOut(auth).then(() => {
+                // Request to clear databaekey and session id and destroy the session after logout
+                axios
+                  .post(
+                    "/session/logout",
+                    { reqest: "logout" },
+                    {
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                    }
+                  )
+                  .then((res) => {
+                    localStorage.removeItem("user");
+                    localStorage.setItem("login", false);
+                    setAuthenticate(false);
+                    Setloading(false);
+                    setOtpLoading(false);
+                    Seterror({
+                      code: "500",
+                      error: true,
+                      message: "Internal Server Erorr.",
+                    });
+                    console.log(err);
+                  });
+              });
             });
         })
         .catch((error) => {

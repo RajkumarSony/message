@@ -180,7 +180,7 @@ app.post("/session/login", async (req, res) => {
         res.cookie("appId", process.env.seald_appId, {
           maxAge: new Date(23423432323232),
         }); // set AppId
-        console.log(Decodetoken);
+
         const sendChallengeResult = await axios.post(
           `${process.env.ssks_key_storage_url}tmr/back/challenge_send/`,
           {
@@ -222,6 +222,11 @@ app.post("/session/login", async (req, res) => {
 
         if (sendChallengeResult.statusText !== "OK") {
           const responseText = sendChallengeResult.statusText;
+          res.status(sendChallengeResult.status);
+          res.send({
+            code: sendChallengeResult.status,
+            err: responseText,
+          });
           throw new Error(
             `Error in SSKS createUser: ${sendChallengeResult.status} ${responseText}`
           );
@@ -235,7 +240,6 @@ app.post("/session/login", async (req, res) => {
         const storeTwoManRuleKey = db.ref(`${Decodetoken.uid}/securityKey`);
         storeTwoManRuleKey.once("value", async (data) => {
           if (data.hasChildren()) {
-            console.log(data.val().ssks2mrkey);
             res.status(200).json({
               twoManRuleSessionId,
               twoManRuleKey: data.val().ssks2mrkey,

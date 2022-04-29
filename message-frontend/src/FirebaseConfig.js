@@ -1,10 +1,12 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import { getDatabase } from "firebase/database";
 // Your web app's Firebase configuration
 import { getMessaging } from "firebase/messaging";
-
+import { retrieveIdentityFromLocalStorage } from "./SealedInit";
+import axios from "axios";
+import Cookies from "js-cookie";
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_apiKey,
   authDomain: process.env.REACT_APP_authDomain,
@@ -20,7 +22,7 @@ const auth = getAuth(app);
 const storage = getStorage(app);
 const db = getDatabase(app);
 const messaging = getMessaging(app);
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   if (!user) {
     localStorage.setItem("login", false);
   }
