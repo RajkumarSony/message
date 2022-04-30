@@ -240,6 +240,7 @@ app.post("/session/login", async (req, res) => {
         const storeTwoManRuleKey = db.ref(`${Decodetoken.uid}/securityKey`);
         storeTwoManRuleKey.once("value", async (data) => {
           if (data.hasChildren()) {
+            console.log(data.val().ssks2mrkey);
             res.status(200).json({
               twoManRuleSessionId,
               twoManRuleKey: data.val().ssks2mrkey,

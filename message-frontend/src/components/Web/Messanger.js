@@ -10,6 +10,10 @@ import {
   SliderFilledTrack,
   SliderThumb,
   Spinner,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverBody,
 } from "@chakra-ui/react";
 import {
   MdSend,
@@ -17,9 +21,11 @@ import {
   MdStop,
   MdOutlineEmojiEmotions,
   MdOutlineCancel,
+  MdInsertPhoto,
 } from "react-icons/md";
 import { TiAttachmentOutline } from "react-icons/ti";
-
+import { BsCameraFill } from "react-icons/bs";
+import { IoMdDocument } from "react-icons/io";
 import { auth, db, storage } from "../../FirebaseConfig";
 import axios from "axios";
 import { onValue, ref, get, off } from "firebase/database";
@@ -489,6 +495,7 @@ export default function Messanger(props) {
         )}
         <Box ref={messagesEndRef}></Box>
       </Box>
+
       {showPicker && (
         <Box
           w={{ md: "60%", sm: "100%", lg: "70%" }}
@@ -504,6 +511,7 @@ export default function Messanger(props) {
           ></emoji-picker>
         </Box>
       )}
+
       <Box
         borderLeft="1px solid gray"
         backgroundColor={config.inputBg}
@@ -512,14 +520,89 @@ export default function Messanger(props) {
         d="flex"
         flexDirection="row"
       >
-        <Icon
-          w={8}
-          cursor="pointer"
-          h={8}
-          color="rgba(150,150,150,1)"
-          as={TiAttachmentOutline}
-          _hover={{ color: "green" }}
-        />
+        <Popover
+          w="fit-content"
+          borderColor="transparent"
+          position="top"
+          backgroundColor="transparent"
+          boxShadow="none"
+        >
+          <PopoverTrigger>
+            <Button variant="ghost">
+              <Icon
+                w={8}
+                h={8}
+                color="rgba(100,100,100,0.3)"
+                cursor="pointer"
+                as={TiAttachmentOutline}
+                _hover={{ color: "#39dcdc" }}
+              />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent
+            borderColor="transparent"
+            boxShadow="none"
+            w="fit-content"
+            matchWidth={true}
+            backgroundColor="transparent"
+            _focus={{ borderShadow: "none" }}
+          >
+            <PopoverBody w="fit-content" matchWidth={true} boxShadow="none">
+              <Box
+                color="white"
+                d="flex"
+                w="fit-content"
+                flexDirection="column"
+              >
+                <Box
+                  cursor="pointer"
+                  d="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  w={10}
+                  h={10}
+                  borderRadius="50%"
+                  p={2}
+                  m={3}
+                  backgroundColor="#6d95f0"
+                  background="linear-gradient(0deg, rgba(34,165,206,1) 33%, rgba(186,82,224,1) 51%, rgba(34,116,195,1) 72%)"
+                >
+                  <Icon h={6} w={6} as={BsCameraFill} />
+                </Box>
+                <Box
+                  d="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  w={10}
+                  h={10}
+                  borderRadius="50%"
+                  p={2}
+                  m={3}
+                  backgroundColor="#6d95f0"
+                  cursor="pointer"
+                  background="linear-gradient(0deg, rgba(34,165,206,1) 33%, rgba(186,82,224,1) 51%, rgba(34,116,195,1) 72%)"
+                >
+                  <Icon h={6} w={6} as={IoMdDocument} />
+                </Box>
+                <Box
+                  cursor="pointer"
+                  d="flex"
+                  justifyContent="center"
+                  alignItems="center"
+                  w={10}
+                  h={10}
+                  borderRadius="50%"
+                  p={2}
+                  m={3}
+                  backgroundColor="#6d95f0"
+                  background="linear-gradient(0deg, rgba(34,165,206,1) 33%, rgba(186,82,224,1) 51%, rgba(34,116,195,1) 72%)"
+                >
+                  <Icon h={6} w={6} as={MdInsertPhoto} />
+                </Box>
+              </Box>
+            </PopoverBody>
+          </PopoverContent>
+        </Popover>
         <Icon
           w={8}
           h={8}
