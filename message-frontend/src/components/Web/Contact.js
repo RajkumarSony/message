@@ -1,25 +1,54 @@
 import React from "react";
-import { Box, Avatar, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Avatar,
+  Text,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverBody,
+  PopoverArrow,
+  PopoverCloseButton,
+  Image,
+} from "@chakra-ui/react";
 import { useThemeConfig } from "../../ThemeConfig";
 export default function Contact(props) {
   const { config } = useThemeConfig();
   return (
-    <Box
-      h="80px"
-      onClick={props.onClick}
-      cursor="pointer"
-      d="flex"
-      backgroundColor={config.contactBg}
-    >
-      <Avatar
-        my={3}
-        mx={2}
-        name={props.name}
-        cursor="pointer"
-        size="lg"
-        src={props.photoURL}
-      />
+    <Box h="80px" cursor="pointer" d="flex" backgroundColor={config.contactBg}>
+      <Popover>
+        <PopoverTrigger>
+          <Avatar
+            my={3}
+            mx={2}
+            name={props.name}
+            cursor="pointer"
+            size="lg"
+            src={props.photoURL}
+          />
+        </PopoverTrigger>
+
+        <PopoverContent>
+          <PopoverArrow />
+          <PopoverCloseButton />
+          <PopoverBody d="flex" justifyContent="center" alignItems="center">
+            {props.photoURL ? (
+              <Image src={props.photoURL} />
+            ) : (
+              <Avatar
+                my={3}
+                mx={2}
+                cursor="pointer"
+                size="2xl"
+                src={props.photoURL}
+              />
+            )}
+          </PopoverBody>
+        </PopoverContent>
+      </Popover>
+
       <Box
+        onClick={props.onClick}
         mt={props.message ? 4 : "12px"}
         flexDirection="column"
         d="flex"
