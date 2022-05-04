@@ -102,17 +102,28 @@ export const retrieveIdentity = async ({
     });
   } else {
     await sealdSDKInstance.ssksPassword.retrieveIdentity({ userId, password });
-
-    await sealdSDKInstance.ssks2MR.saveIdentity({
-      challenge,
-      authFactor: {
-        type: "EM",
-        value: emailAddress,
-      },
-      twoManRuleKey,
-      userId,
-      sessionId: twoManRuleSessionId,
-    });
+    if (challenge) {
+      await sealdSDKInstance.ssks2MR.saveIdentity({
+        challenge,
+        authFactor: {
+          type: "EM",
+          value: emailAddress,
+        },
+        twoManRuleKey,
+        userId,
+        sessionId: twoManRuleSessionId,
+      });
+    } else {
+      await sealdSDKInstance.ssks2MR.saveIdentity({
+        authFactor: {
+          type: "EM",
+          value: emailAddress,
+        },
+        twoManRuleKey,
+        userId,
+        sessionId: twoManRuleSessionId,
+      });
+    }
   }
 };
 
