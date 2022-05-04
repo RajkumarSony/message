@@ -117,10 +117,10 @@ export default function Privacy() {
       </Text>
 
       <Text my={5}>
-        For more general information on cookies, please read{" "}
-        <a href="https://www.generateprivacypolicy.com/#cookies">
-          the Cookies article on Generate Privacy Policy website
-        </a>
+        For more information on how we use cookies, please read{" "}
+        <Link as={reachLink} to="/cookie">
+          Cookie Policy.
+        </Link>
         .
       </Text>
 

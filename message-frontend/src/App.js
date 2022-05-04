@@ -16,6 +16,7 @@ import * as serviceWorker from "./serviceWorkerRegistration";
 import { useSnackbar } from "notistack";
 import ForgotPassword from "./Pages/ForgotPassword";
 import Reset from "./Pages/Reset";
+import CookiePolicy from "./Pages/CookiePolicy";
 
 function App() {
   const { colorMode } = useColorMode();
@@ -88,8 +89,9 @@ function App() {
             <Route path="/" element={<Navbar />}>
               {/* Sub Rotues of / */}
               <Route index element={<Home />} />
-              <Route path={"features"} element={<Features />} />
+              <Route path="features" element={<Features />} />
               <Route path="privacy" element={<Privacy />} />
+              <Route path="cookie" element={<CookiePolicy />} />
 
               <Route path="auth">
                 {/* Sub Routes of auth */}
