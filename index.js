@@ -135,7 +135,7 @@ app.post("/register", (req, res) => {
           const storeTwoManRuleKey = db.ref(`${Decodetoken.uid}/securityKey`);
           storeTwoManRuleKey.update(
             {
-              ssks2mrKey: twoManRuleKey,
+              ssks2mrkey: twoManRuleKey,
             },
             (err) => {
               if (!err) {
