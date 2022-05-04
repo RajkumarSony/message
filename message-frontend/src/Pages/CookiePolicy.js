@@ -1,5 +1,6 @@
 import React from "react";
-import { Box, Text, ListItem, UnorderedList } from "@chakra-ui/react";
+import { Box, Text, ListItem, UnorderedList, Link } from "@chakra-ui/react";
+import { Link as reachLink } from "react-router-dom";
 
 export default function CookiePolicy() {
   return (
@@ -10,7 +11,10 @@ export default function CookiePolicy() {
 
       <Text p={2}>
         This is the Cookie Policy for message hub, accessible from
-        https://secure-message-hub.herokuapp.com/
+        <Link color="blue.600" as={reachLink} to="/">
+          {" "}
+          https://secure-message-hub.herokuapp.com/
+        </Link>
       </Text>
 
       <Text p={2}>
@@ -113,7 +117,73 @@ export default function CookiePolicy() {
           </Text>
           <Text p={2}>
             For more information on Google Analytics cookies, see the official
-            Google Analytics page.
+            <Text d="inline" color="blue.600">
+              {" "}
+              <a href="https://analytics.google.com/">
+                {" "}
+                Google Analytics{" "}
+              </a>{" "}
+            </Text>
+            page.
+          </Text>
+        </ListItem>
+        <ListItem>
+          <Text p={2}>
+            This site uses Google Firebase which is one of the trusted
+            authentication service.Cookies are set by the firebase to identify
+            the particular user's these are only used when you login to the
+            application.These Might track your login information across you
+            devices.
+          </Text>
+          <Text p={2}>
+            For more information on Google Firebase cookies, see the official
+            <Text d="inline" color="blue.600">
+              {" "}
+              <a href="https://firebase.google.com/"> Google Firebase </a>{" "}
+            </Text>
+            page.
+          </Text>
+        </ListItem>
+      </UnorderedList>
+
+      <Text p={2}>
+        <strong>Local Storage</strong>
+      </Text>
+
+      <Text p={2}>
+        Apart from Cookies we also use Local Storage and local database.{" "}
+      </Text>
+      <UnorderedList>
+        <ListItem>
+          <Text fontWeight={600}>Encrypted Identity</Text>
+          <Text>
+            We use end-to-end encryption to send messages. In order to do that
+            we create a identy with the help of
+            <Text color="blue.600" d="inline">
+              <a href="https://www.seald.io/" target="_blank">
+                {" "}
+                seald-io{" "}
+              </a>
+            </Text>
+            which is encrypted and stored on the server and can only be
+            decrypted by you by providing your password and otp while login. So
+            in order to keep you logged in a copy of the decrypted identy is
+            stored in the local database named neDB. This identity remains on
+            your computer browser and is encrypted by a database key which is
+            known to backend so only the application can access the identity on
+            your behalf when you revisit the application. This database is
+            cleared once you logout or session expires so it cannot be retrived
+            when you are logged out helpful when using public computer.
+          </Text>
+        </ListItem>
+        <ListItem>
+          <Text fontWeight={600}>Manage Session & Preference</Text>
+          <Text>
+            Various Local Variables are set to manage session and record
+            preferences of your choice like using light or dark mode etc.These
+            are only known to the browser of your computer and can be read by
+            the application and these are not send to the server for any
+            purpose.
           </Text>
         </ListItem>
       </UnorderedList>
@@ -130,20 +200,19 @@ export default function CookiePolicy() {
       </Text>
 
       <Text p={2}>
-        For more general information on cookies, please read{" "}
-        <a href="https://www.generateprivacypolicy.com/#cookies">
-          "Cookies" article from the Privacy Policy Generator
-        </a>
-        .
-      </Text>
-
-      <Text p={2}>
         However if you are still looking for more information then you can
         contact us through one of our preferred contact methods:
       </Text>
 
       <UnorderedList>
-        <ListItem>Email: backend.nktechnical@gmail.com</ListItem>
+        <ListItem>
+          Email:{" "}
+          <Text d="inline" color="blue.600">
+            <a href="mailto:backend.nktechnical@gmail.com">
+              backend.nktechnical@gmail.com
+            </a>
+          </Text>
+        </ListItem>
       </UnorderedList>
     </Box>
   );

@@ -10,7 +10,7 @@ export default function Privacy() {
 
       <Text my={5}>
         At message hub, accessible from{" "}
-        <Link as={reachLink} to="/">
+        <Link color="blue.600" as={reachLink} to="/">
           https://secure-message-hub.herokuapp.com/
         </Link>
         , one of our main priorities is the privacy of our visitors. This
@@ -118,8 +118,8 @@ export default function Privacy() {
 
       <Text my={5}>
         For more information on how we use cookies, please read{" "}
-        <Link as={reachLink} to="/cookie">
-          Cookie Policy.
+        <Link color="blue.600" as={reachLink} to="/cookie">
+          Cookie Policy
         </Link>
         .
       </Text>
@@ -159,6 +159,37 @@ export default function Privacy() {
         It may include their practices and instructions about how to opt-out of
         certain options.{" "}
       </Text>
+
+      <Text p={2}> List of Third party Services used .</Text>
+      <UnorderedList>
+        <ListItem>
+          <strong>Google</strong>
+          <UnorderedList>
+            <ListItem>
+              <Text>Google Analytics for site analytics</Text>
+            </ListItem>
+            <ListItem>
+              <Text>Google Firebase for authentication, database,Storage </Text>
+            </ListItem>
+          </UnorderedList>
+        </ListItem>
+        <ListItem>
+          <strong>Seald-io</strong>
+          <Text p={2}>
+            Seald-io is used for end-to-end encryption and authentication of
+            encrypted identity. encrypted identity of user is stored on the ssks
+            serever hosted by seald-io or property of seald-io
+          </Text>
+          <Text p={2}>
+            {" "}
+            To get more information about seald-io visit{" "}
+            <Text d="inline" color="blue.600">
+              <a href="https://www.seald.io/"> Seald-io</a>
+            </Text>{" "}
+            official page.
+          </Text>
+        </ListItem>
+      </UnorderedList>
 
       <Text my={5}>
         You can choose to disable cookies through your individual browser
