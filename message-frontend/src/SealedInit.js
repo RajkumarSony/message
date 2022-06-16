@@ -7,8 +7,8 @@ import Cookies from "js-cookie"; // Read Cookies uing Cookies.get("cookieName")
 let sealdSDKInstance = null;
 
 const instantiateSealdSDK = async ({ databaseKey, sessionID }) => {
-  console.log(process.env.REACT_APP_seald_apiURL);
-  console.log(process.env.REACT_APP_ssks_key_storage_url);
+  // console.log(process.env.REACT_APP_seald_apiURL);
+  // console.log(process.env.REACT_APP_ssks_key_storage_url);
   sealdSDKInstance = SealdSDK({
     appId: Cookies.get("appId"),
     databaseKey: databaseKey, //Generated on the Server

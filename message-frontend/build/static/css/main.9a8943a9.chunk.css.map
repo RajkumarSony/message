@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/style.css"],"names":[],"mappings":"AAAA,KACE,iBACF,CAEA,kBACE,oBACF,CACA,mBACE,oBACF","file":"main.9a8943a9.chunk.css","sourcesContent":["body {\n  overflow-y: hidden;\n}\n\nemoji-picker.dark {\n  --background: #2c313d;\n}\nemoji-picker.light {\n  --background: #f7ebeb;\n}\n"]}
