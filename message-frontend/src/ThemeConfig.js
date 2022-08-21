@@ -20,7 +20,7 @@ function useThemeConfig() {
     scrollTrack: colorMode === "light" ? "white" : "#19263a",
     scrollTrackThumb: colorMode === "light" ? "#05c2c8" : "#295599",
     hHeadermd: colorMode === "light" ? "white" : "#19263a",
-    contactBg: colorMode === "light" ? "#d8c9e3" : "#19263a",
+    contactBg: colorMode === "light" ? "white" : "#19263a",
     IconColor: colorMode === "light" ? "#718096" : "#E2E8F0",
     border: colorMode === "light" ? "1px solid #05c2c8 " : "1px solid #0e2e5e",
     inBorder: colorMode === "light" ? "black" : "white",
@@ -29,7 +29,7 @@ function useThemeConfig() {
       colorMode === "light"
         ? "1px solid rgba(32,32,23,0.23)"
         : "2px solid #0e2e5e",
-    mesBg: colorMode === "light" ? "#bceef7" : "#1a202c",
+    mesBg: colorMode === "light" ? "ghostwhite" : "#1a202c",
     chatL: colorMode === "light" ? "#f0d1d1" : "#2c313d",
     chatR: colorMode === "light" ? "#a2d7fc" : "#455ba2",
     inputBg: colorMode === "light" ? "white" : "#02122a",
@@ -39,7 +39,7 @@ function useThemeConfig() {
     img: colorMode === "light" ? androidLight : androidDark,
     imgIphone: colorMode === "light" ? iphoneLight : iphoneDark,
   };
-  return { config, toggleColor };
+  return { config, toggleColor, colorMode };
 }
 
 export { useThemeConfig };

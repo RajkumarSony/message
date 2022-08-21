@@ -39,7 +39,7 @@ import Message from "./Message";
 import { useThemeConfig } from "../../ThemeConfig";
 
 export default function Messanger(props) {
-  const { config } = useThemeConfig();
+  const { config, colorMode } = useThemeConfig();
   const [showPicker, setShowPicker] = useState(false);
   const [micIcon, setMicIcon] = useState(true);
   const [data, setData] = useState();
@@ -513,7 +513,8 @@ export default function Messanger(props) {
       )}
 
       <Box
-        borderLeft="1px solid gray"
+        borderLeft={colorMode === "light" ? "1px solid darkkhaki" : ""}
+        borderTop={colorMode === "light" ? "1px solid darkkhaki" : ""}
         backgroundColor={config.inputBg}
         alignItems="center"
         h="60px"
