@@ -1,3 +1,40 @@
+
+
+Required Maven Dependency Configuration:
+
+<!-- Spring dependencies -->
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-context</artifactId>
+    <version>5.3.10</version>
+</dependency>
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-web</artifactId>
+    <version>5.3.10</version>
+</dependency>
+
+<!-- Hibernate dependencies -->
+```
+<dependency>
+    <groupId>org.hibernate</groupId>
+    <artifactId>hibernate-core</artifactId>
+    <version>5.6.0.Final</version>
+</dependency>
+<dependency>
+    <groupId>org.hibernate</groupId>
+    <artifactId>hibernate-entitymanager</artifactId>
+    <version>5.6.0.Final</version>
+</dependency>
+
+<!-- MySQL Connector/J dependency -->
+<dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-java</artifactId>
+    <version>8.0.26</version>
+</dependency>
+```
+
 Sure! Here's an example of a CRUD (Create, Read, Update, Delete) operation using Spring, Hibernate with Session in XML configuration, and MySQL database.
 
 1. Create the database table:
